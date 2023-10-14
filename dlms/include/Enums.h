@@ -1,0 +1,3775 @@
+#ifndef GXENUMS_H
+#define GXENUMS_H
+
+#if _MSC_VER > 12
+#define _CRTDBG_MAP_ALLOC
+#define CRTDBG_MAP_ALLOC
+#include <stdlib.h>
+#include <crtdbg.h>
+#endif
+
+const unsigned char HDLC_FRAME_START_END = 0x7E;
+const unsigned long DATA_TYPE_OFFSET = 0xFF0000;
+const char AARQ_TAG = 0x60;
+const char AARE_TAG = 0x61;
+
+const unsigned char LLC_SEND_BYTES[3] = { 0xE6, 0xE6, 0x00 };
+const unsigned char LLC_REPLY_BYTES[3] = { 0xE6, 0xE7, 0x00 };
+
+
+enum DLMS_ASSOCIATION_RESULT
+{
+    DLMS_ASSOCIATION_RESULT_ACCEPTED = 0,
+    DLMS_ASSOCIATION_RESULT_PERMANENT_REJECTED = 1,
+    DLMS_ASSOCIATION_RESULT_TRANSIENT_REJECTED = 2
+};
+
+typedef enum
+{
+    DLMS_SOURCE_DIAGNOSTIC_NONE = 0,
+    DLMS_SOURCE_DIAGNOSTIC_NO_REASON_GIVEN = 1,
+    // Application context name not supported.
+    DLMS_SOURCE_DIAGNOSTIC_APPLICATION_CONTEXT_NAME_NOT_SUPPORTED = 2,
+    // Calling AP title not recognized.
+    DLMS_SOURCE_DIAGNOSTIC_APPLICATION_CALLING_AP_TITLE_NOT_RECOGNIZED = 3,
+    // Calling AP invocation identifier not recognized.
+    DLMS_SOURCE_DIAGNOSTIC_APPLICATION_CALLING_AP_INVOCATION_IDENTIFIER_NOT_RECOGNIZED = 4,
+    // Calling AE qualifier not recognized
+    DLMS_SOURCE_DIAGNOSTIC_APPLICATION_CALLING_AE_QUALIFIER_NOT_RECOGNIZED = 5,
+    // Calling AE invocation identifier not recognized
+    DLMS_SOURCE_DIAGNOSTIC_APPLICATION_CALLING_AE_INVOCATION_IDENTIFIER_NOT_RECOGNIZED = 6,
+    // Called AP title not recognized
+    DLMS_SOURCE_DIAGNOSTIC_APPLICATION_CALLED_AP_TITLE_NOT_RECOGNIZED = 7,
+    // Called AP invocation identifier not recognized
+    DLMS_SOURCE_DIAGNOSTIC_APPLICATION_CALLED_AP_INVOCATION_IDENTIFIER_NOT_RECOGNIZED = 8,
+    // Called AE qualifier not recognized
+    DLMS_SOURCE_DIAGNOSTIC_APPLICATION_CALLED_AE_QUALIFIER_NOT_RECOGNIZED = 9,
+    // Called AE invocation identifier not recognized
+    DLMS_SOURCE_DIAGNOSTIC_APPLICATION_CALLED_AE_INVOCATION_IDENTIFIER_NOT_RECOGNIZED = 10,
+    DLMS_SOURCE_DIAGNOSTIC_AUTHENTICATION_MECHANISM_NAME_NOT_RECOGNISED = 11,
+    DLMS_SOURCE_DIAGNOSTIC_AUTHENTICATION_MECHANISM_NAME_REQUIRED = 12,
+    DLMS_SOURCE_DIAGNOSTIC_AUTHENTICATION_FAILURE = 13,
+    DLMS_SOURCE_DIAGNOSTIC_AUTHENTICATION_REQUIRED = 14,
+} DLMS_SOURCE_DIAGNOSTIC;
+
+/*
+ *
+ * Defines the baud rates.
+ */
+enum DLMS_BAUD_RATE
+{
+    /*
+    Baudrate is 300.
+    */
+    DLMS_BAUD_RATE_300 = 0,
+    /*
+     Baudrate is 600.
+    */
+    DLMS_BAUD_RATE_600,
+    /*
+     Baudrate is 1200.
+    */
+    DLMS_BAUD_RATE_1200,
+    /*
+     Baudrate is 2400.
+    */
+    DLMS_BAUD_RATE_2400,
+    /*
+     Baudrate is 4800.
+    */
+    DLMS_BAUD_RATE_4800,
+    /*
+     Baudrate is 9600.
+    */
+    DLMS_BAUD_RATE_9600,
+    /*
+     Baudrate is 19200.
+    */
+    DLMS_BAUD_RATE_19200,
+    /*
+     Baudrate is 38400.
+    */
+    DLMS_BAUD_RATE_38400,
+    /*
+     Baudrate is 57600.
+    */
+    DLMS_BAUD_RATE_57600,
+    /*
+     Baudrate is 115200.
+    */
+    DLMS_BAUD_RATE_115200
+};
+
+
+/*
+ Defines the protocol used by the meter on the port.
+*/
+enum DLMS_OPTICAL_PROTOCOL_MODE
+{
+    /*
+     Protocol according to IEC 62056-21 (modes A…E),
+    */
+    DLMS_OPTICAL_PROTOCOL_MODE_DEFAULT = 0,
+    /*
+     Protocol according to IEC 62056-46.
+     Using this enumeration value all other attributes of this IC are not applicable.
+    */
+    DLMS_OPTICAL_PROTOCOL_MODE_NET = 1,
+    /*
+     Protocol not specified. Using this enumeration value,
+     ProposedBaudrate is used for setting the communication speed on the port.
+     All other attributes are not applicable.
+    */
+    DLMS_OPTICAL_PROTOCOL_MODE_UNKNOWN = 2
+};
+
+enum DLMS_LOCAL_PORT_RESPONSE_TIME
+{
+    /*
+     Minimium time is 20 ms.
+    */
+    DLMS_LOCAL_PORT_RESPONSE_TIME_20_MS = 0,
+    /*
+     Minimium time is 200 ms.
+    */
+    DLMS_LOCAL_PORT_RESPONSE_TIME_200_MS = 1
+};
+
+
+/*
+ * Configures the behaviour of the disconnect control object for all
+triggers, i.e. the possible state transitions.
+ */
+enum DLMS_CONTROL_MODE
+{
+    /*
+     * The disconnect control object is always in 'connected' state,
+     */
+    DLMS_CONTROL_MODE_NONE,
+    /*
+     * Disconnection: Remote (b, c), manual (f), local (g)
+     * Reconnection: Remote (d), manual (e).
+     */
+     DLMS_CONTROL_MODE_MODE_1,
+     /*
+      * Disconnection: Remote (b, c), manual (f), local (g)
+      * Reconnection: Remote (a), manual (e).
+      */
+      DLMS_CONTROL_MODE_MODE_2,
+      /*
+       * Disconnection: Remote (b, c), manual (-), local (g)
+       * Reconnection: Remote (d), manual (e).
+       */
+       DLMS_CONTROL_MODE_MODE_3,
+       /*
+        * Disconnection: Remote (b, c), manual (-), local (g)
+        * Reconnection: Remote (a), manual (e)
+        */
+        DLMS_CONTROL_MODE_MODE_4,
+        /*
+         * Disconnection: Remote (b, c), manual (f), local (g)
+         * Reconnection: Remote (d), manual (e), local (h),
+         */
+         DLMS_CONTROL_MODE_MODE_5,
+         /*
+          * Disconnection: Remote (b, c), manual (-), local (g)
+          * Reconnection: Remote (d), manual (e), local (h)
+          */
+          DLMS_CONTROL_MODE_MODE_6,
+};
+
+//Is logican name assosiated.
+typedef enum
+{
+    DLMS_ASSOCIATION_STATUS_NON_ASSOCIATED,
+    DLMS_ASSOCIATION_STATUS_ASSOCIATION_PENDING,
+    DLMS_ASSOCIATION_STATUS_ASSOCIATED
+}DLMS_ASSOCIATION_STATUS;
+
+typedef enum
+{
+    // Not defined
+    DLMS_CLOCK_BASE_NONE,
+    // Internal Crystal
+    DLMS_CLOCK_BASE_CRYSTAL,
+    // Mains frequency 50 Hz,
+    DLMS_CLOCK_BASE_FREQUENCY_50,
+    // Mains frequency 60 Hz,
+    DLMS_CLOCK_BASE_FREQUENCY_60,
+    // Global Positioning System.
+    DLMS_CLOCK_BASE_GPS,
+    // Radio controlled.
+    DLMS_CLOCK_BASE_RADIO
+} DLMS_CLOCK_BASE;
+
+typedef enum
+{
+    /*
+     * The output_state is set to false and the consumer is disconnected.
+     */
+    DLMS_CONTROL_STATE_DISCONNECTED,
+    /*
+     * The output_state is set to true and the consumer is connected.
+     */
+     DLMS_CONTROL_STATE_CONNECTED,
+     /*
+      * The output_state is set to false and the consumer is disconnected.
+      */
+      DLMS_CONTROL_STATE_READY_FOR_RECONNECTION
+} DLMS_CONTROL_STATE;
+
+
+// Defines whether or not the device has been assigned an address
+// since last power up of the device.
+typedef enum
+{
+    // Not assigned an address yet.
+    DLMS_ADDRESS_STATE_NONE,
+    // Assigned an address either by manual setting, or by automated method.
+    DLMS_ADDRESS_STATE_ASSIGNED
+} DLMS_ADDRESS_STATE;
+
+
+typedef enum
+{
+    /*
+     Size of execution_time = 1. Wildcard in date allowed.
+    */
+    DLMS_SINGLE_ACTION_SCHEDULE_TYPE1 = 1,
+    /*
+     Size of execution_time = n.
+     All time values are the same, wildcards in date not allowed.
+    */
+    DLMS_SINGLE_ACTION_SCHEDULE_TYPE2 = 2,
+    /*
+     Size of execution_time = n.
+     All time values are the same, wildcards in date are allowed,
+    */
+    DLMS_SINGLE_ACTION_SCHEDULE_TYPE3 = 3,
+    /*
+     Size of execution_time = n.
+     Time values may be different, wildcards in date not allowed,
+    */
+    DLMS_SINGLE_ACTION_SCHEDULE_TYPE4 = 4,
+    /*
+     Size of execution_time = n.
+     Time values may be different, wildcards in date are allowed
+    */
+    DLMS_SINGLE_ACTION_SCHEDULE_TYPE5 = 5
+} DLMS_SINGLE_ACTION_SCHEDULE_TYPE;
+
+typedef enum
+{
+    DLMS_IMAGE_TRANSFER_STATUS_NOT_INITIATED,
+    DLMS_IMAGE_TRANSFER_STATUS_INITIATED,
+    DLMS_IMAGE_TRANSFER_STATUS_VERIFICATION_INITIATED,
+    DLMS_IMAGE_TRANSFER_STATUS_VERIFICATION_SUCCESSFUL,
+    DLMS_IMAGE_TRANSFER_STATUS_VERIFICATION_FAILED,
+    DLMS_IMAGE_TRANSFER_STATUS_ACTIVATION_INITIATED,
+    DLMS_IMAGE_TRANSFER_STATUS_ACTIVATION_SUCCESSFUL,
+    DLMS_IMAGE_TRANSFER_STATUS_ACTIVATION_FAILED
+} DLMS_IMAGE_TRANSFER_STATUS;
+
+typedef enum
+{
+    /*
+     * Transport security is not used.
+     */
+    DLMS_SECURITY_NONE = 0,
+
+    /*
+     * Authentication security is used.
+     */
+     DLMS_SECURITY_AUTHENTICATION = 0x10,
+
+     /*
+      * Encryption security is used.
+      */
+      DLMS_SECURITY_ENCRYPTION = 0x20,
+
+      /*
+       * Authentication and Encryption security are used.
+       */
+       DLMS_SECURITY_AUTHENTICATION_ENCRYPTION = 0x30,
+} DLMS_SECURITY;
+
+typedef enum
+{
+    DLMS_COUNT_TYPE_TAG = 0x1,
+    DLMS_COUNT_TYPE_DATA = 2,
+    DLMS_COUNT_TYPE_PACKET = 3
+} DLMS_COUNT_TYPE;
+
+/*
+* HDLC frame types.
+*/
+typedef enum
+{
+    /*
+    * I-Frame. Information frames are used to transport user data.
+    */
+    HDLC_FRAME_TYPE_I_FRAME = 0x0,
+    /*
+     * S-frame. Supervisory Frames are used for flow and error control.
+     * Rejected, RNR and RR.
+     */
+     HDLC_FRAME_TYPE_S_FRAME = 0x1,
+     /*
+      * U-frame. Unnumbered frames are used for link management. Example SNRM and
+      * UA.
+      */
+      HDLC_FRAME_TYPE_U_FRAME = 0x3
+} HDLC_FRAME_TYPE;
+
+/*
+*BER encoding enumeration values.
+*/
+typedef enum
+{
+    /*
+    * End of Content.
+    */
+    BER_TYPE_EOC = 0x00,
+    /*
+    * Boolean.
+    */
+    BER_TYPE_BOOLEAN = 0x1,
+    /*
+    * Integer.
+    */
+    BER_TYPE_INTEGER = 0x2,
+    /*
+    * Bit String.
+    */
+    BER_TYPE_BIT_STRING = 0x3,
+    /*
+    * Octet string.
+    */
+    BER_TYPE_OCTET_STRING = 0x4,
+    /*
+    * Null value.
+    */
+    BER_TYPE_NULL = 0x5,
+    /*
+    * Object identifier.
+    */
+    BER_TYPE_OBJECT_IDENTIFIER = 0x6,
+    /*
+    * Object Descriptor.
+    */
+    BER_TYPE_OBJECT_DESCRIPTOR = 7,
+    /*
+    * External
+    */
+    BER_TYPE_EXTERNAL = 8,
+    /*
+    * Real (float).
+    */
+    BER_TYPE_REAL = 9,
+    /*
+    * Enumerated.
+    */
+    BER_TYPE_ENUMERATED = 10,
+    /*
+    * Utf8 String.
+    */
+    BER_TYPE_UTF8_STRING = 12,
+    /*
+    * Numeric string.
+    */
+    BER_TYPE_NUMERIC_STRING = 18,
+    /*
+    * Printable string.
+    */
+    BER_TYPE_PRINTABLE_STRING = 19,
+    /*
+    * Teletex string.
+    */
+    BER_TYPE_TELETEX_STRING = 20,
+    /*
+    * Videotex string.
+    */
+    BER_TYPE_VIDEOTEX_STRING = 21,
+    /*
+    * Ia5 string
+    */
+    BER_TYPE_IA5_STRING = 22,
+    /*
+    * Utc time.
+    */
+    BER_TYPE_UTC_TIME = 23,
+    /*
+    * Generalized time.
+    */
+    BER_TYPE_GENERALIZED_TIME = 24,
+    /*
+    * Graphic string.
+    */
+    BER_TYPE_GRAPHIC_STRING = 25,
+    /*
+    * Visible string.
+    */
+    BER_TYPE_VISIBLE_STRING = 26,
+    /*
+    * General string.
+    */
+    BER_TYPE_GENERAL_STRING = 27,
+    /*
+    * Universal string.
+    */
+    BER_TYPE_UNIVERSAL_STRING = 28,
+    /*
+    * Bmp string.
+    */
+    BER_TYPE_BMP_STRING = 30,
+    /*
+    * Application class.
+    */
+    BER_TYPE_APPLICATION = 0x40,
+    /*
+    * Context class.
+    */
+    BER_TYPE_CONTEXT = 0x80,
+    /*
+    * Private class.
+    */
+    BER_TYPE_PRIVATE = 0xc0,
+    /*
+    * Constructed.
+    */
+    BER_TYPE_CONSTRUCTED = 0x20
+} BER_TYPE;
+
+/*
+ * APDU types.
+ */
+typedef enum
+{
+    /*
+     * IMPLICIT BIT STRING {version1  = 0} DEFAULT {version1}
+     */
+    PDU_TYPE_PROTOCOL_VERSION = 0,
+
+    /*
+     * Application-context-name
+     */
+     PDU_TYPE_APPLICATION_CONTEXT_NAME = 1,
+
+     /*
+      * AP-title OPTIONAL
+      */
+      PDU_TYPE_CALLED_AP_TITLE = 2,
+
+      /*
+       * AE-qualifier OPTIONAL.
+       */
+       PDU_TYPE_CALLED_AE_QUALIFIER = 3,
+
+       /*
+        * AP-invocation-identifier OPTIONAL.
+        */
+        PDU_TYPE_CALLED_AP_INVOCATION_ID = 4,
+
+        /*
+         * AE-invocation-identifier OPTIONAL
+         */
+         PDU_TYPE_CALLED_AE_INVOCATION_ID = 5,
+
+         /*
+          * AP-title OPTIONAL
+          */
+          PDU_TYPE_CALLING_AP_TITLE = 6,
+
+          /*
+           * AE-qualifier OPTIONAL
+           */
+           PDU_TYPE_CALLING_AE_QUALIFIER = 7,
+
+           /*
+            * AP-invocation-identifier OPTIONAL
+            */
+            PDU_TYPE_CALLING_AP_INVOCATION_ID = 8,
+
+            /*
+             * AE-invocation-identifier OPTIONAL
+             */
+             PDU_TYPE_CALLING_AE_INVOCATION_ID = 9,
+
+             /*
+              * The following field shall not be present if only the kernel is used.
+              */
+              PDU_TYPE_SENDER_ACSE_REQUIREMENTS = 10,
+
+              /*
+               * The following field shall only be present if the authentication
+               * functional unit is selected.
+               */
+               PDU_TYPE_MECHANISM_NAME = 11,
+
+               /*
+                * The following field shall only be present if the authentication
+                * functional unit is selected.
+                */
+                PDU_TYPE_CALLING_AUTHENTICATION_VALUE = 12,
+
+                /*
+                 * Implementation-data.
+                 */
+                 PDU_TYPE_IMPLEMENTATION_INFORMATION = 29,
+
+                 /*
+                  * Association-information OPTIONAL
+                  */
+                  PDU_TYPE_USER_INFORMATION = 30
+} PDU_TYPE;
+
+/*
+ * HDLC control frame types.
+ */
+typedef enum
+{
+    /*
+     * Receive is ready.
+     */
+    HDLC_CONTROL_FRAME_RECEIVE_READY = 0,
+    /*
+     * Receive is not ready.
+     */
+     HDLC_CONTROL_FRAME_RECEIVE_NOT_READY = 0x1,
+     /*
+      * Frame is rejected.
+      */
+      HDLC_CONTROL_FRAME_REJECT = 2,
+      /*
+       * Frame is selective rejected. Not all meters support this.
+       */
+       HDLC_CONTROL_FRAME_SELECTIVE_REJECT = 3
+} HDLC_CONTROL_FRAME;
+
+// Security policy Enforces authentication and/or encryption algorithm provided with security_suite.
+//Note! This enumeration values are used in Security Setup version 0.
+typedef enum
+{
+    //No security is used.
+    DLMS_SECURITY_POLICY_NOTHING = 0,
+    /*
+     All messages to be authenticated using Security Suite 0.
+    */
+    DLMS_SECURITY_POLICY_AUTHENTICATED = 1,
+    /*
+     All messages to be encrypted using Security Suite 0.
+    */
+    DLMS_SECURITY_POLICY_ENCRYPTED = 2,
+    /*
+     All messages to be authenticated and encrypted using Security Suite 0.
+    */
+    DLMS_SECURITY_POLICY_AUTHENTICATED_ENCRYPTED = 3,
+    /*
+    * Request is authenticated in Security Suite 1.
+    */
+    DLMS_SECURITY_POLICY_AUTHENTICATED_REQUEST = 0x4,
+    /*
+    * Request is encrypted in Security Suite 1.
+    */
+    DLMS_SECURITY_POLICY_ENCRYPTED_REQUEST = 0x8,
+    /*
+    * Request is digitally signed in Security Suite 1.
+    */
+    DLMS_SECURITY_POLICY_DIGITALLY_SIGNED_REQUEST = 0x10,
+    /*
+    * Response is authenticated in Security Suite 1.
+    */
+    DLMS_SECURITY_POLICY_AUTHENTICATED_RESPONSE = 0x20,
+    /*
+    * Response is encrypted in Security Suite 1.
+    */
+    DLMS_SECURITY_POLICY_ENCRYPTED_RESPONSE = 0x40,
+    /*
+    * Response is digitally signed in Security Suite 1.
+    */
+    DLMS_SECURITY_POLICY_DIGITALLY_SIGNED_RESPONSE = 0x80
+} DLMS_SECURITY_POLICY;
+
+//Security suite Specifies authentication, encryption and key wrapping algorithm.
+typedef enum
+{
+    /*
+     GMAC ciphering is used with security setup version 0.
+    */
+    DLMS_SECURITY_SUITE_V0 = 0,
+    /*
+     AES-GCM-128 authenticated encryption, ECDSA P-256 digital signature, ECDH P-256 key agreement, SHA-256 hash, V.44 compression and AES-128 key wrap.
+    */
+    DLMS_SECURITY_SUITE_V1 = 1,
+    /*
+     AES-GCM-128 authenticated encryption, ECDSA P-384 digital signature, ECDH P-384 key agreement, SHA-384 hash, V.44 compression and AES-128 key wrap.
+    */
+    DLMS_SECURITY_SUITE_V2 = 2
+} DLMS_SECURITY_SUITE;
+
+typedef enum
+{
+    DLMS_SERVICE_TYPE_TCP = 0,
+    DLMS_SERVICE_TYPE_UDP = 1,
+    DLMS_SERVICE_TYPE_FTP = 2,
+    DLMS_SERVICE_TYPE_SMTP = 3,
+    DLMS_SERVICE_TYPE_SMS = 4
+} DLMS_SERVICE_TYPE;
+
+typedef enum
+{
+    DLMS_MESSAGE_TYPE_COSEM_APDU = 0,
+    DLMS_MESSAGE_TYPE_COSEM_APDU_XML = 1,
+    DLMS_MESSAGE_TYPE_MANUFACTURER_SPESIFIC = 128
+} DLMS_MESSAGE_TYPE;
+
+typedef enum
+{
+    DLMS_CLOCK_STATUS_OK = 0x0,
+    DLMS_CLOCK_STATUS_INVALID_VALUE = 0x1,
+    DLMS_CLOCK_STATUS_DOUBTFUL_VALUE = 0x2,
+    DLMS_CLOCK_STATUS_DIFFERENT_CLOCK_BASE = 0x4,
+    DLMS_CLOCK_STATUS_RESERVED1 = 0x8,
+    DLMS_CLOCK_STATUS_RESERVED2 = 0x10,
+    DLMS_CLOCK_STATUS_RESERVED3 = 0x20,
+    DLMS_CLOCK_STATUS_RESERVED4 = 0x40,
+    DLMS_CLOCK_STATUS_DAYLIGHT_SAVE_ACTIVE = 0x80,
+    //Skip clock status on write.
+    DLMS_CLOCK_STATUS_SKIP = 0xFF
+} DLMS_CLOCK_STATUS;
+
+/*
+ * Authentication enumerates the authentication levels.
+ */
+typedef enum
+{
+    /*
+     * No authentication is used.
+     */
+    DLMS_AUTHENTICATION_NONE,
+
+    /*
+     * Low authentication is used.
+     */
+     DLMS_AUTHENTICATION_LOW,
+
+     /*
+      * High authentication is used. Because DLMS/COSEM specification does not
+      * specify details of the HLS mechanism we have implemented Indian standard.
+      * Texas Instruments also uses this.
+      */
+      DLMS_AUTHENTICATION_HIGH,
+
+      /*
+       * High authentication is used. Password is hashed with MD5.
+       */
+       DLMS_AUTHENTICATION_HIGH_MD5,
+
+       /*
+        * High authentication is used. Password is hashed with SHA1.
+        */
+        DLMS_AUTHENTICATION_HIGH_SHA1,
+
+        /*
+         * High authentication is used. Password is hashed with GMAC.
+         */
+         DLMS_AUTHENTICATION_HIGH_GMAC,
+
+         /*
+         * High authentication is used. Password is hashed with SHA-256.
+         */
+         DLMS_AUTHENTICATION_HIGH_SHA256,
+
+         /*
+         * High authentication is used. Password is hashed with ECDSA.
+         */
+         DLMS_AUTHENTICATION_HIGH_ECDSA
+} DLMS_AUTHENTICATION;
+
+/*
+ * Used priority.
+ */
+typedef enum
+{
+    // Normal priority.
+    DLMS_PRIORITY_NORMAL = 0,
+
+    // High priority.
+    DLMS_PRIORITY_HIGH = 1
+} DLMS_PRIORITY;
+
+typedef enum
+{
+    DLMS_SERVICE_CLASS_UN_CONFIRMED = 0,
+    DLMS_SERVICE_CLASS_CONFIRMED = 1
+} DLMS_SERVICE_CLASS;
+
+//Interface type that is used.
+typedef enum
+{
+    /**
+    * By default, the interface type is HDLC.
+    */
+    DLMS_INTERFACE_TYPE_HDLC = 0,
+    /**
+    * The interface type is TCP/IP or UDP wrapper, can be used with devices
+    * that support IEC 62056-47.
+    */
+    DLMS_INTERFACE_TYPE_WRAPPER,
+    /**
+    * Plain PDU is returned.
+    */
+    DLMS_INTERFACE_TYPE_PDU,
+    /**
+    * Wireless M-Bus frame.
+    */
+    DLMS_INTERFACE_TYPE_WIRELESS_MBUS,
+    /**
+    * IEC 62056-21 E-Mode is used to initialize communication before moving to
+    * HDLC protocol.
+    */
+    DLMS_INTERFACE_TYPE_HDLC_WITH_MODE_E,
+    /**
+    * PLC Logical link control (LLC) profile is used with IEC 61334-4-32
+    * connectionless LLC sublayer.
+    * <p/>
+    * Blue Book: 10.4.4.3.3 The connectionless LLC sublayer.
+    */
+    DLMS_INTERFACE_TYPE_PLC,
+    /**
+    * PLC Logical link control (LLC) profile is used with HDLC.
+    * <p/>
+    * Blue Book: 10.4.4.3.4 The HDLC based LLC sublayer.
+    */
+    DLMS_INTERFACE_TYPE_PLC_HDLC,
+    /**
+    * LowPower Wide Area Networks (LPWAN) profile is used.
+    */
+    DLMS_INTERFACE_TYPE_LPWAN,
+    /**
+    * Wi-SUN FAN mesh network is used.
+    */
+    DLMS_INTERFACE_TYPE_WI_SUN,
+    /**
+    * OFDM PLC PRIME is defined in IEC 62056-8-4.
+    */
+    DLMS_INTERFACE_TYPE_PLC_PRIME
+} DLMS_INTERFACE_TYPE;
+
+typedef enum
+{
+    //All data is received.
+    DLMS_DATA_REQUEST_TYPES_NONE = 0x0,
+    //Frame is available.
+    DLMS_DATA_REQUEST_TYPES_FRAME = 0x1,
+    //Block is available.
+    DLMS_DATA_REQUEST_TYPES_BLOCK = 0x2,
+    //General Block transfer data is available.
+    DLMS_DATA_REQUEST_TYPES_GBT = 0x4
+} DLMS_DATA_REQUEST_TYPES;
+
+typedef enum
+{
+    DLMS_OBJECT_TYPE_ALL = -1,
+    DLMS_OBJECT_TYPE_NONE = 0,
+    DLMS_OBJECT_TYPE_DATA = 1,
+    DLMS_OBJECT_TYPE_REGISTER = 3,
+    DLMS_OBJECT_TYPE_EXTENDED_REGISTER = 4,
+    DLMS_OBJECT_TYPE_DEMAND_REGISTER = 5,
+    DLMS_OBJECT_TYPE_REGISTER_ACTIVATION = 6,
+    DLMS_OBJECT_TYPE_PROFILE_GENERIC = 7,
+    DLMS_OBJECT_TYPE_CLOCK = 8,
+    DLMS_OBJECT_TYPE_SCRIPT_TABLE = 9,
+    DLMS_OBJECT_TYPE_SCHEDULE = 10,
+    DLMS_OBJECT_TYPE_SPECIAL_DAYS_TABLE = 11,
+    DLMS_OBJECT_TYPE_ASSOCIATION_SHORT_NAME = 12,
+    DLMS_OBJECT_TYPE_ASSOCIATION_LOGICAL_NAME = 15,
+    DLMS_OBJECT_TYPE_SAP_ASSIGNMENT = 17,
+    DLMS_OBJECT_TYPE_IMAGE_TRANSFER = 18,
+    DLMS_OBJECT_TYPE_IEC_LOCAL_PORT_SETUP = 19,
+    DLMS_OBJECT_TYPE_ACTIVITY_CALENDAR = 20,
+    DLMS_OBJECT_TYPE_REGISTER_MONITOR = 21,
+    DLMS_OBJECT_TYPE_ACTION_SCHEDULE = 22,
+    DLMS_OBJECT_TYPE_IEC_HDLC_SETUP = 23,
+    DLMS_OBJECT_TYPE_IEC_TWISTED_PAIR_SETUP = 24,
+    DLMS_OBJECT_TYPE_MBUS_SLAVE_PORT_SETUP = 25,
+    DLMS_OBJECT_TYPE_UTILITY_TABLES = 26,
+    DLMS_OBJECT_TYPE_MODEM_CONFIGURATION = 27,
+    DLMS_OBJECT_TYPE_AUTO_ANSWER = 28,
+    DLMS_OBJECT_TYPE_AUTO_CONNECT = 29,
+    DLMS_OBJECT_TYPE_TCP_UDP_SETUP = 41,
+    DLMS_OBJECT_TYPE_IP4_SETUP = 42,
+    DLMS_OBJECT_TYPE_MAC_ADDRESS_SETUP = 43,
+    DLMS_OBJECT_TYPE_PPP_SETUP = 44,
+    DLMS_OBJECT_TYPE_GPRS_SETUP = 45,
+    DLMS_OBJECT_TYPE_SMTP_SETUP = 46,
+    DLMS_OBJECT_TYPE_GSM_DIAGNOSTIC = 47,
+    DLMS_OBJECT_TYPE_IP6_SETUP = 48,
+    DLMS_OBJECT_TYPE_REGISTER_TABLE = 61,
+    DLMS_OBJECT_TYPE_STATUS_MAPPING = 63,
+    DLMS_OBJECT_TYPE_SECURITY_SETUP = 64,
+    DLMS_OBJECT_TYPE_DISCONNECT_CONTROL = 70,
+    DLMS_OBJECT_TYPE_LIMITER = 71,
+    DLMS_OBJECT_TYPE_MBUS_CLIENT = 72,
+    DLMS_OBJECT_TYPE_PUSH_SETUP = 40,
+
+    /**
+    * S-FSK Phy MAC Setup
+    */
+    DLMS_OBJECT_TYPE_SFSK_PHY_MAC_SETUP = 50,
+
+    /*
+    * S-FSK Active initiator.
+    */
+    DLMS_OBJECT_TYPE_SFSK_ACTIVE_INITIATOR = 51,
+    /*
+    * S-FSK MAC synchronization timeouts
+    */
+    DLMS_OBJECT_TYPE_SFSK_MAC_SYNCHRONIZATION_TIMEOUTS = 52,
+
+    /*
+    * S-FSK MAC Counters.
+    */
+    DLMS_OBJECT_TYPE_SFSK_MAC_COUNTERS = 53,
+
+    /*
+    * IEC 61334-4-32 LLC setup.
+    */
+    DLMS_OBJECT_TYPE_IEC_61334_4_32_LLC_SETUP = 55,
+
+    /*
+    * S-FSK Reporting system list.
+    */
+    DLMS_OBJECT_TYPE_SFSK_REPORTING_SYSTEM_LIST = 56,
+
+    /*
+    * ISO/IEC 8802-2 LLC Type 1 setup.
+    */
+    DLMS_OBJECT_TYPE_IEC_8802_LLC_TYPE1_SETUP = 57,
+
+    /*
+    * ISO/IEC 8802-2 LLC Type 2 setup.
+    */
+    DLMS_OBJECT_TYPE_IEC_8802_LLC_TYPE2_SETUP = 58,
+    /*
+    * ISO/IEC 8802-2 LLC Type 3 setup.
+    */
+    DLMS_OBJECT_TYPE_IEC_8802_LLC_TYPE3_SETUP = 59,
+
+    DLMS_OBJECT_TYPE_WIRELESS_MODE_Q_CHANNEL = 73,
+    DLMS_OBJECT_TYPE_MBUS_MASTER_PORT_SETUP = 74,
+    DLMS_OBJECT_TYPE_MESSAGE_HANDLER = 60,
+    DLMS_OBJECT_TYPE_PARAMETER_MONITOR = 65,
+    /*
+    * Arbitrator
+    */
+    DLMS_OBJECT_TYPE_ARBITRATOR = 68,
+
+    /*
+    * Addresses that are provided by the base node during the opening of the
+    * convergence layer.
+    */
+    DLMS_OBJECT_TYPE_LLC_SSCS_SETUP = 80,
+
+    /*
+    * Counters related to the physical layers exchanges.
+    */
+    DLMS_OBJECT_TYPE_PRIME_NB_OFDM_PLC_PHYSICAL_LAYER_COUNTERS = 81,
+
+    /*
+    * A necessary parameters to set up and manage the PRIME NB OFDM PLC MAC
+    * layer.
+    */
+    DLMS_OBJECT_TYPE_PRIME_NB_OFDM_PLC_MAC_SETUP = 82,
+
+    /*
+    * Functional behaviour of MAC.
+    */
+    DLMS_OBJECT_TYPE_PRIME_NB_OFDM_PLC_MAC_FUNCTIONAL_PARAMETERS = 83,
+
+    /*
+    * Statistical information on the operation of the MAC layer for management
+    * purposes.
+    */
+    DLMS_OBJECT_TYPE_PRIME_NB_OFDM_PLC_MAC_COUNTERS = 84,
+
+    /*
+    * Parameters related to the management of the devices connected to the
+    * network.
+    */
+    DLMS_OBJECT_TYPE_PRIME_NB_OFDM_PLC_MAC_NETWORK_ADMINISTRATION_DATA = 85,
+
+    /*
+    * Identification information related to administration and maintenance of
+    * PRIME NB OFDM PLC devices.
+    */
+    DLMS_OBJECT_TYPE_PRIME_NB_OFDM_PLC_APPLICATIONS_IDENTIFICATION = 86,
+
+    /*
+    * G3-PLC MAC layer counters
+    */
+    DLMS_OBJECT_TYPE_G3_PLC_MAC_LAYER_COUNTERS = 90,
+
+    /*
+    * G3-PLC MAC setup.
+    */
+    DLMS_OBJECT_TYPE_G3_PLC_MAC_SETUP = 91,
+
+    /*
+    * G3-PLC 6LoWPAN.
+    */
+    DLMS_OBJECT_TYPE_G3_PLC6_LO_WPAN = 92,
+
+    /*NTP Setup is used for time synchronisation.*/
+    DLMS_OBJECT_TYPE_NTP_SETUP = 100,
+
+    /*
+    * Configure a ZigBee PRO device with information necessary to create or
+    * join the network.
+    */
+    DLMS_OBJECT_TYPE_ZIG_BEE_SAS_STARTUP = 101,
+
+    /*
+    * Configure the behavior of a ZigBee PRO device on joining or loss of
+    * connection to the network.
+    */
+    DLMS_OBJECT_TYPE_ZIG_BEE_SAS_JOIN = 102,
+
+    /*
+    * Configure the fragmentation feature of ZigBee PRO transport layer.
+    */
+    DLMS_OBJECT_TYPE_ZIG_BEE_SAS_APS_FRAGMENTATION = 103,
+
+
+    DLMS_OBJECT_TYPE_ZIG_BEE_NETWORK_CONTROL = 104,
+
+    DLMS_OBJECT_TYPE_ACCOUNT = 111,
+    DLMS_OBJECT_TYPE_CREDIT = 112,
+    DLMS_OBJECT_TYPE_CHARGE = 113,
+    DLMS_OBJECT_TYPE_TOKEN_GATEWAY = 115,
+    DLMS_OBJECT_TYPE_COMPACT_DATA = 62,
+    /*
+    * Communication port protection.
+    */
+    DLMS_OBJECT_TYPE_COMMUNICATION_PORT_PROTECTION = 124
+} DLMS_OBJECT_TYPE;
+
+/*
+ * DLMS commands.
+ */
+typedef enum
+{
+    /*
+    * No command to execute.
+    */
+    DLMS_COMMAND_NONE = 0,
+
+    /*
+    * Initiate request.
+    */
+    DLMS_COMMAND_INITIATE_REQUEST = 0x1,
+
+    /*
+    * Initiate response.
+    */
+    DLMS_COMMAND_INITIATE_RESPONSE = 0x8,
+    /*
+    * Read request.
+    */
+    DLMS_COMMAND_READ_REQUEST = 0x5,
+
+    /*
+    * Read response.
+    */
+    DLMS_COMMAND_READ_RESPONSE = 0xC,
+
+    /*
+    * Write request.
+    */
+    DLMS_COMMAND_WRITE_REQUEST = 0x6,
+
+    /*
+    * Write response.
+    */
+    DLMS_COMMAND_WRITE_RESPONSE = 0xD,
+
+    /*
+    * Get request.
+    */
+    DLMS_COMMAND_GET_REQUEST = 0xC0,
+
+    /*
+    * Get response.
+    */
+    DLMS_COMMAND_GET_RESPONSE = 0xC4,
+
+    /*
+    * Set request.
+    */
+    DLMS_COMMAND_SET_REQUEST = 0xC1,
+
+    /*
+    * Set response.
+    */
+    DLMS_COMMAND_SET_RESPONSE = 0xC5,
+
+    /*
+    * Action request.
+    */
+    DLMS_COMMAND_METHOD_REQUEST = 0xC3,
+
+    /*
+    * Action response.
+    */
+    DLMS_COMMAND_METHOD_RESPONSE = 0xC7,
+
+    /*
+    HDLC Disconnect Mode.
+    Responder for Disconnect Mode request.
+    */
+    DLMS_COMMAND_DISCONNECT_MODE = 0x1f,
+
+    /*
+    * HDLC Unacceptable Frame.
+    */
+    DLMS_COMMAND_UNACCEPTABLE_FRAME = 0x97,
+
+    /*
+    * SNRM request.
+    */
+    DLMS_COMMAND_SNRM = 0x93,
+
+    /*
+    * UA request.
+    */
+    DLMS_COMMAND_UA = 0x73,
+
+    /*
+    * AARQ request.
+    */
+    DLMS_COMMAND_AARQ = 0x60,
+
+    /*
+    * AARE request.
+    */
+    DLMS_COMMAND_AARE = 0x61,
+
+    /*
+    * Disconnect request for HDLC framing.
+    */
+    DLMS_COMMAND_DISCONNECT_REQUEST = 0x53,
+
+    /*
+    * Release request.
+    */
+    DLMS_COMMAND_RELEASE_REQUEST = 0x62,
+
+    /*
+    * Release response.
+    */
+    DLMS_COMMAND_RELEASE_RESPONSE = 0x63,
+
+    /*
+    * Confirmed Service Error.
+    */
+    DLMS_COMMAND_CONFIRMED_SERVICE_ERROR = 0x0E,
+
+    /*
+    * Exception Response.
+    */
+    DLMS_COMMAND_EXCEPTION_RESPONSE = 0xD8,
+
+    /*
+    * General Block Transfer.
+    */
+    DLMS_COMMAND_GENERAL_BLOCK_TRANSFER = 0xE0,
+
+    /*
+    * Access Request.
+    */
+    DLMS_COMMAND_ACCESS_REQUEST = 0xD9,
+    /*
+    * Access Response.
+    */
+    DLMS_COMMAND_ACCESS_RESPONSE = 0xDA,
+
+    /*
+    * Data Notification request.
+    */
+    DLMS_COMMAND_DATA_NOTIFICATION = 0x0F,
+
+    /*
+    * Glo get request.
+    */
+    DLMS_COMMAND_GLO_GET_REQUEST = 0xC8,
+
+    /*
+    * Glo get response.
+    */
+    DLMS_COMMAND_GLO_GET_RESPONSE = 0xCC,
+
+    /*
+    * Glo set request.
+    */
+    DLMS_COMMAND_GLO_SET_REQUEST = 0xC9,
+
+    /*
+    * Glo set response.
+    */
+    DLMS_COMMAND_GLO_SET_RESPONSE = 0xCD,
+
+    /*
+    * Glo general ciphering.
+    */
+    DLMS_COMMAND_GLO_GENERAL_CIPHERING = 0xDB,
+
+    /*
+    * Glo event notification request.
+    */
+    DLMS_COMMAND_GLO_EVENT_NOTIFICATION_REQUEST = 0xCA,
+
+    /*
+    * Glo method request.
+    */
+    DLMS_COMMAND_GLO_METHOD_REQUEST = 0xCB,
+
+    /*
+    * Glo method response.
+    */
+    DLMS_COMMAND_GLO_METHOD_RESPONSE = 0xCF,
+
+    /*
+    * Glo Initiate request.
+    */
+    DLMS_COMMAND_GLO_INITIATE_REQUEST = 0x21,
+    /*
+    * Glo read request.
+    */
+    DLMS_COMMAND_GLO_READ_REQUEST = 37,
+
+    /*
+    * Glo write request.
+    */
+    DLMS_COMMAND_GLO_WRITE_REQUEST = 38,
+    /*
+    * Glo Initiate response.
+    */
+    DLMS_COMMAND_GLO_INITIATE_RESPONSE = 40,
+    /*
+    * Glo read response.
+    */
+    DLMS_COMMAND_GLO_READ_RESPONSE = 44,
+    /*
+    * Glo write response.
+    */
+    DLMS_COMMAND_GLO_WRITE_RESPONSE = 45,
+
+    /*
+    * GLO confirmed service error.
+    */
+    DLMS_COMMAND_GLO_CONFIRMED_SERVICE_ERROR = 46,
+
+    /*
+    * General GLO ciphering.
+    */
+    DLMS_COMMAND_GENERAL_GLO_CIPHERING = 0xDB,
+    /*
+    * General DED ciphering.
+    */
+    DLMS_COMMAND_GENERAL_DED_CIPHERING = 0xDC,
+    /*
+    * General ciphering.
+    */
+    DLMS_COMMAND_GENERAL_CIPHERING = 0xDD,
+    /*
+    * Information Report request.
+    */
+    DLMS_COMMAND_INFORMATION_REPORT = 0x18,
+    /*
+    * Event Notification request.
+    */
+    DLMS_COMMAND_EVENT_NOTIFICATION = 0xC2,
+
+    /*
+    * Ded get request.
+    */
+    DLMS_COMMAND_DED_GET_REQUEST = 0xD0,
+
+    /*
+    * Ded get response.
+    */
+    DLMS_COMMAND_DED_GET_RESPONSE = 0xD4,
+
+    /*
+    * Ded set request.
+    */
+    DLMS_COMMAND_DED_SET_REQUEST = 0xD1,
+
+    /*
+    * Ded set response.
+    */
+    DLMS_COMMAND_DED_SET_RESPONSE = 0xD5,
+
+    /*
+    * Ded event notification request.
+    */
+    DLMS_COMMAND_DED_EVENT_NOTIFICATION = 0xD2,
+
+    /*
+    * Ded method request.
+    */
+    DLMS_COMMAND_DED_METHOD_REQUEST = 0xD3,
+
+    /*
+    * Ded method response.
+    */
+    DLMS_COMMAND_DED_METHOD_RESPONSE = 0xD7,
+
+    /*
+    * Ded read request.
+    */
+    DLMS_COMMAND_DED_READ_REQUEST = 69,
+
+    /*
+    * Ded write request.
+    */
+    DLMS_COMMAND_DED_WRITE_REQUEST = 70,
+
+    /*
+    * Ded read response.
+    */
+    DLMS_COMMAND_DED_READ_RESPONSE = 76,
+
+    /*
+    * Ded write response.
+    */
+    DLMS_COMMAND_DED_WRITE_RESPONSE = 77,
+
+    /*
+    * Ded confirmed service error.
+    */
+    DLMS_COMMAND_DED_CONFIRMED_SERVICE_ERROR = 78,
+
+    /*
+    * Request message from client to gateway.
+    */
+    DLMS_COMMAND_GATEWAY_REQUEST = 0xE6,
+
+    /*
+    * Response message from gateway to client.
+    */
+    DLMS_COMMAND_GATEWAY_RESPONSE = 0xE7,
+    /*Ded initiate request.*/
+    DLMS_COMMAND_DED_INITIATE_REQUEST = 65,
+    /*Ded initiate response.*/
+    DLMS_COMMAND_DED_INITIATE_RESPONSE = 72,
+    // PLC discover request.
+    DLMS_COMMAND_DISCOVER_REQUEST = 0x1D,
+    // PLC discover report.
+    DLMS_COMMAND_DISCOVER_REPORT = 0x1E,
+    // PLC register request.
+    DLMS_COMMAND_REGISTER_REQUEST = 0x1C,
+    // PLC ping request.
+    DLMS_COMMAND_PING_REQUEST = 0x19,
+    // PLC ping response.
+    DLMS_COMMAND_PING_RESPONSE = 0x1A,
+    // PLC repeat call request.
+    DLMS_COMMAND_REPEAT_CALL_REQUEST = 0x1F
+} DLMS_COMMAND;
+
+typedef enum
+{
+    HDLC_INFO_MAX_INFO_TX = 0x5,
+    HDLC_INFO_MAX_INFO_RX = 0x6,
+    HDLC_INFO_WINDOW_SIZE_TX = 0x7,
+    HDLC_INFO_WINDOW_SIZE_RX = 0x8
+} HDLC_INFO;
+
+typedef enum
+{
+    DLMS_DATA_TYPE_NONE = 0,
+    DLMS_DATA_TYPE_BOOLEAN = 3,
+    DLMS_DATA_TYPE_BIT_STRING = 4,
+    DLMS_DATA_TYPE_INT32 = 5,
+    DLMS_DATA_TYPE_UINT32 = 6,
+    DLMS_DATA_TYPE_OCTET_STRING = 9,
+    DLMS_DATA_TYPE_STRING = 10,
+    DLMS_DATA_TYPE_BINARY_CODED_DESIMAL = 13,
+    DLMS_DATA_TYPE_STRING_UTF8 = 12,
+    DLMS_DATA_TYPE_INT8 = 15,
+    DLMS_DATA_TYPE_INT16 = 16,
+    DLMS_DATA_TYPE_UINT8 = 17,
+    DLMS_DATA_TYPE_UINT16 = 18,
+    DLMS_DATA_TYPE_INT64 = 20,
+    DLMS_DATA_TYPE_UINT64 = 21,
+    DLMS_DATA_TYPE_ENUM = 22,
+    DLMS_DATA_TYPE_FLOAT32 = 23,
+    DLMS_DATA_TYPE_FLOAT64 = 24,
+    DLMS_DATA_TYPE_DATETIME = 25,
+    DLMS_DATA_TYPE_DATE = 26,
+    DLMS_DATA_TYPE_TIME = 27,
+    DLMS_DATA_TYPE_ARRAY = 1,
+    DLMS_DATA_TYPE_STRUCTURE = 2,
+    DLMS_DATA_TYPE_COMPACT_ARRAY = 19
+} DLMS_DATA_TYPE;
+
+typedef enum
+{
+
+    /// No access.
+
+    DLMS_ACCESS_MODE_NONE = 0,
+
+    /// The client is allowed only reading from the server.
+
+    DLMS_ACCESS_MODE_READ = 1,
+
+    /// The client is allowed only writing to the server.
+
+    DLMS_ACCESS_MODE_WRITE = 2,
+
+    /// The client is allowed both reading from the server and writing to it.
+
+    DLMS_ACCESS_MODE_READ_WRITE = 3,
+    DLMS_ACCESS_MODE_AUTHENTICATED_READ = 4,
+    DLMS_ACCESS_MODE_AUTHENTICATED_WRITE = 5,
+    DLMS_ACCESS_MODE_AUTHENTICATED_READ_WRITE = 6
+} DLMS_ACCESS_MODE;
+
+typedef enum
+{
+
+    /// No access.
+
+    DLMS_METHOD_ACCESS_MODE_NONE = 0,
+
+    /// Access.
+
+    DLMS_METHOD_ACCESS_MODE_ACCESS = 1,
+
+    /// Authenticated Access.
+
+    DLMS_METHOD_ACCESS_MODE_AUTHENTICATED_ACCESS = 2
+} DLMS_METHOD_ACCESS_MODE;
+
+/*
+ * Enumerates Action request types.
+ */
+typedef enum
+{
+    /*
+     * Normal action.
+     */
+    DLMS_ACTION_COMMAND_TYPE_NORMAL = 1,
+    /*
+     * Next block.
+     */
+     DLMS_ACTION_COMMAND_TYPE_NEXT_BLOCK = 2,
+     /*
+      * Action with list.
+      */
+      DLMS_ACTION_COMMAND_TYPE_WITH_LIST = 3,
+      /*
+       * Action with first block.
+       */
+       DLMS_ACTION_COMMAND_TYPE_WITH_FIRST_BLOCK = 4,
+       /*
+        * Action with list and first block.
+        */
+        DLMS_ACTION_COMMAND_TYPE_WITH_LIST_AND_FIRST_BLOCK = 5,
+        /*
+         * Action with block.
+         */
+         DLMS_ACTION_COMMAND_TYPE_WITH_BLOCK = 6
+} DLMS_ACTION_COMMAND_TYPE;
+
+/*
+* Confirmed service error tells when error has occurred.
+*/
+typedef enum
+{
+    /*
+     * Error has occurred on initialize.
+     */
+    DLMS_CONFIRMED_SERVICE_ERROR_INITIATE_ERROR = 1,
+    /*
+     * Error has occurred on read.
+     */
+     DLMS_CONFIRMED_SERVICE_ERROR_READ = 5,
+     /*
+      * Error has occurred on write.
+      */
+      DLMS_CONFIRMED_SERVICE_ERROR_WRITE = 6
+} DLMS_CONFIRMED_SERVICE_ERROR;
+
+/*
+ * Access describes access errors.
+ */
+typedef enum
+{
+    /*
+     * Other error.
+     */
+    DLMS_ACCESS_OTHER = 0,
+    /*
+     * Scope of access violated.
+     */
+     DLMS_ACCESS_SCOPE_OF_ACCESS_VIOLATED = 1,
+     /*
+      * Object access is invalid.
+      */
+      DLMS_ACCESS_OBJECT_ACCESS_INVALID = 2,
+      /*
+       * Hardware fault.
+       */
+       DLMS_ACCESS_HARDWARE_FAULT = 3,
+       /*
+        * Object is unavailable.
+        */
+        DLMS_ACCESS_OBJECT_UNAVAILABLE = 4
+} DLMS_ACCESS;
+
+/*
+ * Application reference describes application errors.
+ */
+typedef enum
+{
+    /*
+     * Other error is occurred.
+     */
+    DLMS_APPLICATION_REFERENCE_OTHER = 0,
+    /*
+     * Time elapsed.
+     */
+     DLMS_APPLICATION_REFERENCE_TIME_ELAPSED = 1,
+     /*
+      * Application unreachable.
+      */
+      DLMS_APPLICATION_REFERENCE_APPLICATION_UNREACHABLE = 2,
+      /*
+       * Application reference is invalid.
+       */
+       DLMS_APPLICATION_REFERENCE_APPLICATION_REFERENCE_INVALID = 3,
+       /*
+        * Application context unsupported.
+        */
+        DLMS_APPLICATION_REFERENCE_APPLICATION_CONTEXT_UNSUPPORTED = 4,
+        /*
+         * Provider communication error.
+         */
+         DLMS_APPLICATION_REFERENCE_PROVIDER_COMMUNICATION_ERROR = 5,
+         /*
+          * Deciphering error.
+          */
+          DLMS_APPLICATION_REFERENCE_DECIPHERING_ERROR = 6
+} DLMS_APPLICATION_REFERENCE;
+
+
+/*
+ * Definition describes definition errors.
+ */
+typedef enum
+{
+    /*
+     * Other error.
+     */
+    DLMS_DEFINITION_OTHER = 0,
+    /*
+     * Object is Undefined.
+     */
+     DLMS_DEFINITION_OBJECT_UNDEFINED = 1,
+     /*
+      * Object class inconsistent.
+      */
+      DLMS_DEFINITION_OBJECT_CLASS_INCONSISTENT = 2,
+      /*
+       * Object attribute inconsistent.
+       */
+       DLMS_DEFINITION_OBJECT_ATTRIBUTE_INCONSISTENT = 3
+} DLMS_DEFINITION;
+
+/*
+ * DLMS service errors.
+ *
+ * @author Gurux Ltd.
+ */
+typedef enum
+{
+    //Invalid error.
+    DLMS_EXCEPTION_SERVICE_ERROR_INVALID = 0,
+    /*
+     * Operation is not possible
+    */
+    DLMS_EXCEPTION_SERVICE_ERROR_OPERATION_NOT_POSSIBLE = 1,
+    /*
+     * Service is not supported.
+    */
+    DLMS_EXCEPTION_SERVICE_ERROR_SERVICE_NOT_SUPPORTED = 2,
+    /*
+     * Other reason.
+    */
+    DLMS_EXCEPTION_SERVICE_ERROR_OTHER_REASON = 3,
+    /*
+     * PDU is too long.
+    */
+    DLMS_EXCEPTION_SERVICE_ERROR_PDU_TOO_LONG = 4,
+    /*
+     * Ciphering failed.
+    */
+    DLMS_EXCEPTION_SERVICE_ERROR_DECIPHERING_ERROR = 5,
+    /*
+     * Invocation counter is invalid.
+    */
+    DLMS_EXCEPTION_SERVICE_ERROR_INVOCATION_COUNTER_ERROR = 6
+} DLMS_EXCEPTION_SERVICE_ERROR;
+
+/*
+ * Hardware resource describes hardware errors.
+ */
+typedef enum
+{
+    /*
+     * Other hardware resource error.
+     */
+    DLMS_HARDWARE_RESOURCE_OTHER = 0,
+    /*
+     * Memory is unavailable.
+     */
+     DLMS_HARDWARE_RESOURCE_MEMORY_UNAVAILABLE = 1,
+     /*
+      * Processor resource is unavailable.
+      */
+      DLMS_HARDWARE_RESOURCE_PROCESSOR_RESOURCE_UNAVAILABLE = 2,
+      /*
+       * Mass storage is unavailable.
+       */
+       DLMS_HARDWARE_RESOURCE_MASS_STORAGE_UNAVAILABLE = 3,
+       /*
+        * Other resource is unavailable.
+        */
+        DLMS_HARDWARE_RESOURCE_OTHER_RESOURCE_UNAVAILABLE = 4
+} DLMS_HARDWARE_RESOURCE;
+
+
+/*
+ * Initiate describes onitiate errors.
+ */
+typedef enum
+{
+    /*
+     * Other error.
+     */
+    DLMS_INITIATE_OTHER = 0,
+    /*
+     * Dlms version is too low.
+     */
+     DLMS_INITIATE_DLMS_VERSION_TOO_LOW = 1,
+     /*
+      * Incompatible conformance.
+      */
+      DLMS_INITIATE_INCOMPATIBLE_CONFORMANCE = 2,
+      /*
+       * Pdu size is too short.
+       */
+       DLMS_INITIATE_PDU_SIZE_TOOSHORT = 3,
+       /*
+        * Refused by the VDE handler.
+        */
+        DLMS_INITIATE_REFUSED_BY_THE_VDE_HANDLER = 4
+} DLMS_INITIATE;
+
+/*
+ * LoadDataSet describes load dataset errors.
+ */
+typedef enum
+{
+    /*
+     * Other error.
+     */
+    DLMS_LOAD_DATASET_OTHER = 0,
+    /*
+     * Primitive out of sequence.
+     */
+     DLMS_LOAD_DATASET_PRIMITIVE_OUT_OF_SEQUENCE = 1,
+     /*
+      * Not loadable.
+      */
+      DLMS_LOAD_DATASET_NOT_LOADABLE = 2,
+      /*
+       * Dataset size is too large.
+       */
+       DLMS_LOAD_DATASET_SIZE_TOO_LARGE = 3,
+       /*
+        * Not awaited segment.
+        */
+        DLMS_LOAD_DATASET_NOT_AWAITED_SEGMENT = 4,
+        /*
+         * Interpretation failure.
+         */
+         DLMS_LOAD_DATASET_INTERPRETATION_FAILURE = 5,
+         /*
+          * Storage failure.
+          */
+          DLMS_LOAD_DATASET_STORAGE_FAILURE = 6,
+          /*
+           * Dataset not ready.
+           */
+           DLMS_LOAD_DATASET_NOT_READY = 7
+} DLMS_LOAD_DATASET;
+
+/*
+ * Task describes load task errors.
+ */
+typedef enum
+{
+    /*
+     * Other error.
+     */
+    DLMS_TASK_OTHER = 0,
+    /*
+     * No remote control.
+     */
+     DLMS_TASK_NO_REMOTE_CONTROL = 1,
+     /*
+      * Ti is stopped.
+      */
+      DLMS_TASK_TI_STOPPED = 2,
+      /*
+       * TI is running.
+       */
+       DLMS_TASK_TI_RUNNIN = 3,
+       /*
+        * TI is unusable.
+        */
+        DLMS_TASK_TI_UNUSABLE = 4
+} DLMS_TASK;
+
+
+/*
+ * VdeState error describes Vde state errors.
+ */
+typedef enum
+{
+    /*
+     * Other error.
+     */
+    DLMS_VDE_STATE_ERROR_OTHER = 0,
+    /*
+     * No DLMS context.
+     */
+     DLMS_VDE_STATE_ERROR_NO_DLMS_CONTEXT = 1,
+     /*
+      * Loading dataset error.
+      */
+      DLMS_VDE_STATE_ERROR_LOADING_DATASET = 2,
+      /*
+       * Status No change.
+       */
+       DLMS_VDE_STATE_ERROR_STATUS_NO_CHANGE = 3,
+       /*
+        * Status Inoperable.
+        */
+        DLMS_VDE_STATE_ERROR_STATUS_INOPERABLE = 4
+} DLMS_VDE_STATE_ERROR;
+
+/*
+ * Enumerates Get request and response types.
+ */
+typedef enum
+{
+    /*
+     * Normal Get.
+     */
+    DLMS_GET_COMMAND_TYPE_NORMAL = 1,
+    /*
+     * Next data block.
+     */
+     DLMS_GET_COMMAND_TYPE_NEXT_DATA_BLOCK = 2,
+     /*
+      * Get request with list.
+      */
+      DLMS_GET_COMMAND_TYPE_WITH_LIST = 3
+} DLMS_GET_COMMAND_TYPE;
+
+/*
+ * Service describes service errors.
+ */
+typedef enum
+{
+    /*
+     * Other error.
+     */
+    DLMS_SERVICE_OTHER = 0,
+    /*
+     * PDU size is wrong.
+     */
+     DLMS_SERVICE_PDU_SIZE = 1,
+     /*
+      * Service is unsupported.
+      */
+      DLMS_SERVICE_UNSUPPORTED = 2
+} DLMS_SERVICE;
+
+/*
+ * ServiceError enumerates service errors.
+ */
+typedef enum
+{
+    /*
+     * Application error.
+     */
+    DLMS_SERVICE_ERROR_APPLICATION_REFERENCE = 0,
+    /*
+     * Hardware error.
+     */
+     DLMS_SERVICE_ERROR_HARDWARE_RESOURCE = 1,
+     /*
+      * Vde state error.
+      */
+      DLMS_SERVICE_ERROR_VDE_STATE_ERROR = 2,
+      /*
+       * Service error.
+       */
+       DLMS_SERVICE_ERROR_SERVICE = 3,
+       /*
+        * Definition error.
+        */
+        DLMS_SERVICE_ERROR_DEFINITION = 4,
+        /*
+         * Access error.
+         */
+         DLMS_SERVICE_ERROR_ACCESS = 5,
+         /*
+          * Initiate error.
+          */
+          DLMS_SERVICE_ERROR_INITIATE = 6,
+          /*
+           * LoadDataSet error.
+           */
+           DLMS_SERVICE_ERROR_LOAD_DATASET = 7,
+           /*
+            * Task error.
+            */
+            DLMS_SERVICE_ERROR_TASK = 8,
+            /*
+             * Other error describes manufacturer specific error code.
+             */
+             DLMS_SERVICE_ERROR_OTHER_ERROR = 9
+} DLMS_SERVICE_ERROR;
+
+/*
+ * Enumerates Set request types.
+ */
+typedef enum
+{
+    /*
+     * Normal Set.
+     */
+    DLMS_SET_COMMAND_TYPE_NORMAL = 1,
+    /*
+     * Set with first data block.
+     */
+     DLMS_SET_COMMAND_TYPE_FIRST_DATABLOCK = 2,
+     /*
+      * Set with data block.
+      */
+      DLMS_SET_COMMAND_TYPE_WITH_DATABLOCK = 3,
+      /*
+       * Set with list .
+       */
+       DLMS_SET_COMMAND_TYPE_WITH_LIST = 4,
+       /*
+        * Set with list and first data block.
+        */
+        DLMS_SET_COMMAND_TYPE_WITH_LIST_AND_WITH_FIRST_DATA_BLOCK = 5
+} DLMS_SET_COMMAND_TYPE;
+
+/*
+ * Enumerates single read response types.
+ */
+typedef enum
+{
+    /*
+     * Normal data.
+     */
+    DLMS_SINGLE_READ_RESPONSE_DATA = 0,
+    /*
+     * Error has occurred on read.
+     */
+     DLMS_SINGLE_READ_RESPONSE_DATA_ACCESS_ERROR = 1,
+     /*
+      * Return data as blocks.
+      */
+      DLMS_SINGLE_READ_RESPONSE_DATA_BLOCK_RESULT = 2,
+      /*
+       * Return block number.
+       */
+       DLMS_SINGLE_READ_RESPONSE_BLOCK_NUMBER = 3
+} DLMS_SINGLE_READ_RESPONSE;
+
+/*
+ * Enumerates single write response types.
+ */
+typedef enum
+{
+    /*
+     * Write succeeded.
+     */
+    DLMS_SINGLE_WRITE_RESPONSE_SUCCESS = 0,
+    /*
+     * Write error has occurred.
+     */
+     DLMS_SINGLE_WRITE_RESPONSE_DATA_ACCESS_ERROR = 1,
+     /*
+      * Get next block.
+      */
+      DLMS_SINGLE_WRITE_RESPONSE_BLOCK_NUMBER = 2
+} DLMS_SINGLE_WRITE_RESPONSE;
+
+/*
+ * Enumerates how data is access on read or write.
+ */
+typedef enum
+{
+    /*
+     * Read data using SN.
+     */
+    DLMS_VARIABLE_ACCESS_SPECIFICATION_VARIABLE_NAME = 2,
+    /*
+     * Get data using parameterized access.
+     */
+     DLMS_VARIABLE_ACCESS_SPECIFICATION_PARAMETERISED_ACCESS = 4,
+     /*
+      * Get next block.
+      */
+      DLMS_VARIABLE_ACCESS_SPECIFICATION_BLOCK_NUMBER_ACCESS = 5,
+      /*
+       * Read data as blocks.
+       */
+       DLMS_VARIABLE_ACCESS_SPECIFICATION_READ_DATA_BLOCK_ACCESS = 6,
+       /*
+        * Write data as blocks.
+        */
+        DLMS_VARIABLE_ACCESS_SPECIFICATION_WRITE_DATA_BLOCK_ACCESS = 7
+} DLMS_VARIABLE_ACCESS_SPECIFICATION;
+
+/*
+* Enumerates all conformance bits.
+* https://www.gurux.fi/Gurux.DLMS.Conformance
+*/
+typedef enum
+{
+    /*
+    * Reserved zero conformance bit.
+    */
+    DLMS_CONFORMANCE_NONE = 0,
+    /*
+    * Reserved zero conformance bit.
+    */
+    DLMS_CONFORMANCE_RESERVED_ZERO = 0x1,
+
+    /*
+    * General protection conformance bit.
+    */
+    DLMS_CONFORMANCE_GENERAL_PROTECTION = 0x2,
+
+    /*
+    * General block transfer conformance bit.
+    */
+    DLMS_CONFORMANCE_GENERAL_BLOCK_TRANSFER = 0x4,
+    /*
+    * Read conformance bit.
+    */
+    DLMS_CONFORMANCE_READ = 0x8,
+    /*
+    * Write conformance bit.
+    */
+    DLMS_CONFORMANCE_WRITE = 0x10,
+    /*
+    * Un confirmed write conformance bit.
+    */
+    DLMS_CONFORMANCE_UN_CONFIRMED_WRITE = 0x20,
+    /*
+    * Delta value encoding.
+    */
+    DLMS_CONFORMANCE_DELTA_VALUE_ENCODING = 0x40,
+    /*
+    * Reserved seven conformance bit.
+    */
+    DLMS_CONFORMANCE_RESERVED_SEVEN = 0x80,
+    /*
+    * Attribute 0 supported with set conformance bit.
+    */
+    DLMS_CONFORMANCE_ATTRIBUTE_0_SUPPORTED_WITH_SET = 0x100,
+    /*
+    * Priority mgmt supported conformance bit.
+    */
+    DLMS_CONFORMANCE_PRIORITY_MGMT_SUPPORTED = 0x200,
+    /*
+    * Attribute 0 supported with get conformance bit.
+    */
+    DLMS_CONFORMANCE_ATTRIBUTE_0_SUPPORTED_WITH_GET = 0x400,
+    /*
+    * Block transfer with get or read conformance bit.
+    */
+    DLMS_CONFORMANCE_BLOCK_TRANSFER_WITH_GET_OR_READ = 0x800,
+    /*
+    * Block transfer with set or write conformance bit.
+    */
+    DLMS_CONFORMANCE_BLOCK_TRANSFER_WITH_SET_OR_WRITE = 0x1000,
+    /*
+    * Block transfer with action conformance bit.
+    */
+    DLMS_CONFORMANCE_BLOCK_TRANSFER_WITH_ACTION = 0x2000,
+    /*
+    * multiple references conformance bit.
+    */
+    DLMS_CONFORMANCE_MULTIPLE_REFERENCES = 0x4000,
+    /*
+    * Information report conformance bit.
+    */
+    DLMS_CONFORMANCE_INFORMATION_REPORT = 0x8000,
+    /*
+    * Data notification conformance bit.
+    */
+    DLMS_CONFORMANCE_DATA_NOTIFICATION = 0x10000,
+    /*
+    * Access conformance bit.
+    */
+    DLMS_CONFORMANCE_ACCESS = 0x20000,
+    /*
+    * Parameterized access conformance bit.
+    */
+    DLMS_CONFORMANCE_PARAMETERIZED_ACCESS = 0x40000,
+    /*
+    * Get conformance bit.
+    */
+    DLMS_CONFORMANCE_GET = 0x80000,
+    /*
+    * Set conformance bit.
+    */
+    DLMS_CONFORMANCE_SET = 0x100000,
+    /*
+    * Selective access conformance bit.
+    */
+    DLMS_CONFORMANCE_SELECTIVE_ACCESS = 0x200000,
+    /*
+    * Event notification conformance bit.
+    */
+    DLMS_CONFORMANCE_EVENT_NOTIFICATION = 0x400000,
+    /*
+    * Action conformance bit.
+    */
+    DLMS_CONFORMANCE_ACTION = 0x800000
+}DLMS_CONFORMANCE;
+
+typedef enum
+{
+    /*
+    If this option is present, the device shall be allowed to send security,
+    compartmentation, handling restrictions and TCC (closed user group)
+    parameters within its IP Datagrams. The value of the IP-Option-
+    Length Field must be 11, and the IP-Option-Data shall contain the
+    value of the Security, Compartments, Handling Restrictions and
+    Transmission Control Code values, as specified in STD0005 / RFC791.
+    */
+    IP_OPTION_TYPE_DLMS_SECURITY = 0x82,
+    /*
+    If this option is present, the device shall supply routing information to be
+    used by the gateways in forwarding the datagram to the destination, and to
+    record the route information.
+    The IP-Option-length and IP-Option-Data values are specified in STD0005 / RFC 791.
+    */
+    IP_OPTION_TYPE_LOOSE_SOURCE_AND_RECORD_ROUTE = 0x83,
+    /*
+    If this option is present, the device shall supply routing information to be
+    used by the gateways in forwarding the datagram to the destination, and to
+    record the route information.
+    The IP-Option-length and IP-Option-Data values are specified in STD0005 / RFC 791.
+    */
+    IP_OPTION_TYPE_STRICT_SOURCE_AND_RECORD_ROUTE = 0x89,
+    /*
+    If this option is present, the device shall as well:
+    send originated IP Datagrams with that option, providing means
+    to record the route of these Datagrams;
+    as a router, send routed IP Datagrams with the route option
+    adjusted according to this option.
+    The IP-Option-length and IP-Option-Data values are specified in
+    STD0005 / RFC 791.
+    */
+    IP_OPTION_TYPE_RECORD_ROUTE = 0x07,
+    /*
+    If this option is present, the device shall as well:
+    send originated IP Datagrams with that option, providing means
+    to time-stamp the datagram in the route to its destination;
+    as a router, send routed IP Datagrams with the time-stamp option
+    adjusted according to this option.
+    The IP-Option-length and IP-Option-Data values are specified in STD0005 / RFC 791.
+    */
+    IP_OPTION_TYPE_INTERNET_TIMESTAMP = 0x44
+}IP_OPTION_TYPE;
+
+// Enumerates Set response types.
+typedef enum
+{
+    /*
+    * Normal set response.
+    */
+    DLMS_SET_RESPONSE_TYPE_NORMAL = 1,
+    /*
+    * Set response in data blocks.
+    */
+    DLMS_SET_RESPONSE_TYPE_DATA_BLOCK = 2,
+    /*
+    * Set response in last data block.
+    */
+    DLMS_SET_RESPONSE_TYPE_LAST_DATA_BLOCK = 3,
+    /*
+    * Set response in last data block with list.
+    */
+    DLMS_SET_RESPONSE_TYPE_LAST_DATA_BLOCK_WITH_LIST = 4,
+    /*
+    * Set with list response.
+    */
+    DLMS_SET_RESPONSE_TYPE_WITH_LIST = 5
+}DLMS_SET_RESPONSE_TYPE;
+
+/*
+ * Enumerates all Unit constants.
+ */
+typedef enum
+{
+    /*
+    * No Unit.
+    */
+    DLMS_UNIT_NONE = 0,
+    /*
+    * Year.
+    */
+    DLMS_UNIT_YEAR = 1,
+
+    /*
+    * Month.
+    */
+    DLMS_UNIT_MONTH = 2,
+
+    /*
+    * Week.
+    */
+    DLMS_UNIT_WEEK = 3,
+
+    /*
+    * Day.
+    */
+    DLMS_UNIT_DAY = 4,
+
+    /*
+    * Hour.
+    */
+    DLMS_UNIT_HOUR = 5,
+
+    /*
+    * Minute.
+    */
+    DLMS_UNIT_MINUTE = 6,
+
+    /*
+    * Second.
+    */
+    DLMS_UNIT_SECOND = 7,
+
+    /*
+    * Phase angle degree.
+    */
+    DLMS_UNIT_PHASE_ANGLE_DEGREE = 8,
+    /*
+    * Temperature T degree centigrade, rad*180/p.
+    */
+    DLMS_UNIT_TEMPERATURE = 9,
+    /*
+    * Local currency.
+    */
+    DLMS_UNIT_LOCAL_CURRENCY = 10,
+    /*
+    * Length l meter m.
+    */
+    DLMS_UNIT_LENGTH = 11,
+    /*
+    * Speed v m/s.
+    */
+    DLMS_UNIT_SPEED = 12,
+    /*
+    * Volume V m3.
+    */
+    DLMS_UNIT_VOLUME_CUBIC_METER = 13,
+    /*
+    * Corrected volume m3.
+    */
+    DLMS_UNIT_CORRECTED_VOLUME = 14,
+    /*
+    * Volume flux m3/60*60s.
+    */
+    DLMS_UNIT_VOLUME_FLUX_HOUR = 15,
+    /*
+    * Corrected volume flux m3/60*60s.
+    */
+    DLMS_UNIT_CORRECTED_VOLUME_FLUX_HOUR = 16,
+    /*
+    * Volume flux m3/24*60*60s.
+    */
+    DLMS_UNIT_VOLUME_FLUX_DAY = 17,
+    /*
+    * Corrected volume flux m3/24*60*60s.
+    */
+    DLMS_UNIT_CORRECTED_VOLUME_FLUX_DAY = 18,
+    /*
+    * Volume 10-3 m3.
+    */
+    DLMS_UNIT_VOLUME_LITER = 19,
+    /*
+    * Mass m kilogram kg.
+    */
+    DLMS_UNIT_MASS_KG = 20,
+    /*
+    * return "Force F newton N.
+    */
+    DLMS_UNIT_FORCE = 21,
+    /*
+    * Energy newtonmeter J = Nm = Ws.
+    */
+    DLMS_UNIT_ENERGY = 22,
+    /*
+    * Pressure p pascal N/m2.
+    */
+    DLMS_UNIT_PRESSURE_PASCAL = 23,
+    /*
+    * Pressure p bar 10-5 N/m2.
+    */
+    DLMS_UNIT_PRESSURE_BAR = 24,
+    /*
+    * Energy joule J = Nm = Ws.
+    */
+    DLMS_UNIT_ENERGY_JOULE = 25,
+    /*
+    * Thermal power J/60*60s.
+    */
+    DLMS_UNIT_THERMAL_POWER = 26,
+    /*
+    * Active power P watt W = J/s.
+    */
+    DLMS_UNIT_ACTIVE_POWER = 27,
+    /*
+    * Apparent power S.
+    */
+    DLMS_UNIT_APPARENT_POWER = 28,
+    /*
+    * Reactive power Q.
+    */
+    DLMS_UNIT_REACTIVE_POWER = 29,
+    /*
+    * Active energy W*60*60s.
+    */
+    DLMS_UNIT_ACTIVE_ENERGY = 30,
+    /*
+    * Apparent energy VA*60*60s.
+    */
+    DLMS_UNIT_APPARENT_ENERGY = 31,
+    /*
+    * Reactive energy var*60*60s.
+    */
+    DLMS_UNIT_REACTIVE_ENERGY = 32,
+    /*
+    * Current I ampere A.
+    */
+    DLMS_UNIT_CURRENT = 33,
+    /*
+    * Electrical charge Q coulomb C = As.
+    */
+    DLMS_UNIT_ELECTRICAL_CHARGE = 34,
+    /*
+    * Voltage.
+    */
+    DLMS_UNIT_VOLTAGE = 35,
+    /*
+    * Electrical field strength E V/m.
+    */
+    DLMS_UNIT_ELECTRICAL_FIELD_STRENGTH = 36,
+    /*
+    * Capacity C farad C/V = As/V.
+    */
+    DLMS_UNIT_CAPACITY = 37,
+    /*
+    * Resistance R ohm = V/A.
+    */
+    DLMS_UNIT_RESISTANCE = 38,
+    /*
+    * Resistivity.
+    */
+    DLMS_UNIT_RESISTIVITY = 39,
+    /*
+    * Magnetic flux F weber Wb = Vs.
+    */
+    DLMS_UNIT_MAGNETIC_FLUX = 40,
+    /*
+    * Induction T tesla Wb/m2.
+    */
+    DLMS_UNIT_INDUCTION = 41,
+    /*
+    * Magnetic field strength H A/m.
+    */
+    DLMS_UNIT_MAGNETIC = 42,
+    /*
+    * Inductivity L henry H = Wb/A.
+    */
+    DLMS_UNIT_INDUCTIVITY = 43,
+    /*
+    * Frequency f.
+    */
+    DLMS_UNIT_FREQUENCY = 44,
+    /*
+    * Active energy meter constant 1/Wh.
+    */
+    DLMS_UNIT_ACTIVE = 45,
+    /*
+    * Reactive energy meter constant.
+    */
+    DLMS_UNIT_REACTIVE = 46,
+    /*
+    * Apparent energy meter constant.
+    */
+    DLMS_UNIT_APPARENT = 47,
+    /*
+    * V260*60s.
+    */
+    DLMS_UNIT_V260 = 48,
+    /*
+    * A260*60s.
+    */
+    DLMS_UNIT_A260 = 49,
+    /*
+    * Mass flux kg/s.
+    */
+    DLMS_UNIT_MASS_KG_PER_SECOND = 50,
+    /*
+    * Unit is Conductance siemens 1/ohm.
+    */
+    DLMS_UNIT_CONDUCTANCE = 51,
+    /*
+    * Temperature in Kelvin.
+    */
+    DLMS_UNIT_KELVIN = 52,
+    /*
+    * 1/(V2h) RU2h , volt-squared hour meter constant or pulse value.
+    */
+    DLMS_UNIT_RU2H = 53,
+    /*
+    * 1/(A2h) RI2h , ampere-squared hour meter constant or pulse value.
+    */
+    DLMS_UNIT_RI2H = 54,
+    /*
+    * 1/m3 RV , meter constant or pulse value  = volume).
+    */
+    DLMS_UNIT_CUBIC_METER_RV = 55,
+    /*
+    * Percentage.
+    */
+    DLMS_UNIT_PERCENTAGE = 56,
+    /*
+    * Ah ampere hours.
+    */
+    DLMS_UNIT_AMPERE_HOURS = 57,
+    /*
+    * Wh/m3 energy per volume 3,6*103 J/m3.
+    */
+    DLMS_UNIT_ENERGY_PER_VOLUME = 60,
+    /*
+    * J/m3 calorific value, wobbe.
+    */
+    DLMS_UNIT_WOBBE = 61,
+    /*
+    * Mol % molar fraction of gas composition mole percent  = Basic gas
+    * composition unit).
+    */
+    DLMS_UNIT_MOLE_PERCENT = 62,
+    /*
+    * g/m3 mass density, quantity of material.
+    */
+    DLMS_UNIT_MASS_DENSITY = 63,
+    /*
+    * Dynamic viscosity pascal second  = Characteristic of gas stream).
+    */
+    DLMS_UNIT_PASCAL_SECOND = 64,
+    /*
+    * J/kg Specific energy NOTE The amount of energy per unit of mass of a
+    * substance Joule / kilogram m2 . kg . s -2 / kg = m2.
+    */
+    DLMS_UNIT_JOULE_KILOGRAM = 65,
+    /*
+    * Pressure, gram per square centimeter.
+    */
+    DLMS_UNIT_PRESSURE_GRAM_PER_SQUARE_CENTIMETER = 66,
+    /*
+    * Pressure, atmosphere.
+    */
+    DLMS_UNIT_PRESSURE_ATMOSPHERE = 67,
+    /*
+    * Signal strength, dB milliwatt (e.g. of GSM radio systems)
+    */
+    DLMS_UNIT_SIGNAL_STRENGTH_MILLI_WATT = 70,
+    /*
+    * Signal strength, dB microvolt.
+    */
+    DLMS_UNIT_SIGNAL_STRENGTH_MICRO_VOLT = 71,
+    /*
+    * Logarithmic unit that expresses the ratio between two values of a physical quantity
+    */
+    DLMS_UNIT_DB = 72,
+    /*
+    * Length in inches.
+    */
+    DLMS_UNIT_INCH = 128,
+    /*
+    * Foot (Length).
+    */
+    DLMS_UNIT_FOOT = 129,
+    /*
+    * Pound (mass).
+    */
+    DLMS_UNIT_POUND = 130,
+    /*
+    * Fahrenheit.
+    */
+    DLMS_UNIT_FAHRENHEIT = 131,
+    /*
+    * Rankine.
+    */
+    DLMS_UNIT_RANKINE = 132,
+    /*
+    * Square inch.
+    */
+    DLMS_UNIT_SQUARE_INCH = 133,
+    /*
+    * Square foot.
+    */
+    DLMS_UNIT_SQUARE_FOOT = 134,
+    /*
+    * Acre.
+    */
+    DLMS_UNIT_ACRE = 135,
+    /*
+    * Cubic inch.
+    */
+    DLMS_UNIT_CUBIC_INCH = 136,
+    /*
+    * Cubic foot.
+    */
+    DLMS_UNIT_CUBIC_FOOT = 137,
+    /*
+    * Acre foot.
+    */
+    DLMS_UNIT_ACRE_FOOT = 138,
+    /*
+    * Gallon (imperial).
+    */
+    DLMS_UNIT_GALLON_IMPERIAL = 139,
+    /*
+    *  Gallon (US).
+    */
+    DLMS_UNIT_GALLON_US = 140,
+    /*
+    * Pound force.
+    */
+    DLMS_UNIT_POUND_FORCE = 141,
+    /*
+    * Pound force per square inch.
+    */
+    DLMS_UNIT_POUND_FORCE_PER_SQUARE_INCH = 142,
+    /*
+    * Pound per cubic foot.
+    */
+    DLMS_UNIT_POUND_PER_CUBIC_FOOT = 143,
+    /*
+    * Pound per (foot second).
+    */
+    DLMS_UNIT_POUND_PER_FOOT_SECOND = 144,
+    /*
+    * Square foot per second.
+    */
+    DLMS_UNIT_SQUARE_FOOT_PER_SECOND = 145,
+    /*
+    * British thermal unit.
+    */
+    DLMS_UNIT_BRITISH_THERMAL_UNIT = 146,
+    /*
+    * Therm EU.
+    */
+    DLMS_UNIT_THERM_EU = 147,
+    /*
+    * Therm US.
+    */
+    DLMS_UNIT_THERM_US = 148,
+    /*
+    * British thermal unit per pound.
+    */
+    DLMS_UNIT_BRITISH_THERMAL_UNIT_PER_POUND = 149,
+    /*
+    * British thermal unit per cubic foot.
+    */
+    DLMS_UNIT_BRITISH_THERMAL_UNIT_PER_CUBIC_FOOT = 150,
+    /*
+    * Cubic feet.
+    */
+    DLMS_UNIT_CUBIC_FEET = 151,
+    /*
+    * Foot per second.
+    */
+    DLMS_UNIT_FOOT_PER_SECOND = 152,
+    /*
+    * Cubic foot per second.
+    */
+    DLMS_UNIT_CUBIC_FOOT_PER_SECOND = 153,
+    /*
+    * Cubic foot per min.
+    */
+    DLMS_UNIT_CUBIC_FOOT_PER_MIN = 154,
+    /*
+    * Cubic foot per hour.
+    */
+    DLMS_UNIT_CUBIC_FOOT_PER_HOUR = 155,
+    /*
+    * Cubic foot per day
+    */
+    DLMS_UNIT_CUBIC_FOOT_PER_DAY = 156,
+    /*
+    * Acre foot per second.
+    */
+    DLMS_UNIT_ACRE_FOOT_PER_SECOND = 157,
+    /*
+    * Acre foot per min.
+    */
+    DLMS_UNIT_ACRE_FOOT_PER_MIN = 158,
+    /*
+    *  Acre foot per hour.
+    */
+    DLMS_UNIT_ACRE_FOOT_PER_HOUR = 159,
+    /*
+    *  Acre foot per day.
+    */
+    DLMS_UNIT_ACRE_FOOT_PER_DAY = 160,
+    /*
+    * Imperial gallon.
+    */
+    DLMS_UNIT_IMPERIAL_GALLON = 161,
+    /*
+    * Imperial gallon per second.
+    */
+    DLMS_UNIT_IMPERIAL_GALLON_PER_SECOND = 162,
+    /*
+    * Imperial gallon per min.
+    */
+    DLMS_UNIT_IMPERIAL_GALLON_PER_MIN = 163,
+    /*
+    * Imperial gallon per hour.
+    */
+    DLMS_UNIT_IMPERIAL_GALLON_PER_HOUR = 164,
+    /*
+    * Imperial gallon per day.
+    */
+    DLMS_UNIT_IMPERIAL_GALLON_PER_DAY = 165,
+    /*
+    * US gallon.
+    */
+    DLMS_UNIT_US_GALLON = 166,
+    /*
+    * US gallon per second.
+    */
+    DLMS_UNIT_US_GALLON_PER_SECOND = 167,
+    /*
+    * US gallon per min.
+    */
+    DLMS_UNIT_US_GALLON_PER_MIN = 168,
+    /*
+    * US gallon per hour.
+    */
+    DLMS_UNIT_US_GALLON_PER_HOUR = 169,
+    /*
+    * US gallon per day.
+    */
+    DLMS_UNIT_US_GALLON_PER_DAY = 170,
+    /*
+    * British thermal unit per second.
+    */
+    DLMS_UNIT_BRITISH_THERMAL_UNIT_PER_SECOND = 171,
+    /*
+    * British thermal unit per minute.
+    */
+    DLMS_UNIT_BRITISH_THERMAL_UNIT_PER_MIN = 172,
+    /*
+    * British thermal unit per hour.
+    */
+    DLMS_UNIT_BRITISH_THERMAL_UNIT_PER_HOUR = 173,
+    /*
+    * British thermal unit per day.
+    */
+    DLMS_UNIT_BRITISH_THERMAL_UNIT_PER_DAY = 174,
+    /*
+    * Other Unit.
+    */
+    DLMS_UNIT_OTHER = 254,
+    /*
+    * No Unit.
+    */
+    DLMS_UNIT_NO_UNIT = 255
+}DLMS_UNIT;
+
+/*
+* Specifies trace levels.
+*
+*/
+typedef enum {
+    /*
+    * Output no tracing and debugging messages.
+    */
+    GX_TRACE_LEVEL_OFF,
+
+    /*
+    * Output error-handling messages.
+    */
+    GX_TRACE_LEVEL_ERROR,
+
+    /*
+    * Output warnings and error-handling messages.
+    */
+    GX_TRACE_LEVEL_WARNING,
+
+    /*
+    * Output informational messages, warnings, and error-handling messages.
+    */
+    GX_TRACE_LEVEL_INFO,
+
+    /*
+    * Output all debugging and tracing messages.
+    */
+    GX_TRACE_LEVEL_VERBOSE
+}GX_TRACE_LEVEL;
+
+/*
+* Defines the GSM status.
+*/
+typedef enum {
+    /*
+    * Not registered.
+    */
+    DLMS_GSM_STATUS_NONE,
+    /*
+    * Registered, home network.
+    */
+    DLMS_GSM_STATUS_HOME_NETWORK,
+    /*
+    * Not registered, but MT is currently searching a new operator to register
+    * to.
+    */
+    DLMS_GSM_STATUS_SEARCHING,
+    /*
+    * Registration denied.
+    */
+    DLMS_GSM_STATUS_DENIED,
+    /*
+    * Unknown.
+    */
+    DLMS_GSM_STATUS_UNKNOWN,
+    /*
+    * Registered, roaming.
+    */
+    DLMS_GSM_STATUS_ROAMING
+}DLMS_GSM_STATUS;
+
+
+/*
+* GSM circuit switced status.
+*/
+typedef enum {
+    /*
+    * Inactive.
+    */
+    DLMS_GSM_CIRCUIT_SWITCH_STATUS_INACTIVE,
+    /*
+    * Incoming call.
+    */
+    DLMS_GSM_CIRCUIT_SWITCH_STATUS_INCOMING_CALL,
+    /*
+    * Active.
+    */
+    DLMS_GSM_CIRCUIT_SWITCH_STATUS_ACTIVE
+}DLMS_GSM_CIRCUIT_SWITCH_STATUS;
+
+
+/*
+* Packet switched status of the modem.
+*/
+typedef enum {
+    /*
+    * Inactive
+    */
+    DLMS_GSM_PACKET_SWITCH_STATUS_INACTIVE,
+    /*
+    * GPRS
+    */
+    DLMS_GSM_PACKET_SWITCH_STATUS_GPRS,
+    /*
+    * EDGE
+    */
+    DLMS_GSM_PACKET_SWITCH_STATUS_EDGE,
+    /*
+    * UMTS
+    */
+    DLMS_GSM_PACKET_SWITCH_STATUS_UMTS,
+    /*
+    * HSDPA
+    */
+    DLMS_GSM_PACKET_SWITCH_STATUS_HSDPA,
+    /*
+     * LTE
+     */
+     DLMS_GSM_PACKET_SWITCH_STATUS_LTE,
+     /*
+     * CDMA
+     */
+     DLMS_GSM_PACKET_SWITCH_STATUS_CDMA
+}DLMS_GSM_PACKET_SWITCH_STATUS;
+
+/*
+  * Enumerates payment Modes.<br/>
+  * Online help:<br/>
+  * http://www.gurux.fi/Gurux.DLMS.Objects.GXDLMSAccount
+  */
+typedef enum
+{
+    /*
+    * Credit mode.
+    */
+    DLMS_ACCOUNT_PAYMENT_MODE_CREDIT = 1,
+    /*
+    * Prepayment mode.
+    */
+    DLMS_ACCOUNT_PAYMENT_MODE_PREPAYMENT = 2
+}DLMS_ACCOUNT_PAYMENT_MODE;
+
+/*
+* Enumerates account status modes.<br/>
+* Online help:<br/>
+* http://www.gurux.fi/Gurux.DLMS.Objects.GXDLMSAccount
+*/
+typedef enum
+{
+    /*
+    * New (inactive) account.
+    */
+    DLMS_ACCOUNT_STATUS_NEW_INACTIVE_ACCOUNT = 1,
+    /*
+    * Account active.
+    */
+    DLMS_ACCOUNT_STATUS_ACTIVE = 2,
+    /*
+    * Account closed.
+    */
+    DLMS_ACCOUNT_STATUS_CLOSED = 3
+}DLMS_ACCOUNT_STATUS;
+
+/*
+* Enumerates account credit status modes.<br/>
+* Online help:<br/>
+* http://www.gurux.fi/Gurux.DLMS.Objects.GXDLMSAccount
+*/
+typedef enum {
+    /*
+    * In credit.
+    */
+    DLMS_ACCOUNT_CREDIT_STATUS_NONE = 0x0,
+    /*
+    * In credit.
+    */
+    DLMS_ACCOUNT_CREDIT_STATUS_IN_CREDIT = 0x1,
+
+    /*
+    * Low credit.
+    */
+    DLMS_ACCOUNT_CREDIT_STATUS_LOW_CREDIT = 0x2,
+
+    /*
+    * Next credit enabled.
+    */
+    DLMS_ACCOUNT_CREDIT_STATUS_NEXT_CREDIT_ENABLED = 0x4,
+
+    /*
+    * Next credit selectable.
+    */
+    DLMS_ACCOUNT_CREDIT_STATUS_NEXT_CREDIT_SELECTABLE = 0x8,
+
+    /*
+    * Credit reference list.
+    */
+    DLMS_ACCOUNT_CREDIT_STATUS_CREDIT_REFERENCE_LIST = 0x10,
+
+    /*
+    * Selectable credit in use.
+    */
+    DLMS_ACCOUNT_CREDIT_STATUS_SELECTABLE_CREDIT_IN_USE = 0x20,
+
+    /*
+    * Out of credit.
+    */
+    DLMS_ACCOUNT_CREDIT_STATUS_OUT_OF_CREDIT = 0x40,
+
+    /*
+    * Reserved.
+    */
+    DLMS_ACCOUNT_CREDIT_STATUS_RESERVED = 0x80
+}DLMS_ACCOUNT_CREDIT_STATUS;
+
+/*
+* Enumerates payment Modes.<br/>
+* Online help:<br/>
+* http://www.gurux.fi/Gurux.DLMS.Objects.GXDLMSAccount
+*/
+typedef enum {
+    /*
+    * Time.
+    */
+    DLMS_CURRENCY_TIME,
+    /*
+    * Consumption.
+    */
+    DLMS_CURRENCY_CONSUMPTION,
+    /*
+    * Monetary.
+    */
+    DLMS_CURRENCY_MONETARY
+}DLMS_CURRENCY;
+
+typedef enum
+{
+    DLMS_REQUIRED_PROTECTION_NONE = 0,
+    //Authenticated request.
+    DLMS_REQUIRED_PROTECTION_AUTHENTICATED_REQUEST = 0x4,
+    //Encrypted request.
+    DLMS_REQUIRED_PROTECTION_ENCRYPTED_REQUEST = 0x8,
+    //Digitally signed request
+    DLMS_REQUIRED_PROTECTION_DIGITALLY_SIGNED_REQUEST = 0x10,
+    //Authenticated response.
+    DLMS_REQUIRED_PROTECTION_AUTHENTICATED_RESPONSE = 0x20,
+    //Encrypted response.
+    DLMS_REQUIRED_PROTECTION_ENCRYPTED_RESPONSE = 0x40,
+    //Digitally signed response
+    DLMS_REQUIRED_PROTECTION_DIGITALLY_SIGNED_RESPONSE = 0x80,
+}DLMS_REQUIRED_PROTECTION;
+
+typedef enum
+{
+    /*
+    * None.
+    */
+    DLMS_CREDIT_COLLECTION_CONFIGURATION_NONE = 0,
+    /*
+     * Collect when supply disconnected.
+    */
+    DLMS_CREDIT_COLLECTION_CONFIGURATION_DISCONNECTED = 0x1,
+    /*
+     * Collect in load limiting periods.
+     */
+     DLMS_CREDIT_COLLECTION_CONFIGURATION_LOAD_LIMITING = 0x2,
+     /*
+      * Collect in friendly credit periods.
+     */
+     DLMS_CREDIT_COLLECTION_CONFIGURATION_FRIENDLY_CREDIT = 0x4
+}DLMS_CREDIT_COLLECTION_CONFIGURATION;
+
+// Enumerates payment Modes.
+typedef enum
+{
+    // Credit mode.
+    DLMS_PAYMENT_MODE_CREDIT = 1,
+
+    // Prepayment mode.
+    DLMS_PAYMENT_MODE_PREPAYMENT = 2
+}DLMS_PAYMENT_MODE;
+
+
+// Enumerates token status codes.
+//  Online help:<br/>
+//  http://www.gurux.fi/Gurux.DLMS.Objects.GXDLMSTokenGateway
+typedef enum
+{
+    // Token format result OK.
+    FORMAT_OK,
+
+    // Authentication result OK.
+    AUTHENTICATION_OK,
+
+    // Validation result OK.
+    VALIDATION_OK,
+
+    // Token execution result OK.
+    TOKEN_EXECUTION_OK,
+
+    // Token format failure.
+    DLMS_TOKEN_STATUS_CODE_TOKEN_FORMAT_FAILURE,
+
+    // Authentication failure.
+    DLMS_TOKEN_STATUS_CODE_AUTHENTICATION_FAILURE,
+
+    // Validation result failure.
+    DLMS_TOKEN_STATUS_CODE_VALIDATION_RESULT_FAILURE,
+
+    // Token execution result failure.
+    DLMS_TOKEN_STATUS_CODE_TOKEN_EXECUTION_RESULT_FAILURE,
+
+    // Token received and not yet processed.
+    DLMS_TOKEN_STATUS_CODE_TOKEN_RECEIVED
+}DLMS_TOKEN_STATUS_CODE;
+
+// Enumerates token delivery methods.
+//  Online help:<br/>
+//  http://www.gurux.fi/Gurux.DLMS.Objects.GXDLMSTokenGateway
+typedef enum
+{
+    // Via remote communications.
+    DLMS_TOKEN_DELIVERY_REMOTE,
+
+    // Via local communications.
+    DLMS_TOKEN_DELIVERY_LOCAL,
+
+    // Via manual entry.
+    DLMS_TOKEN_DELIVERY_MANUAL
+}DLMS_TOKEN_DELIVERY;
+
+/*
+* Enumerates application context name.
+*/
+typedef enum {
+    /*
+    * Logical name.
+    */
+    DLMS_APPLICATION_CONTEXT_NAME_LOGICAL_NAME = 1,
+    /*
+    * Short name.
+    */
+    DLMS_APPLICATION_CONTEXT_NAME_SHORT_NAME = 2,
+    /*
+    * Logical name with ciphering.
+    */
+    DLMS_APPLICATION_CONTEXT_NAME_LOGICAL_NAME_WITH_CIPHERING = 3,
+    /*
+    * Short name with ciphering.
+    */
+    DLMS_APPLICATION_CONTEXT_NAME_SHORT_NAME_WITH_CIPHERING = 4
+}DLMS_APPLICATION_CONTEXT_NAME;
+
+// Connection types.
+typedef enum {
+    //Connection is not made for the meter.
+    DLMS_CONNECTION_STATE_NONE = 0,
+    //Connection is made for HDLC level.
+    DLMS_CONNECTION_STATE_HDLC = 1,
+    //Connection is made for DLMS level.
+    DLMS_CONNECTION_STATE_DLMS = 2
+}DLMS_CONNECTION_STATE;
+
+
+/*
+ * Certificate entity.
+ */
+typedef enum {
+    /*
+     * Certificate entity is server
+     */
+    DLMS_CERTIFICATE_ENTITY_SERVER = 0,
+    /*
+     * Certificate entity is client
+     */
+     DLMS_CERTIFICATE_ENTITY_CLIENT = 1,
+     /*
+      * Certificate entity is certification authority
+      */
+      DLMS_CERTIFICATE_ENTITY_CERTIFICATION_AUTHORITY = 2,
+      /*
+       * Certificate entity is other.
+       */
+       OTHER = 3
+}DLMS_CERTIFICATE_ENTITY;
+
+
+/*
+ * Certificate type.
+ */
+typedef enum {
+    /*
+    * Certificate type is digital signature.
+    */
+    DLMS_CERTIFICATE_TYPE_DIGITAL_SIGNATURE = 0,
+    /*
+    * Certificate type is key agreement.
+    */
+    DLMS_CERTIFICATE_TYPE_KEY_AGREEMENT = 1,
+    /*
+    * Certificate type is TLS.
+    */
+    DLMS_CERTIFICATE_TYPE_TLS = 2,
+    /*
+    * Certificate type is other.
+    */
+    DLMS_CERTIFICATE_TYPE_OTHER = 3
+}DLMS_CERTIFICATE_TYPE;
+
+typedef enum
+{
+    //Simple XML format.
+    DLMS_TRANSLATOR_OUTPUT_TYPE_SIMPLE_XML,
+    //Standard XML format.
+    DLMS_TRANSLATOR_OUTPUT_TYPE_STANDARD_XML
+}DLMS_TRANSLATOR_OUTPUT_TYPE;
+
+// RequestTypes enumerates the replies of the server to a client's request,
+// indicating the request type.
+typedef enum
+{
+    // Client closes connection as normal.
+    DLMS_RELEASE_REQUEST_REASON_NORMAL = 0,
+    // Client closes connection as urgent.
+    DLMS_RELEASE_REQUEST_REASON_URGENT = 1,
+    // Client closes connection user defined reason.
+    DLMS_RELEASE_REQUEST_REASON_USER_DEFINED = 30
+}DLMS_RELEASE_REQUEST_REASON;
+
+// RequestTypes enumerates the replies of the server to a client's request,
+// indicating the request type.
+typedef enum
+{
+    // Client closes connection as normal.
+    DLMS_RELEASE_RESPONSE_REASON_NORMAL = 0,
+    // Connection is not finished.
+    DLMS_RELEASE_RESPONSE_REASON_NOTFINISHED = 1,
+    // Client closes connection user defined reason.
+    DLMS_RELEASE_RESPONSE_REASON_USERDEFINED = 30
+}DLMS_RELEASE_RESPONSE_REASON;
+
+// Enumerates Access Service types.
+typedef enum
+{
+    // Get request or response.
+    DLMS_ACCESS_SERVICE_COMMAND_TYPE_GET = 1,
+    // Set request or response.
+    DLMS_ACCESS_SERVICE_COMMAND_TYPE_SET = 2,
+    // Action request or response.
+    DLMS_ACCESS_SERVICE_COMMAND_TYPE_ACTION = 3
+}DLMS_ACCESS_SERVICE_COMMAND_TYPE;
+
+// Enumerates Set request types.
+typedef enum {
+    // Normal Set.
+    DLMS_SET_REQUEST_TYPE_NORMAL = 1,
+    // Set with first data block.
+    DLMS_SET_REQUEST_TYPE_FIRST_DATA_BLOCK = 2,
+    // Set with data block.
+    DLMS_SET_REQUEST_TYPE_WITH_DATA_BLOCK = 3,
+    // Set with list.
+    DLMS_SET_REQUEST_TYPE_WITH_LIST = 4,
+    // Set with list and first data block.
+    DLMS_SET_REQUEST_TYPE_WITH_LIST_AND_WITH_FIRST_DATA_BLOCK = 5
+}DLMS_SET_REQUEST_TYPE;
+
+// Enumerates Action request types.
+typedef enum
+{
+    // Normal action.
+    DLMS_ACTION_REQUEST_TYPE_NORMAL = 1,
+    // Next block.
+    DLMS_ACTION_REQUEST_TYPE_NEXT_BLOCK = 2,
+    // Action with list.
+    DLMS_ACTION_REQUEST_TYPE_WITH_LIST = 3,
+    // Action with first block.
+    DLMS_ACTION_REQUEST_TYPE_WITH_FIRST_BLOCK = 4,
+    // Action with list and first block.
+    DLMS_ACTION_REQUEST_TYPE_WITH_LIST_AND_FIRST_BLOCK = 5,
+    // Action with block.
+    DLMS_ACTION_REQUEST_TYPE_WITH_BLOCK = 6
+}DLMS_ACTION_REQUEST_TYPE;
+
+// Enumerates Action response types.
+typedef enum
+{
+    // Normal action.
+    DLMS_ACTION_RESPONSE_TYPE_NORMAL = 1,
+    // Action with block.
+    DLMS_ACTION_RESPONSE_TYPE_WITH_BLOCK = 2,
+    // Action with list.
+    DLMS_ACTION_RESPONSE_TYPE_WITH_LIST = 3,
+    // Next block.
+    DLMS_ACTION_RESPONSE_TYPE_NEXT_BLOCK = 4
+}DLMS_ACTION_RESPONSE_TYPE;
+
+/*
+ * Enumerates credit types.<br>
+ * Online help:<br>
+ * http://www.gurux.fi/Gurux.DLMS.Objects.GXDLMSCredit
+ */
+typedef enum
+{
+    /*
+     * Token credit.
+     */
+    DLMS_CREDIT_TYPE_TOKEN,
+    /*
+     * Reserved credit.
+     */
+     DLMS_CREDIT_TYPE_RESERVED,
+     /*
+      * Emergency credit.
+      */
+      DLMS_CREDIT_TYPE_EMERGENCY,
+      /*
+       * TimeBased credit.
+       */
+       DLMS_CREDIT_TYPE_TIME_BASED,
+       /*
+        * Consumption based credit.
+        */
+        DLMS_CREDIT_TYPE_CONSUMPTION_BASED
+}DLMS_CREDIT_TYPE;
+
+/*
+ * Enumerates credit status values.<br>
+ * Online help:<br>
+ * http://www.gurux.fi/Gurux.DLMS.Objects.GXDLMSCredit
+ */
+typedef enum
+{
+    /*
+    * Enabled state.
+    */
+    DLMS_CREDIT_STATUS_ENABLED,
+    /*
+     * Selectable state.
+     */
+     DLMS_CREDIT_STATUS_SELECTABLE,
+     /*
+      * Selected/Invoked state.
+      */
+      DLMS_CREDIT_STATUS_INVOKED,
+      /*
+       * In use state.
+       */
+       DLMS_CREDIT_STATUS_IN_USE,
+       /*
+        * Consumed state.
+        */
+        DLMS_CREDIT_STATUS_CONSUMED
+}DLMS_CREDIT_STATUS;
+
+/*
+ * Enumerated Credit configuration values.<br>
+ * Online help:<br>
+ * http://www.gurux.fi/Gurux.DLMS.Objects.GXDLMSAccount
+ */
+typedef enum
+{
+    /*
+    * None.
+    */
+    DLMS_CREDIT_CONFIGURATION_NONE = 0x0,
+    /*
+    * Requires visual indication
+    */
+    DLMS_CREDIT_CONFIGURATION_VISUAL = 0x10,
+    /*
+    * Requires confirmation before it can be selected/invoked
+    */
+    DLMS_CREDIT_CONFIGURATION_CONFIRMATION = 0x2,
+    /*
+    * Requires the credit amount to be paid back.
+    */
+    DLMS_CREDIT_CONFIGURATION_PAID_BACK = 0x4,
+    /*
+    * Resettable.
+    */
+    DLMS_CREDIT_CONFIGURATION_RESETTABLE = 0x8,
+    /*
+    * Able to receive credit amounts from tokens.
+    */
+    DLMS_CREDIT_CONFIGURATION_TOKENS = 0x10
+}DLMS_CREDIT_CONFIGURATION;
+
+/*
+ * Enumerates account credit status modes.<br>
+ * Online help:<br>
+ * http://www.gurux.fi/Gurux.DLMS.Objects.GXDLMSCharge
+ */
+typedef enum
+{
+    /*
+    * Consumption based collection.
+    */
+    DLMS_CHARGE_TYPE_CONSUMPTION_BASED_COLLECTION,
+    /*
+    * Time based collection.
+    */
+    DLMS_CHARGE_TYPE_TIME_BASED_COLLECTION,
+    /*
+    * Payment based collection.
+    */
+    DLMS_CHARGE_TYPE_PAYMENT_EVENT_BASED_COLLECTION
+}DLMS_CHARGE_TYPE;
+
+// Defines the weekdays.
+typedef enum
+{
+    /// No day of week is selected.
+    DLMS_WEEKDAYS_NONE = 0,
+    // Indicates Monday.
+    DLMS_WEEKDAYS_MONDAY = 0x1,
+    // Indicates Tuesday.
+    DLMS_WEEKDAYS_TUESDAY = 0x2,
+    // Indicates Wednesday.
+    DLMS_WEEKDAYS_WEDNESDAY = 0x4,
+    // Indicates Thursday.
+    DLMS_WEEKDAYS_THURSDAY = 0x8,
+    // Indicates Friday.
+    DLMS_WEEKDAYS_FRIDAY = 0x10,
+    // Indicates Saturday.
+    DLMS_WEEKDAYS_SATURDAY = 0x20,
+    // Indicates Sunday.
+    DLMS_WEEKDAYS_SUNDAY = 0x40
+}DLMS_WEEKDAYS;
+
+// Charge configuration enumeration types.
+typedef enum
+{
+    // Percentage based collection.
+    DLMS_CHARGE_CONFIGURATION_PERCENTAGE_BASED_COLLECTION = 0x1,
+    // Continuous collection.
+    DLMS_CHARGE_CONFIGURATION_CONTINUOUS_COLLECTION = 0x2
+}DLMS_CHARGE_CONFIGURATION;
+
+// DLMS state errors.
+typedef enum {
+    //Invalid value.
+    DLMS_EXCEPTION_STATE_ERROR_SERVICE_INVALID = 0,
+    //Service is not allowed.
+    DLMS_EXCEPTION_STATE_ERROR_SERVICE_NOT_ALLOWED = 1,
+    //Unknown service.
+    DLMS_EXCEPTION_STATE_ERROR_SERVICE_UNKNOWN = 2
+}DLMS_EXCEPTION_STATE_ERROR;
+
+//MIB variable initiator electrical phase.
+typedef enum
+{
+    /**
+    * Not defined.
+    */
+    DLMS_INITIATOR_ELECTRICAL_PHASE_NOT_DEFINED,
+    /**
+    * Phase 1.
+    */
+    DLMS_INITIATOR_ELECTRICAL_PHASE_1,
+    /**
+    * Phase 2.
+    */
+    DLMS_INITIATOR_ELECTRICAL_PHASE_2,
+    /**
+    * Phase 3.
+    */
+    DLMS_INITIATOR_ELECTRICAL_PHASE_3
+}DLMS_INITIATOR_ELECTRICAL_PHASE;
+
+/**
+ * MIB variable initiator electrical phase.
+ */
+typedef enum
+{
+    /**
+    * Not defined.
+    */
+    DLMS_DELTA_ELECTRICAL_PHASE_NOT_DEFINED,
+    /**
+    * The server system is connected to the same phase as the client system.
+    */
+    DLMS_DELTA_ELECTRICAL_PHASE_SAME,
+
+    DLMS_DELTA_ELECTRICAL_PHASE_DEGREES_60,
+
+    DLMS_DELTA_ELECTRICAL_PHASE_DEGREES_120,
+
+    DLMS_DELTA_ELECTRICAL_PHASE_DEGREES_180,
+
+    DLMS_DELTA_ELECTRICAL_PHASE_DEGREES_MINUS_120,
+
+    DLMS_DELTA_ELECTRICAL_PHASE_DEGREES_MINUS_60
+}DLMS_DELTA_ELECTRICAL_PHASE;
+
+
+/**
+ * Repeater enumerator values.
+ */
+typedef enum
+{
+    /**
+    * Newer repeater.
+    */
+    DLMS_REPEATER_NEVER,
+    /**
+    * Always repeater.
+    */
+    DLMS_REPEATER_ALWAYS,
+    /**
+    * Dynamic repeater.
+    */
+    DLMS_REPEATER_DYNAMIC
+}DLMS_REPEATER;
+
+
+/**
+* IEC Twisted pair setup working mode.
+*/
+typedef enum
+{
+    /**
+    * The interface ignores all received frames.
+    */
+    DLMS_IEC_TWISTED_PAIR_SETUP_MODE_INACTIVE,
+
+    /**
+    * Always active.
+    */
+    DLMS_IEC_TWISTED_PAIR_SETUP_MODE_ACTIVE
+}DLMS_IEC_TWISTED_PAIR_SETUP_MODE;
+
+/**
+* PLC Source address enumerations.
+*/
+typedef enum
+{
+    DLMS_PLC_SOURCE_ADDRESS_INITIATOR = 0xC00,
+    DLMS_PLC_SOURCE_ADDRESS_NEW = 0xFFE
+}DLMS_PLC_SOURCE_ADDRESS;
+
+// PLC Destination address enumerations.
+typedef enum
+{
+    DLMS_PLC_DESTINATION_ADDRESS_ALL_PHYSICAL = 0xFFF
+}DLMS_PLC_DESTINATION_ADDRESS;
+
+/**
+* PLC HDLC Source address enumerations.
+*/
+typedef enum
+{
+    // Initiator.
+    DLMS_PLC_HDLC_SOURCE_ADDRESS_INITIATOR = 0xC01,
+}DLMS_PLC_HDLC_SOURCE_ADDRESS;
+
+/**
+* PLC data link data commands.
+* */
+typedef enum
+{
+    DLMS_PLC_DATA_LINK_DATA_REQUEST = 0x90
+}DLMS_PLC_DATA_LINK_DATA;
+
+//  Sequence number of MAC sub frame.
+typedef enum
+{
+    DLMS_PLC_MAC_SUB_FRAMES_ONE = 0x6C6C,
+    DLMS_PLC_MAC_SUB_FRAMES_TWO = 0x3A3A,
+    DLMS_PLC_MAC_SUB_FRAMES_THREE = 0x5656,
+    DLMS_PLC_MAC_SUB_FRAMES_FOUR = 0x7171,
+    DLMS_PLC_MAC_SUB_FRAMES_FIVE = 0x1D1D,
+    DLMS_PLC_MAC_SUB_FRAMES_SIX = 0x4B4B,
+    DLMS_PLC_MAC_SUB_FRAMES_SEVEN = 0x2727,
+}DLMS_PLC_MAC_SUB_FRAMES;
+
+// M-Bus command.
+typedef enum
+{
+    DLMS_MBUS_COMMAND_SND_NR = 0x44,
+    DLMS_MBUS_COMMAND_SND_UD2 = 0x43,
+    DLMS_MBUS_COMMAND_RSP_UD = 0x08
+} DLMS_MBUS_COMMAND;
+
+// M-Bus meter type.
+typedef enum
+{
+    // Oil meter.
+    DLMS_MBUS_METER_TYPE_OIL = 1,
+    // Energy meter.
+    DLMS_MBUS_METER_TYPE_ENERGY = 2,
+    // Gas meter.
+    DLMS_MBUS_METER_TYPE_GAS = 3,
+    // Water meter.
+    DLMS_MBUS_METER_TYPE_WATER = 7,
+    // Unknown meter type.
+    DLMS_MBUS_METER_TYPE_UNKNOWN = 0x0F
+}DLMS_MBUS_METER_TYPE;
+
+// M-Bus control info.
+typedef enum
+{
+    // Long M-Bus data header present, direction master to slave
+    DLMS_MBUS_CONTROL_INFO_LONG_HEADER_MASTER = 0x60,
+    // Short M-Bus data header present, direction master to slave
+    DLMS_MBUS_CONTROL_INFO_SHORT_HEADER_MASTER = 0x61,
+    // Long M-Bus data header present, direction slave to master
+    DLMS_MBUS_CONTROL_INFO_LONG_HEADER_SLAVE = 0x7C,
+    // Short M-Bus data header present, direction slave to master
+    DLMS_MBUS_CONTROL_INFO_SHORT_HEADER_SLAVE = 0x7D,
+    // M-Bus short Header.
+    DLMS_MBUS_CONTROL_INFO_SHORT_HEADER = 0x7A,
+    // M-Bus long Header.
+    DLMS_MBUS_CONTROL_INFO_LONG_HEADER = 0x72
+}DLMS_MBUS_CONTROL_INFO;
+
+// Encryption modes.
+typedef enum
+{
+    // Encryption is not used.
+    DLMS_MBUS_ENCRYPTION_MODE_NONE,
+    //  AES with Counter Mode (CTR) noPadding and IV.
+    DLMS_MBUS_ENCRYPTION_MODE_AES_128,
+    //  DES with Cipher Block Chaining Mode (CBC).
+    DLMS_MBUS_ENCRYPTION_MODE_DES_CBC,
+    //  DES with Cipher Block Chaining Mode (CBC) and Initial Vector.
+    DLMS_MBUS_ENCRYPTION_MODE_DES_CBC_IV,
+    // AES with Cipher Block Chaining Mode (CBC) and Initial Vector.
+    DLMS_MBUS_ENCRYPTION_MODE_AES_CBC_IV = 5,
+    // AES 128 with Cipher Block Chaining Mode (CBC) and dynamic key and Initial Vector with 0.
+    DLMS_MBUS_ENCRYPTION_MODE_AES_CBC_IV_0 = 7,
+    // TLS
+    DLMS_MBUS_ENCRYPTION_MODE_TLS = 13
+}DLMS_MBUS_ENCRYPTION_MODE;
+
+/*Defines NTP authentication methods.*/
+typedef enum
+{
+    //No security is used.
+    DLMS_NTP_AUTHENTICATION_METHOD_NO_SECURITY = 0,
+    //Shared secrets are used.
+    DLMS_NTP_AUTHENTICATION_METHOD_SHARED_SECRETS = 1,
+    //IFF auto key is used.
+    DLMS_NTP_AUTHENTICATION_METHOD_AUTO_KEY_IFF = 2
+}DLMS_NTP_AUTHENTICATION_METHOD;
+
+/*Enumerates communication port protection mode values.*/
+typedef enum
+{
+    /**
+   * Port is locked. Communication is not possible.
+   */
+    DLMS_PROTECTION_MODE_LOCKED,
+
+    /**
+    * The port becomes temporarily locked when failed connections exceeds an
+    * allowed.
+    */
+    DLMS_PROTECTION_MODE_LOCKED_ON_FAILED_ATTEMPTS,
+
+    /**
+    * Port is unlocked.
+    */
+    DLMS_PROTECTION_MODE_UNLOCKED
+}DLMS_PROTECTION_MODE;
+
+/*Enumerates communication port protection status values.*/
+typedef enum
+{
+    /**
+    * Port is unlocked.
+    */
+    DLMS_PROTECTION_STATUS_UNLOCKED,
+    /**
+    * The port is temporarily locked. Communication is not possible.
+    */
+    DLMS_PROTECTION_STATUS_TEMPORARILY_LOCKED,
+    /**
+    * Port is locked. Communication is not possible.
+    */
+    DLMS_PROTECTION_STATUS_LOCKED
+}DLMS_PROTECTION_STATUS;
+
+/// X509 names.
+typedef enum
+{
+    DLMS_X509_NAME_NONE,
+    /// country code - StringType(SIZE(2)) 
+    DLMS_X509_NAME_C,
+    /// organization - StringType(SIZE(1..64)) 
+    DLMS_X509_NAME_O,
+    /// organizational unit name - StringType(SIZE(1..64)) 
+    DLMS_X509_NAME_OU,
+    /// Title 
+    DLMS_X509_NAME_T,
+    /// common name - StringType(SIZE(1..64)) 
+    DLMS_X509_NAME_CN,
+    /// street - StringType(SIZE(1..64)) 
+    DLMS_X509_NAME_STREET,
+    /// device serial number name - StringType(SIZE(1..64)) 
+    DLMS_X509_NAME_SERIAL_NUMBER,
+    /// locality name - StringType(SIZE(1..64)) 
+    DLMS_X509_NAME_L,
+    /// state, or province name - StringType(SIZE(1..64)) 
+    DLMS_X509_NAME_ST,
+    /// Naming attributes of type X520name 
+    DLMS_X509_NAME_SUR_NAME,
+    /// Given name. 
+    DLMS_X509_NAME_GIVEN_NAME,
+    /// Initials. 
+    DLMS_X509_NAME_INITIALS,
+    /// Generation. 
+    DLMS_X509_NAME_GENERATION,
+    /// Unique identifier. 
+    DLMS_X509_NAME_UNIQUE_IDENTIFIER,
+    /// businessCategory - DirectoryString(SIZE(1..128)) 
+    DLMS_X509_NAME_BUSINESS_CATEGORY,
+    /// postalCode - DirectoryString(SIZE(1..40)) 
+    DLMS_X509_NAME_POSTAL_CODE,
+    /// dnQualifier - DirectoryString(SIZE(1..64)) 
+    DLMS_X509_NAME_DN_QUALIFIER,
+    /// RFC 3039 Pseudonym - DirectoryString(SIZE(1..64)) 
+    DLMS_X509_NAME_PSEUDONYM,
+    /// RFC 3039 DateOfBirth - GeneralizedTime - YYYYMMDD000000Z 
+    DLMS_X509_NAME_DATE_OF_BIRTH,
+    /// RFC 3039 PlaceOfBirth - DirectoryString(SIZE(1..128)) 
+    DLMS_X509_NAME_PLACE_OF_BIRTH,
+    /// RFC 3039 DateOfBirth - PrintableString (SIZE(1 -- "M", "F", "m" or "f") 
+    DLMS_X509_NAME_GENDER,
+    /// RFC 3039 CountryOfCitizenship - PrintableString (SIZE (2 -- ISO 3166)) codes only 
+    DLMS_X509_NAME_COUNTRY_OF_CITIZENSHIP,
+    /// RFC 3039 CountryOfCitizenship - PrintableString (SIZE (2 -- ISO 3166)) codes only 
+    DLMS_X509_NAME_COUNTRY_OF_RESIDENCE,
+    /// ISIS-MTT NameAtBirth - DirectoryString(SIZE(1..64)) 
+    DLMS_X509_NAME_NAME_AT_BIRTH,
+    /// RFC 3039 PostalAddress - SEQUENCE SIZE (1..6 OF DirectoryString(SIZE(1..30))) 
+    DLMS_X509_NAME_POSTAL_ADDRESS,
+    /// RFC 2256 dmdName 
+    DLMS_X509_NAME_DMD_NAME,
+    /// id-at-telephoneNumber 
+    DLMS_X509_NAME_TELEPHONE_NUMBER,
+    /// id-at-name 
+    DLMS_X509_NAME_NAME,
+    /// email address in Verisign certificates 
+    DLMS_X509_NAME_E,
+    DLMS_X509_NAME_DC,
+    /// LDAP User id. 
+    DLMS_X509_NAME_UID
+}DLMS_X509_NAME;
+
+// x509 Certificate type.
+typedef enum
+{
+    DLMS_X509_CERTIFICATE_TYPE_NONE,
+    DLMS_X509_CERTIFICATE_TYPE_OLDAUTHORITY_KEY_IDENTIFIER,
+    DLMS_X509_CERTIFICATE_TYPE_OLD_PRIMARY_KEY_ATTRIBUTES,
+    DLMS_X509_CERTIFICATE_TYPE_CERTIFICATE_POLICIES,
+    DLMS_X509_CERTIFICATE_TYPE_ORIMARY_KEY_USAGE_RESTRICTION,
+    DLMS_X509_CERTIFICATE_TYPE_SUBJECT_DIRECTORY_ATTRIBUTES,
+    DLMS_X509_CERTIFICATE_TYPE_SUBJECT_KEY_IDENTIFIER,
+    DLMS_X509_CERTIFICATE_TYPE_KEY_USAGE,
+    DLMS_X509_CERTIFICATE_TYPE_PRIVATE_KEY_USAGE_PERIOD,
+    DLMS_X509_CERTIFICATE_TYPE_SUBJECT_ALTERNATIVE_NAME,
+    DLMS_X509_CERTIFICATE_TYPE_ISSUER_ALTERNATIVE_NAME,
+    DLMS_X509_CERTIFICATE_TYPE_BASIC_CONSTRAINTS,
+    DLMS_X509_CERTIFICATE_TYPE_CRL_NUMBER,
+    DLMS_X509_CERTIFICATE_TYPE_REASON_CODE,
+    DLMS_X509_CERTIFICATE_TYPE_HOLD_INSTRUCTIONCODE,
+    DLMS_X509_CERTIFICATE_TYPE_INVALIDITY_DATE,
+    DLMS_X509_CERTIFICATE_TYPE_DELTA_CRLINDICATOR,
+    DLMS_X509_CERTIFICATE_TYPE_ISSUING_DISTRIBUTION_POINT,
+    DLMS_X509_CERTIFICATE_TYPE_CERTIFICATE_ISSUER,
+    DLMS_X509_CERTIFICATE_TYPE_NAME_CONSTRAINTS,
+    DLMS_X509_CERTIFICATE_TYPE_CRL_DISTRIBUTION_POINTS,
+    DLMS_X509_CERTIFICATE_TYPE_CERTIFICATE_POLICIES2,
+    DLMS_X509_CERTIFICATE_TYPE_POLICY_MAPPINGS,
+    DLMS_X509_CERTIFICATE_TYPE_AUTHORITY_KEY_IDENTIFIER,
+    DLMS_X509_CERTIFICATE_TYPE_POLICY_CONSTRAINTS,
+    DLMS_X509_CERTIFICATE_TYPE_EXTENDED_KEY_USAGE,
+    DLMS_X509_CERTIFICATE_TYPE_FRESHEST_CRL
+}DLMS_X509_CERTIFICATE_TYPE;
+
+//X9 object identifiers.
+typedef enum
+{
+    DLMS_X9_OBJECT_IDENTIFIER_NONE,
+    DLMS_X9_OBJECT_IDENTIFIER_ID_FIELD_TYPE,
+    DLMS_X9_OBJECT_IDENTIFIER_PRIME_FIELD,
+    DLMS_X9_OBJECT_IDENTIFIER_CHARACTERISTIC_TWO_FIELD,
+    DLMS_X9_OBJECT_IDENTIFIER_GN_BASIS,
+    DLMS_X9_OBJECT_IDENTIFIER_TP_BASIS,
+    DLMS_X9_OBJECT_IDENTIFIER_PP_BASIS,
+    DLMS_X9_OBJECT_IDENTIFIER_ECDSA_WITH_SHA1,
+    DLMS_X9_OBJECT_IDENTIFIER_ID_EC_PUBLIC_KEY,
+    DLMS_X9_OBJECT_IDENTIFIER_ECDSA_WITH_SHA2,
+    DLMS_X9_OBJECT_IDENTIFIER_ECDSA_WITH_SHA224,
+    DLMS_X9_OBJECT_IDENTIFIER_ECDSA_WITH_SHA256,
+    DLMS_X9_OBJECT_IDENTIFIER_ECDSA_WITH_SHA_384,
+    DLMS_X9_OBJECT_IDENTIFIER_ECDSA_WITH_SHA_512,
+    DLMS_X9_OBJECT_IDENTIFIER_ELLIPTIC_CURVE,
+    DLMS_X9_OBJECT_IDENTIFIER_C_TWO_CURVE,
+    DLMS_X9_OBJECT_IDENTIFIER_C2_PNB_163_V1,
+    DLMS_X9_OBJECT_IDENTIFIER_C2_PNB_163_V2,
+    DLMS_X9_OBJECT_IDENTIFIER_C2_PNB_163_V3,
+    DLMS_X9_OBJECT_IDENTIFIER_C2_PNB_176_W1,
+    DLMS_X9_OBJECT_IDENTIFIER_C2_TNB_191_V1,
+    DLMS_X9_OBJECT_IDENTIFIER_C2_TNB_191_V2,
+    DLMS_X9_OBJECT_IDENTIFIER_C2_TNB_191_V3,
+    DLMS_X9_OBJECT_IDENTIFIER_C2_ONB_191_V4,
+    DLMS_X9_OBJECT_IDENTIFIER_C2_ONB_191_V5,
+    DLMS_X9_OBJECT_IDENTIFIER_C2_PNB_208_W1,
+    DLMS_X9_OBJECT_IDENTIFIER_C2_TNB_239_V1,
+    DLMS_X9_OBJECT_IDENTIFIER_C2_TNB_239_V2,
+    DLMS_X9_OBJECT_IDENTIFIER_C2_TNB_239_V3,
+    DLMS_X9_OBJECT_IDENTIFIER_C2_ONB_239_V4,
+    DLMS_X9_OBJECT_IDENTIFIER_C2_ONB_239_V5,
+    DLMS_X9_OBJECT_IDENTIFIER_C2_PNB_272_W1,
+    DLMS_X9_OBJECT_IDENTIFIER_C2_PNB_304_W1,
+    DLMS_X9_OBJECT_IDENTIFIER_C2_TNB_359_V1,
+    DLMS_X9_OBJECT_IDENTIFIER_C2_PNB_368_W1,
+    DLMS_X9_OBJECT_IDENTIFIER_C2_TNB_431_R1,
+    DLMS_X9_OBJECT_IDENTIFIER_PRIME_CURVE,
+    DLMS_X9_OBJECT_IDENTIFIER_PRIME_192_V1,
+    DLMS_X9_OBJECT_IDENTIFIER_PRIME_192_V2,
+    DLMS_X9_OBJECT_IDENTIFIER_PRIME_192_V3,
+    DLMS_X9_OBJECT_IDENTIFIER_PRIME_239_V1,
+    DLMS_X9_OBJECT_IDENTIFIER_PRIME_239_V2,
+    DLMS_X9_OBJECT_IDENTIFIER_PRIME_239_V3,
+    DLMS_X9_OBJECT_IDENTIFIER_PRIME_256_V1,
+    DLMS_X9_OBJECT_IDENTIFIER_ID_DSA,
+    DLMS_X9_OBJECT_IDENTIFIER_ID_DSA_WITH_SHA1,
+    DLMS_X9_OBJECT_IDENTIFIER_X9_X63_SCHEME,
+    DLMS_X9_OBJECT_IDENTIFIER_DH_SINGLE_PASS_STD_DH_SHA1_KDF_SCHEME,
+    DLMS_X9_OBJECT_IDENTIFIER_DH_SINGLE_PASS_COFACTOR_DH_SHA1_KDF_SCHEME,
+    DLMS_X9_OBJECT_IDENTIFIER_MQV_SINGLE_PASS_SHA1_KDF_SCHEME,
+    DLMS_X9_OBJECT_IDENTIFIER_ANSI_X9_42,
+    DLMS_X9_OBJECT_IDENTIFIER_DH_PUBLIC_NUMBER,
+    DLMS_X9_OBJECT_IDENTIFIER_X9_X42_SCHEMES,
+    DLMS_X9_OBJECT_IDENTIFIER_DH_STATIC,
+    DLMS_X9_OBJECT_IDENTIFIER_DH_EPHEM,
+    DLMS_X9_OBJECT_IDENTIFIER_DH_ONE_FLOW,
+    DLMS_X9_OBJECT_IDENTIFIER_DH_HYBRID1,
+    DLMS_X9_OBJECT_IDENTIFIER_DH_HYBRID2,
+    DLMS_X9_OBJECT_IDENTIFIER_DH_HYBRID_ONE_FLOW,
+    DLMS_X9_OBJECT_IDENTIFIER_MQ_V2,
+    DLMS_X9_OBJECT_IDENTIFIER_MQ_V1,
+    DLMS_X9_OBJECT_IDENTIFIER_SECP_384_R1
+}DLMS_X9_OBJECT_IDENTIFIER;
+
+// Public-Key Cryptography Standards (PKCS) type.
+typedef enum
+{
+    /// Unknown certificate type.
+    DLMS_PKCS_TYPE_NONE,
+    /// PKCS 8 is used with private key.
+    DLMS_PKCS_TYPE_PKCS8,
+    /// PKCS 10 is used with Certificate Signing Request.
+    DLMS_PKCS_TYPE_PKCS10,
+    /// x509Certificate is used with public key.
+    DLMS_PKCS_TYPE_X509_CERTIFICATE
+}DLMS_PKCS_TYPE;
+
+typedef enum
+{
+    DLMS_PKCS_OBJECT_IDENTIFIER_NONE,
+    DLMS_PKCS_OBJECT_IDENTIFIER_RSA_ENCRYPTION,
+    DLMS_PKCS_OBJECT_IDENTIFIER_MD2_WITH_RSA_ENCRYPTION,
+    DLMS_PKCS_OBJECT_IDENTIFIER_MD4_WITH_RSA_ENCRYPTION,
+    DLMS_PKCS_OBJECT_IDENTIFIER_MD5_WITH_RSA_ENCRYPTION,
+    DLMS_PKCS_OBJECT_IDENTIFIER_SHA1_WITH_RSA_ENCRYPTION,
+    DLMS_PKCS_OBJECT_IDENTIFIER_SRSA_OAEP_ENCRYPTIONSET,
+    DLMS_PKCS_OBJECT_IDENTIFIER_ID_RSAES_OAEP,
+    DLMS_PKCS_OBJECT_IDENTIFIER_ID_MGF1,
+    DLMS_PKCS_OBJECT_IDENTIFIER_ID_PSPECIFIED,
+    DLMS_PKCS_OBJECT_IDENTIFIER_ID_RSASSA_PSS,
+    DLMS_PKCS_OBJECT_IDENTIFIER_SHA256_WITH_RSA_ENCRYPTION,
+    DLMS_PKCS_OBJECT_IDENTIFIER_SHA384_WITH_RSA_ENCRYPTION,
+    DLMS_PKCS_OBJECT_IDENTIFIER_SHA512_WITH_RSA_ENCRYPTION,
+    DLMS_PKCS_OBJECT_IDENTIFIER_SHA224_WITH_RSA_ENCRYPTION,
+    DLMS_PKCS_OBJECT_IDENTIFIER_DH_KEY_AGREEMENT,
+    DLMS_PKCS_OBJECT_IDENTIFIER_PBE_WITH_MD2_AND_DES_CBC,
+    DLMS_PKCS_OBJECT_IDENTIFIER_PBE_WITH_MD2_AND_RC2_CBC,
+    DLMS_PKCS_OBJECT_IDENTIFIER_PBE_WITH_MD5_AND_DES_CBC,
+    DLMS_PKCS_OBJECT_IDENTIFIER_PBE_WITH_MD5_AND_RC2_CBC,
+    DLMS_PKCS_OBJECT_IDENTIFIER_PBE_WITH_SHA1_AND_DES_CBC,
+    DLMS_PKCS_OBJECT_IDENTIFIER_PBE_WITH_SHA1_AND_RC2_CBC,
+    DLMS_PKCS_OBJECT_IDENTIFIER_ID_PBE_S2,
+    DLMS_PKCS_OBJECT_IDENTIFIER_ID_PBKD_F2,
+    DLMS_PKCS_OBJECT_IDENTIFIER_DES_EDE3_CBC,
+    DLMS_PKCS_OBJECT_IDENTIFIER_RC2_CBC,
+    DLMS_PKCS_OBJECT_IDENTIFIER_MD2,
+    DLMS_PKCS_OBJECT_IDENTIFIER_MD4,
+    DLMS_PKCS_OBJECT_IDENTIFIER_MD5,
+    DLMS_PKCS_OBJECT_IDENTIFIER_ID_HMAC_WITH_SHA1,
+    DLMS_PKCS_OBJECT_IDENTIFIER_ID_HMAC_WITH_SHA224,
+    DLMS_PKCS_OBJECT_IDENTIFIER_ID_HMAC_WITH_SHA256,
+    DLMS_PKCS_OBJECT_IDENTIFIER_ID_HMAC_WITH_SHA384,
+    DLMS_PKCS_OBJECT_IDENTIFIER_ID_HMAC_WITH_SHA512,
+    DLMS_PKCS_OBJECT_IDENTIFIER_DATA,
+    DLMS_PKCS_OBJECT_IDENTIFIER_SIGNED_DATA,
+    DLMS_PKCS_OBJECT_IDENTIFIER_ENVELOPED_DATA,
+    DLMS_PKCS_OBJECT_IDENTIFIER_SIGNED_AND_ENVELOPED_DATA,
+    DLMS_PKCS_OBJECT_IDENTIFIER_DIGESTED_DATA,
+    DLMS_PKCS_OBJECT_IDENTIFIER_ENCRYPTED_DATA,
+    DLMS_PKCS_OBJECT_IDENTIFIER_PKCS9_AT_EMAIL_ADDRESS,
+    DLMS_PKCS_OBJECT_IDENTIFIER_PKCS9_AT_UNSTRUCTURED_NAME,
+    DLMS_PKCS_OBJECT_IDENTIFIER_PKCS9_AT_CONTENT_TYPE,
+    DLMS_PKCS_OBJECT_IDENTIFIER_PKCS9_AT_MESSAGE_DIGEST,
+    DLMS_PKCS_OBJECT_IDENTIFIER_PKCS9_AT_SIGNING_TIME,
+    DLMS_PKCS_OBJECT_IDENTIFIER_PKCS9_AT_COUNTER_SIGNATURE,
+    DLMS_PKCS_OBJECT_IDENTIFIER_PKCS9_AT_CHALLENGE_PASSWORD,
+    DLMS_PKCS_OBJECT_IDENTIFIER_PKCS9_AT_UNSTRUCTURED_ADDRESS,
+    DLMS_PKCS_OBJECT_IDENTIFIER_PKCS9_AT_EXTENDED_CERTIFICATE_ATTRIBUTES,
+    DLMS_PKCS_OBJECT_IDENTIFIER_PKCS9_AT_SIGNING_DESCRIPTION,
+    DLMS_PKCS_OBJECT_IDENTIFIER_PKCS9_AT_EXTENSION_REQUEST,
+    DLMS_PKCS_OBJECT_IDENTIFIER_PKCS9_AT_SMIME_CAPABILITIES,
+    DLMS_PKCS_OBJECT_IDENTIFIER_ID_SMIME,
+    DLMS_PKCS_OBJECT_IDENTIFIER_PKCS9_AT_FRIENDLY_NAME,
+    DLMS_PKCS_OBJECT_IDENTIFIER_PKCS9_AT_LOCAL_KEY_ID,
+    DLMS_PKCS_OBJECT_IDENTIFIER_X509_CERTIFICATE,
+    DLMS_PKCS_OBJECT_IDENTIFIER_SDSI_CERTIFICATE,
+    DLMS_PKCS_OBJECT_IDENTIFIER_X509_CRL,
+    DLMS_PKCS_OBJECT_IDENTIFIER_ID_ALG,
+    DLMS_PKCS_OBJECT_IDENTIFIER_ID_ALG_ESDH,
+    DLMS_PKCS_OBJECT_IDENTIFIER_ID_ALG_CMS3_DES_WRAP,
+    DLMS_PKCS_OBJECT_IDENTIFIER_ID_ALG_CMS_RC2_WRAP,
+    DLMS_PKCS_OBJECT_IDENTIFIER_ID_ALG_PWRI_KEK,
+    DLMS_PKCS_OBJECT_IDENTIFIER_ID_ALG_SSDH,
+    DLMS_PKCS_OBJECT_IDENTIFIER_ID_RSA_KEM,
+    DLMS_PKCS_OBJECT_IDENTIFIER_PREFER_SIGNED_DATA,
+    DLMS_PKCS_OBJECT_IDENTIFIER_CANNOT_DECRYPT_ANY,
+    DLMS_PKCS_OBJECT_IDENTIFIER_SMIME_CAPABILITIES_VERSIONS,
+    DLMS_PKCS_OBJECT_IDENTIFIER_ID_AA_RECEIPT_REQUEST,
+    DLMS_PKCS_OBJECT_IDENTIFIER_ID_CT_AUTH_DATA,
+    DLMS_PKCS_OBJECT_IDENTIFIER_ID_CT_TST_INFO,
+    DLMS_PKCS_OBJECT_IDENTIFIER_ID_CT_COMPRESSED_DATA,
+    DLMS_PKCS_OBJECT_IDENTIFIER_ID_CT_AUTH_ENVELOPED_DATA,
+    DLMS_PKCS_OBJECT_IDENTIFIER_ID_CT_TIME_STAMPED_DATA,
+    DLMS_PKCS_OBJECT_IDENTIFIER_ID_CTI_ETS_PROOF_OF_ORIGIN,
+    DLMS_PKCS_OBJECT_IDENTIFIER_ID_CTI_ETS_PROOF_OF_RECEIPT,
+    DLMS_PKCS_OBJECT_IDENTIFIER_ID_CTI_ETS_PROOF_OF_DELIVERY,
+    DLMS_PKCS_OBJECT_IDENTIFIER_ID_CTI_ETS_PROOF_OF_SENDER,
+    DLMS_PKCS_OBJECT_IDENTIFIER_ID_CTI_ETS_PROOF_OF_APPROVAL,
+    DLMS_PKCS_OBJECT_IDENTIFIER_ID_CTI_ETS_PROOF_OF_CREATION,
+    DLMS_PKCS_OBJECT_IDENTIFIER_ID_AA_CONTENT_HINT,
+    DLMS_PKCS_OBJECT_IDENTIFIER_ID_AA_MSG_SIG_DIGEST,
+    DLMS_PKCS_OBJECT_IDENTIFIER_ID_AA_CONTENT_REFERENCE,
+    DLMS_PKCS_OBJECT_IDENTIFIER_ID_AA_ENCRYP_KEY_PREF,
+    DLMS_PKCS_OBJECT_IDENTIFIER_ID_AA_SIGNING_CERTIFICATE,
+    DLMS_PKCS_OBJECT_IDENTIFIER_ID_AA_SIGNING_CERTIFICATE_V2,
+    DLMS_PKCS_OBJECT_IDENTIFIER_ID_AA_CONTENT_ID_ENTIFIER,
+    DLMS_PKCS_OBJECT_IDENTIFIER_ID_AA_SIGNATURE_TIME_STAMP_TOKEN,
+    DLMS_PKCS_OBJECT_IDENTIFIER_ID_AA_ETS_SIG_POLICY_ID,
+    DLMS_PKCS_OBJECT_IDENTIFIER_ID_AA_ETS_COMMITMENT_TYPE,
+    DLMS_PKCS_OBJECT_IDENTIFIER_ID_AA_ETS_SIGNER_LOCATION,
+    DLMS_PKCS_OBJECT_IDENTIFIER_ID_AA_ETS_SIGNER_ATTR,
+    DLMS_PKCS_OBJECT_IDENTIFIER_ID_AA_ETS_OTHER_SIG_CERT,
+    DLMS_PKCS_OBJECT_IDENTIFIER_ID_AA_ETS_CONTENT_TIMESTAMP,
+    DLMS_PKCS_OBJECT_IDENTIFIER_ID_AA_ETS_CERTIFICATE_REFS,
+    DLMS_PKCS_OBJECT_IDENTIFIER_ID_AA_ETS_REVOCATION_REFS,
+    DLMS_PKCS_OBJECT_IDENTIFIER_ID_AA_ETS_CERT_VALUES,
+    DLMS_PKCS_OBJECT_IDENTIFIER_ID_AA_ETS_REVOCATION_VALUES,
+    DLMS_PKCS_OBJECT_IDENTIFIER_ID_AA_ETS_ESC_TIME_STAMP,
+    DLMS_PKCS_OBJECT_IDENTIFIER_ID_AA_ETS_CERT_CRL_TIMESTAMP,
+    DLMS_PKCS_OBJECT_IDENTIFIER_ID_AA_ETS_ARCHIVE_TIMESTAMP,
+    DLMS_PKCS_OBJECT_IDENTIFIER_ID_SPQ_ETS_URI,
+    DLMS_PKCS_OBJECT_IDENTIFIER_ID_SPQ_ETS_UNOTICE,
+    DLMS_PKCS_OBJECT_IDENTIFIER_KEY_BAG,
+    DLMS_PKCS_OBJECT_IDENTIFIER_PKCS8_SHROUDED_KEY_BAG,
+    DLMS_PKCS_OBJECT_IDENTIFIER_CERT_BAG,
+    DLMS_PKCS_OBJECT_IDENTIFIER_CRL_BAG,
+    DLMS_PKCS_OBJECT_IDENTIFIER_SECRET_BAG,
+    DLMS_PKCS_OBJECT_IDENTIFIER_SAFECONTENTS_BAG,
+    DLMS_PKCS_OBJECT_IDENTIFIER_PBE_WITH_SHA_AND_128_BIT_RC4,
+    DLMS_PKCS_OBJECT_IDENTIFIER_PBE_WITH_SHA_AND_40_BIT_RC4,
+    DLMS_PKCS_OBJECT_IDENTIFIER_PBE_WITH_SHA_AND_3KEY_TRIPLE_DES_CBC,
+    DLMS_PKCS_OBJECT_IDENTIFIER_PBE_WITH_SHA_AND_2KEY_TRIPLE_DES_CBC,
+    DLMS_PKCS_OBJECT_IDENTIFIER_PBE_WITH_SHA_AND_128_BIT_RC2_CBC,
+    DLMS_PKCS_OBJECT_IDENTIFIER_PBE_WITH_SHA_AND_40_BIT_RC2_CBC
+}DLMS_PKCS_OBJECT_IDENTIFIER;
+
+    /// Key Usage.
+    typedef enum
+    {
+    //Key is not used.
+    DLMS_KEY_USAGE_NONE = 0,
+    //Digital signature.
+    DLMS_KEY_USAGE_DIGITAL_SIGNATURE = 0x1,
+    //Non Repudiation.    
+    DLMS_KEY_USAGE_NON_REPUDIATION = 0x2,
+    //Key encipherment.
+    DLMS_KEY_USAGE_KEY_ENCIPHERMENT = 0x4,
+    //Data encipherment.
+    DLMS_KEY_USAGE_DATA_ENCIPHERMENT = 0x8,
+    //Key agreement.
+    DLMS_KEY_USAGE_KEY_AGREEMENT = 0x10,
+    //Used with CA certificates when the subject public key is used to verify a signature on certificates.
+    DLMS_KEY_USAGE_KEY_CERT_SIGN = 0x20,
+    //Used when the subject public key is to verify a signature.
+    DLMS_KEY_USAGE_CRL_SIGN = 0x40,
+    //Encipher only.
+    DLMS_KEY_USAGE_ENCIPHER_ONLY = 0x80,
+    //Decipher only.
+    DLMS_KEY_USAGE_DECIPHER_ONLY = 0x100
+    }DLMS_KEY_USAGE;
+
+    // Hash algorithms.
+    typedef enum 
+    {
+        DLMS_HASH_ALGORITHM_NONE,
+        DLMS_HASH_ALGORITHM_SHA1_RSA,
+        DLMS_HASH_ALGORITHM_MD5_RSA,
+        DLMS_HASH_ALGORITHM_SHA1_DSA,
+        DLMS_HASH_ALGORITHM_SHA1_RSA1,
+        DLMS_HASH_ALGORITHM_SHA_RSA,
+        DLMS_HASH_ALGORITHM_MD5_RSA1,
+        DLMS_HASH_ALGORITHM_MD2_RSA1,
+        DLMS_HASH_ALGORITHM_MD4_RSA,
+        DLMS_HASH_ALGORITHM_MD4_RSA1,
+        DLMS_HASH_ALGORITHM_MD4_RSA2,
+        DLMS_HASH_ALGORITHM_MD2_RSA,
+        DLMS_HASH_ALGORITHM_SHA1_DSA1,
+        DLMS_HASH_ALGORITHM_DSA_SHA1,
+        DLMS_HASH_ALGORITHM_MOSAIC_UPDATED_SIG,
+        DLMS_HASH_ALGORITHM_SHA1_NO_SIGN,
+        DLMS_HASH_ALGORITHM_MD5_NO_SIGN,
+        DLMS_HASH_ALGORITHM_SHA_256_NO_SIGN,
+        DLMS_HASH_ALGORITHM_SHA_384_NO_SIGN,
+        DLMS_HASH_ALGORITHM_SHA_512_NO_SIGN,
+        DLMS_HASH_ALGORITHM_SHA_256_RSA,
+        DLMS_HASH_ALGORITHM_SHA_384_RSA,
+        DLMS_HASH_ALGORITHM_SHA_512_RSA,
+        DLMS_HASH_ALGORITHM_RSA_SSA_PSS,
+        DLMS_HASH_ALGORITHM_SHA1_WITH_ECDSA,
+        DLMS_HASH_ALGORITHM_SHA_256_WITH_ECDSA,
+        DLMS_HASH_ALGORITHM_SHA_384_WITH_ECDSA,
+        DLMS_HASH_ALGORITHM_SHA_512_WITH_ECDSA,
+        DLMS_HASH_ALGORITHM_SPECIFIED_ECDSA
+    }DLMS_HASH_ALGORITHM;
+
+    // Extended key usage.
+    typedef enum 
+    {
+        // Extended key usage is not used.
+        DLMS_EXTENDED_KEY_USAGE_NONE,
+        // Certificate can be used as an TLS server certificate.
+        DLMS_EXTENDED_KEY_USAGE_SERVER_AUTH,
+        // Certificate can be used as an TLS client certificate.
+        DLMS_EXTENDED_KEY_USAGE_CLIENT_AUTH
+    }DLMS_EXTENDED_KEY_USAGE;
+
+    // Certificate version.
+    typedef enum
+    {
+    // Certificate version 1.
+    DLMS_CERTIFICATE_VERSION_1,
+    // Certificate version 2.
+    DLMS_CERTIFICATE_VERSION_2,
+    // Certificate version 3.
+    DLMS_CERTIFICATE_VERSION_3,
+    }DLMS_CERTIFICATE_VERSION;
+#endif
