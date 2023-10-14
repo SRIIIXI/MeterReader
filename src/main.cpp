@@ -1,13 +1,13 @@
 #include <QGuiApplication>
 #include <QQmlApplicationEngine>
-#include "EdmiCsa.hpp"
+#include "MeterReader.hpp"
 #include "UICommandHandler.hpp"
 
 int main(int argc, char *argv[])
 {
-    Q_INIT_RESOURCE(EdmiCsa);
+    Q_INIT_RESOURCE(MeterReader);
 
-    EdmiCsa  app(argc, argv);
+    MeterReader  app(argc, argv);
 
     if(!app.StartApplication())
     {

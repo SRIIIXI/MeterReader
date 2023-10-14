@@ -1,4 +1,4 @@
-#include "EdmiCsa.hpp"
+#include "MeterReader.hpp"
 #include "EntityStatisticsEnergy.hpp"
 #include "EntityStatisticsPowerQuality.hpp"
 #include "EntityAlarm.hpp"
@@ -14,12 +14,12 @@
 static float get_random_real(float lower, float upper);
 static long long get_random_integer(long long lower, long long upper);
 
-EdmiCsa::EdmiCsa(int argc, char *argv[])
+MeterReader::MeterReader(int argc, char *argv[])
     :QGuiApplication(argc, argv)
 {
 }
 
-EdmiCsa::~EdmiCsa()
+MeterReader::~MeterReader()
 {
     if(dataInterfacePtr)
     {
@@ -27,7 +27,7 @@ EdmiCsa::~EdmiCsa()
     }
 }
 
-bool EdmiCsa::StartApplication()
+bool MeterReader::StartApplication()
 {
     QString logfilepath;
     QString dbffilepath;
@@ -188,7 +188,7 @@ bool EdmiCsa::StartApplication()
     return init_b;
 }
 
-void EdmiCsa::populateAlarmFilters()
+void MeterReader::populateAlarmFilters()
 {
     QString sqlstring;
 
@@ -388,7 +388,7 @@ void EdmiCsa::populateAlarmFilters()
     dataInterfacePtr->executeSQL(sqlstring);
 }
 
-void EdmiCsa::populateDemoData()
+void MeterReader::populateDemoData()
 {
     char tsbuffer[32] = {0};
 

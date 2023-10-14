@@ -1,5 +1,5 @@
-#ifndef EDMI_CSA
-#define EDMI_CSA
+#ifndef METER_READER
+#define METER_READER
 
 #include <QtQuickWidgets/QQuickWidget>
 #include <QGuiApplication>
@@ -21,12 +21,12 @@
 
 #include "DataInterface.hpp"
 
-class EdmiCsa : public QGuiApplication
+class MeterReader : public QGuiApplication
 {
     Q_OBJECT
 public:
-    explicit EdmiCsa(int argc, char *argv[]);
-    virtual ~EdmiCsa();
+    explicit MeterReader(int argc, char *argv[]);
+    virtual ~MeterReader();
     bool StartApplication();
 private:
     void populateAlarmFilters();

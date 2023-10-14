@@ -22,7 +22,7 @@ BleCentral::~BleCentral()
 
 }
 
-void BleCentral::SetPeripheralDevice(const QString &macaddress, const QString &uuid, const QString &name, QString servicestr)
+void BleCentral::SetPeripheralDevice(const QBluetoothDeviceInfo &device, QString servicestr)
 {
 //    if(uartCentral != nullptr)
 //    {
@@ -156,8 +156,8 @@ void BleCentral::OnCommunicationTimeout()
 
 }
 
-//void BleCentral::QueryServiceDetails()
-//{
+void BleCentral::QueryServiceDetails()
+{
 //    uartService = uartCentral->createServiceObject(peripheralGattService, this);
 
 //    connect(uartService, SIGNAL(stateChanged(QLowEnergyService::ServiceState)), this, SLOT(OnServiceStateChanged(QLowEnergyService::ServiceState)));
@@ -170,10 +170,10 @@ void BleCentral::OnCommunicationTimeout()
 //    {
 //        uartService->discoverDetails();
 //    }
-//}
+}
 
-//void BleCentral::GetCharachteristics()
-//{
+void BleCentral::GetCharachteristics()
+{
 //    readfound = false;
 //    writefound = false;
 
@@ -238,12 +238,12 @@ void BleCentral::OnCommunicationTimeout()
 //    {
 //        emit DeviceConnected(remoteDevice);
 //    }
-//}
+}
 
 //Controller events/signals
 
-//void BleCentral::OnServiceDiscovered(const QBluetoothUuid &gattservice)
-//{
+void BleCentral::OnServiceDiscovered(const QBluetoothUuid &gattservice)
+{
 //    QString temp = gattservice.toString(QUuid::WithoutBraces).toUpper();
 
 //    if(temp == peripheralServiceIdString)
@@ -256,24 +256,24 @@ void BleCentral::OnCommunicationTimeout()
 //            QueryServiceDetails();
 //        }
 //    }
-//}
+}
 
-//void BleCentral::OnServiceScanDone()
-//{
+void BleCentral::OnServiceScanDone()
+{
 //    gattServiceScanComplete = true;
 
 //    if(gattServiceScanComplete && gattServiceFound)
 //    {
 //       QueryServiceDetails();
 //    }
-//}
+}
 
-//void BleCentral::OnControllerError(QLowEnergyController::Error)
-//{
-//}
+void BleCentral::OnControllerError(QLowEnergyController::Error)
+{
+}
 
-//void BleCentral::OnDeviceConnected()
-//{
+void BleCentral::OnDeviceConnected()
+{
 //    globalApplicationData->AppLogInformation("LE Connected");
 //    connectionEvents++;
 
@@ -281,71 +281,69 @@ void BleCentral::OnCommunicationTimeout()
 //    {
 //        uartCentral->discoverServices();
 //    }
-//}
+}
 
-//void BleCentral::OnDeviceDisconnected()
-//{
+void BleCentral::OnDeviceDisconnected()
+{
 //    emit DeviceDisconnected(remoteDevice);
-//}
+}
 
 ////Characteristic (I/O) events
 
-//void BleCentral::OnServiceStateChanged(QLowEnergyService::ServiceState state)
-//{
-//    if(state == QLowEnergyService::ServiceDiscovered)
-//    {
-//        GetCharachteristics();
-//    }
-//}
+void BleCentral::OnServiceStateChanged(QLowEnergyService::ServiceState state)
+{
+    if(state == QLowEnergyService::RemoteServiceDiscovered)
+    {
+        GetCharachteristics();
+    }
+}
 
-//void BleCentral::OnCharacteristicChanged(const QLowEnergyCharacteristic &characteristics, const QByteArray &value)
-//{
+void BleCentral::OnCharacteristicChanged(const QLowEnergyCharacteristic &characteristics, const QByteArray &value)
+{
 //    if(characteristics.uuid().toString() == peripheralTx.toString())
 //    {
 //        emit DataReceived(value);
 //    }
-//}
+}
 
-//void BleCentral::OnServiceError(QLowEnergyService::ServiceError error)
-//{
+void BleCentral::OnServiceError(QLowEnergyService::ServiceError error)
+{
 //    globalApplicationData->AppLogError("Service Error");
-//}
+}
 
-//void BleCentral::OnCharacteristicRead(const QLowEnergyCharacteristic &characteristics, const QByteArray &value)
-//{
-//}
+void BleCentral::OnCharacteristicRead(const QLowEnergyCharacteristic &characteristics, const QByteArray &value)
+{
+}
 
-//void BleCentral::OnCharacteristicWrite(const QLowEnergyCharacteristic &characteristics, const QByteArray &value)
-//{
-//}
+void BleCentral::OnCharacteristicWrite(const QLowEnergyCharacteristic &characteristics, const QByteArray &value)
+{
+}
 
-//void BleCentral::OnDeviceConnected(const QBluetoothAddress &address)
-//{
+void BleCentral::OnDeviceConnected(const QBluetoothAddress &address)
+{
 //    globalApplicationData->AppLogInformation("Classic Connected");
 //    connectionEvents++;
 //    if(connectionEvents == 2)
 //    {
 //        uartCentral->discoverServices();
 //    }
-//}
+}
 
-//void BleCentral::OnDeviceDisconnected(const QBluetoothAddress &address)
-//{
+void BleCentral::OnDeviceDisconnected(const QBluetoothAddress &address)
+{
+}
 
-//}
+void BleCentral::OnErrorOccurred(QBluetoothLocalDevice::Error error)
+{
+}
 
-//void BleCentral::OnErrorOccurred(QBluetoothLocalDevice::Error error)
-//{
+void BleCentral::OnHostModeStateChanged(QBluetoothLocalDevice::HostMode state)
+{
 
-//}
+}
 
-//void BleCentral::OnHostModeStateChanged(QBluetoothLocalDevice::HostMode state)
-//{
-
-//}
-
-//void BleCentral::OnPairingFinished(const QBluetoothAddress &address, QBluetoothLocalDevice::Pairing pairing)
-//{
+void BleCentral::OnPairingFinished(const QBluetoothAddress &address, QBluetoothLocalDevice::Pairing pairing)
+{
 //    globalApplicationData->AppLogInformation("Pairing Finished");
 
 //    if(pairing == QBluetoothLocalDevice::Unpaired)
@@ -359,4 +357,4 @@ void BleCentral::OnCommunicationTimeout()
 //            uartCentral->connectToDevice();
 //        }
 //    }
-//}
+}
