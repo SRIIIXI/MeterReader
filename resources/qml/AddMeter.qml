@@ -8,91 +8,25 @@ Page
     id: addMeterPage
 
     Material.theme: Material.Light
-    Material.accent: "#961C1C"
-
-    property bool meterStatus: false
-    property string lastSyncTime: applicationData.CurrentMeter.LastSyncStr
-    property string meterName: applicationData.CurrentMeter.SerialNo
+    Material.accent: applicationData.Theme.AccentColor
 
     property bool stage1: false
     property bool stage2: false
     property bool stage3: false
     property bool stage4: false
 
-    function getFontColor()
-    {
-        if(applicationData.IsDarkTheme === true)
-        {
-            return "black";
-        }
-        else
-        {
-            return "white";
-        }
-    }
-
-    Keys.onReleased:
-    {
-        if(Qt.platform.os === "android")
-        {
-            if (event.key === Qt.Key_Back)
-            {
-                event.accepted = true
-                applicationData.pageAction(4)
-            }
-        }
-    }
-
-    Header
-    {
-        id:headerID
-        headerTitle: "Add New Meter"
-        meterName  : applicationData.CurrentMeter.SerialNo
-        syncDate   : applicationData.CurrentMeter.LastSyncStr
-        isOptionsBtnVisible:  false
-        isMeterNameVisible: false
-        isSyncDateVisible: false
-        isInfoVisible: false
-        isTitleVisible: true
-        backBtn.action      : navigateAvailableMeters
-    }
-
-    Rectangle
-    {
-        id: background
-        width: parent.width
-        height: parent.height - headerID.height
-        anchors.top: headerID.bottom
-        color:
-        {
-            if(applicationData.IsDarkTheme === true)
-            {
-                return "black";
-            }
-            else
-            {
-                return "white";
-            }
-        }
-    }
-
     Component.onCompleted:
     {
-        headerID.isMeterNameVisible = true
         stage1ItemID.visible = false
         stage2ItemID.visible = false
         stage3ItemID.visible = false
         stage4ItemID.visible = false
         stage5ItemID.visible = false
-        btnClose.visible = false
 
-        btnAdd.enabled = false;
-
-        console.log("Existing QR Text Lenght", applicationData.QRText.length, Qt.platform.os)
-
-        if(applicationData.QRText.length === 29 || applicationData.QRText.length === 23 || applicationData.QRText.length === 15 || applicationData.QRText.length === 9)
+        if(applicationData.QRText.length > 8 && applicationData.QRText.length < 30)
         {
             btnAdd.enabled = true;
+            textEdit.text = applicationData.QRText;
         }
         else
         {
@@ -102,21 +36,30 @@ Page
 
     Rectangle
     {
+        id: background
+        width: parent.width
+        height: parent.height - headerPanel.height
+        anchors.top: headerPanel.bottom
+        color: applicationData.Theme.BackgroundColor
+    }
+
+    Header
+    {
+        id:headerPanel
+        headerTitle: "Add New Meter"
+        isMenuButtonVisible: true
+        isMeterNameVisible: false
+        isSyncDateVisible: false
+        isConnectionIndicatorVisible: applicationData.IsAppConnected
+    }
+
+    Rectangle
+    {
         id:pairingCodelblRect
         width: addMeterPage.width
         height: addMeterPage.width * 0.1
-        color:
-        {
-            if(applicationData.IsDarkTheme === true)
-            {
-                return "black";
-            }
-            else
-            {
-                return "white";
-            }
-        }
-        anchors.top: headerID.bottom
+        color: applicationData.Theme.BackgroundColor
+        anchors.top: headerPanel.bottom
         anchors.topMargin: 10
         anchors.horizontalCenter: parent.horizontalCenter
 
@@ -126,17 +69,7 @@ Page
             text: "Enter Pairing Code"
             font.bold: true
             anchors.horizontalCenter: parent.horizontalCenter
-            Material.theme:
-            {
-                if(applicationData.IsDarkTheme === true)
-                {
-                    return Material.Dark;
-                }
-                else
-                {
-                    return Material.Light;
-                }
-            }
+            color: applicationData.Theme.FontColor
         }
     }
 
@@ -148,17 +81,7 @@ Page
         anchors.top: pairingCodelblRect.bottom
         anchors.horizontalCenter: parent.horizontalCenter
         radius: 5
-        color:
-        {
-            if(applicationData.IsDarkTheme === true)
-            {
-                return "black";
-            }
-            else
-            {
-                return "white";
-            }
-        }
+        color: applicationData.Theme.BackgroundColor
 
        TextField
        {
@@ -166,7 +89,7 @@ Page
            focus: true
            text: applicationData.QRText
            height: rectMeterEdit.height
-           width: rectMeterEdit.width - btnSCan.width*1.5
+           width: rectMeterEdit.width - btnScan.width*1.5
            anchors.left: parent.left
            anchors.verticalCenter: parent.verticalCenter
            maximumLength: 29
@@ -179,9 +102,8 @@ Page
                stage3ItemID.visible = false
                stage4ItemID.visible = false
                stage5ItemID.visible = false
-               btnClose.visible = false
 
-               if(text.length === 29 || text.length === 23 || text.length === 15 || text.length === 9)
+               if(text.length <= 29 || text.length === 23 || text.length === 15 || text.length === 9)
                {
                    btnAdd.enabled = true;
                }
@@ -206,42 +128,36 @@ Page
 
        ToolButton
        {
-           id: btnSCan
+           id: btnScan
            height: rectMeterEdit.height
            width: rectMeterEdit.height
-           icon.source:
-           if(applicationData.IsDarkTheme === true)
-           {
-               return "../images/ScanWhite.png";
-           }
-           else
-           {
-               return "../images/ScanBlack.png";
-           }
            icon.color: "transparent"
            icon.height: rectMeterEdit.height*0.66
            icon.width: rectMeterEdit.height*0.66
            anchors.right :rectMeterEdit.right
            anchors.verticalCenter: rectMeterEdit.verticalCenter
-           enabled: true
+           enabled: applicationData.IsCameraAccessEnabled
 
-           background: Rectangle
+           icon.source:
            {
-               color:
+               if(applicationData.IsCameraAccessEnabled === true)
                {
-                   if(applicationData.IsDarkTheme === true)
-                   {
-                       return "black";
-                   }
-                   else
-                   {
-                       return "white";
-                   }
+                   return "../images/Scan.png";
+               }
+               else
+               {
+                   return "../images/ScanGrey.png"
                }
            }
 
+           background: Rectangle
+           {
+               color: applicationData.Theme.BackgroundColor
+           }
+
            onClicked:
-           {               
+           {
+               btnScan.enabled = false;
                applicationData.QRText = "";
                applicationData.ScanMode = 0;
                applicationData.invokeClearToken();
@@ -250,47 +166,35 @@ Page
        }
     }
 
-    Button
+    CustomButton
     {
         id: btnAdd
         text: "Add Meter"
-        height: parent.width*0.15
+        height: parent.width*0.125
         width: (parent.width*0.2)*2
         anchors.top: rectMeterEdit.bottom
         anchors.topMargin: 10
         anchors.horizontalCenter: parent.horizontalCenter
+        textAlignment: Text.ElideRight
+        isDefault: true
+        accentColor: applicationData.Theme.AccentColor
         onClicked:
         {
+            var str = textEdit.text
             stage1ItemID.visible = false
             stage2ItemID.visible = false
             stage3ItemID.visible = false
             stage4ItemID.visible = false
             stage5ItemID.visible = false
             btnClose.visible = false
-            btnAdd.enabled = false;
-            headerID.isInfoVisible = true;
-            headerID.progressVisible = true;
-            headerID.progressText = "0%";
-            applicationData.invokeAddMeter(textEdit.text)
-        }
-
-        background: Rectangle
-        {
-            color: "#961C1C"
-            border.width: 1
-            border.color: "#961C1C"
-            radius: 0.2  * btnAdd.height
-        }
-
-        contentItem: Text
-        {
-           text: "Add Meter"
-           font: btnAdd.font
-           opacity: enabled ? 1.0 : 0.3
-           color: btnAdd.down ? "gray" : "white"
-           horizontalAlignment: Text.AlignHCenter
-           verticalAlignment: Text.AlignVCenter
-           elide: Text.ElideRight
+            btnAdd.enabled = false
+            btnAdd.visible = false
+            btnScan.enabled = false
+            btnClose.visible = false
+            headerPanel.isMenuButtonVisible = false
+            applicationData.QRText = ""
+            textEdit.text = ""
+            applicationData.invokeAddMeter(str)
         }
     }
 
@@ -320,7 +224,7 @@ Page
             id:stage1Namelbl
             elide: Label.ElideRight
             height: stage1ItemID.height
-            font.pointSize: headerID.fontSizeSmall
+            font.pointSize: headerPanel.fontSizeSmall
             verticalAlignment: Qt.AlignVCenter
             anchors
             {
@@ -328,17 +232,7 @@ Page
                 leftMargin: stage1ImgID.width*0.33
             }
             text: "Validating Code"
-            Material.theme:
-            {
-                if(applicationData.IsDarkTheme === true)
-                {
-                    return Material.Dark;
-                }
-                else
-                {
-                    return Material.Light;
-                }
-            }
+            color: applicationData.Theme.FontColor
         }
     }
 
@@ -368,7 +262,7 @@ Page
             id:stage2Namelbl
             elide: Label.ElideRight
             height: stage2ItemID.height
-            font.pointSize: headerID.fontSizeSmall
+            font.pointSize: headerPanel.fontSizeSmall
             verticalAlignment: Qt.AlignVCenter
             anchors
             {
@@ -376,17 +270,7 @@ Page
                 leftMargin: stage2ImgID.width*0.33
             }
             text: "Scanning for Meter"
-            Material.theme:
-            {
-                if(applicationData.IsDarkTheme === true)
-                {
-                    return Material.Dark;
-                }
-                else
-                {
-                    return Material.Light;
-                }
-            }
+            color: applicationData.Theme.FontColor
         }
     }
 
@@ -416,7 +300,7 @@ Page
             id:stage3Namelbl
             elide: Label.ElideRight
             height: stage4ItemID.height
-            font.pointSize: headerID.fontSizeSmall
+            font.pointSize: headerPanel.fontSizeSmall
             verticalAlignment: Qt.AlignVCenter
             anchors
             {
@@ -424,17 +308,7 @@ Page
                 leftMargin: stage3ImgID.width*0.33
             }
             text: "Verifying Credentials"
-            Material.theme:
-            {
-                if(applicationData.IsDarkTheme === true)
-                {
-                    return Material.Dark;
-                }
-                else
-                {
-                    return Material.Light;
-                }
-            }
+            color: applicationData.Theme.FontColor
         }
     }
 
@@ -464,7 +338,7 @@ Page
             id:stage4Namelbl
             elide: Label.ElideRight
             height: stage4ItemID.height
-            font.pointSize: headerID.fontSizeSmall
+            font.pointSize: headerPanel.fontSizeSmall
             verticalAlignment: Qt.AlignVCenter
             anchors
             {
@@ -472,17 +346,7 @@ Page
                 leftMargin: stage4ImgID.width*0.33
             }
             text: "Validating Configuration"
-            Material.theme:
-            {
-                if(applicationData.IsDarkTheme === true)
-                {
-                    return Material.Dark;
-                }
-                else
-                {
-                    return Material.Light;
-                }
-            }
+            color: applicationData.Theme.FontColor
         }
     }
 
@@ -494,7 +358,7 @@ Page
         height: addMeterPage.width * 0.1
         color:"transparent"
         anchors.bottom: btnClose.top
-        anchors.bottomMargin: (btnClose.y - btnAdd.y)/2 - btnAdd.height*2
+        anchors.bottomMargin: btnClose.height
         anchors.horizontalCenter: parent.horizontalCenter
 
         Image
@@ -507,64 +371,27 @@ Page
         }
     }
 
-    Button
+    CustomButton
     {
         id: btnClose
         text: "Close"
-        height: parent.width*0.15
+        height: parent.width*0.125
         width: (parent.width*0.2)*2
-        visible: false
         anchors.bottom: parent.bottom
         anchors.bottomMargin: 10
         anchors.horizontalCenter: parent.horizontalCenter
+        isDefault: false
+        accentColor: applicationData.Theme.AccentColor
         onClicked:
         {
             applicationData.invokeMeterAdditionClose()
-        }
-
-        background: Rectangle
-        {
-            color:
-            {
-                if(applicationData.IsDarkTheme === true)
-                {
-                    return "white";
-                }
-                else
-                {
-                    return "black";
-                }
-            }
-            border.width: 1
-            border.color:
-            {
-                if(applicationData.IsDarkTheme === true)
-                {
-                    return "white";
-                }
-                else
-                {
-                    return "black";
-                }
-            }
-            radius: 0.2  * btnClose.height
-        }
-
-        contentItem: Text
-        {
-           text: "Close"
-           font: btnClose.font
-           opacity: enabled ? 1.0 : 0.3
-           color: btnClose.down ? "gray" : getFontColor()
-           horizontalAlignment: Text.AlignHCenter
-           verticalAlignment: Text.AlignVCenter
-           elide: Text.ElideRight
         }
     }
 
     Connections
     {
         target: applicationData
+
         function onMeterPairingCodeVerification(fl, errorstr)
         {
             stage1 = fl;
@@ -572,7 +399,6 @@ Page
             if(fl === true)
             {
                 stage1ImgID.source = "../images/Pass.png"
-                stage1Namelbl.text = "Validating Code"
                 btnClose.visible = false
             }
             else
@@ -580,14 +406,14 @@ Page
                 stage1ImgID.source = "../images/Fail.png"
                 stage1Namelbl.text = errorstr
                 btnClose.visible = true
-                btnAdd.enabled = true;
+                headerPanel.isMenuButtonVisible = true
             }
 
-            console.log("Token verify " + fl)
-            stage1ItemID.visible = true
+           stage1Namelbl.text = errorstr
+           stage1ItemID.visible = true
         }
 
-        function onMeterFound(fl)
+        function onMeterFound(fl, errorstr)
         {
             stage2 = fl;
 
@@ -600,14 +426,14 @@ Page
             {
                 stage2ImgID.source = "../images/Fail.png"
                 btnClose.visible = true
-                btnAdd.enabled = true;
+                headerPanel.isMenuButtonVisible = true
             }
 
-            console.log("Meter found " + fl)
+            stage2Namelbl.text = errorstr
             stage2ItemID.visible = true
-        }
+       }
 
-        function onMeterAuthenticated(fl)
+        function onMeterConnected(fl, errorstr)
         {
             stage3 = fl;
 
@@ -620,14 +446,14 @@ Page
             {
                 stage3ImgID.source = "../images/Fail.png"
                 btnClose.visible = true
-                btnAdd.enabled = true;
+                headerPanel.isMenuButtonVisible = true
             }
 
-            console.log("Meter authenticate " + fl)
+            stage3Namelbl.text = errorstr
             stage3ItemID.visible = true
         }
 
-        function onMeterCheckConfiguration(fl)
+        function onMeterConfigured(fl, errorstr)
         {
             stage4 = fl;
 
@@ -640,10 +466,9 @@ Page
             {
                 stage4ImgID.source = "../images/Fail.png"
                 btnClose.visible = true
-                btnAdd.enabled = true;
             }
 
-            console.log("Meter Check Configuration " + fl)
+            stage4Namelbl.text = errorstr
             stage4ItemID.visible = true
 
             if(stage1 === true && stage2 === true && stage3 === true && stage4 === true)
@@ -655,11 +480,11 @@ Page
                  stage5ItemID.visible = false
             }
 
-            headerID.isInfoVisible = false;
-            headerID.progressVisible = false;
-            headerID.progressText = "0%";
             btnClose.visible = true
-            btnAdd.enabled = true;
+            btnAdd.enabled = false
+            btnAdd.visible = true
+            btnScan.enabled = true
+            headerPanel.isMenuButtonVisible = true
         }
     }
 }

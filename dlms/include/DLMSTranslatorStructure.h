@@ -34,7 +34,7 @@ class DLMSTranslatorStructure
     bool m_IgnoreSpaces;
 
     std::string GetTag(unsigned long tag);
-    char tmp[20];
+    char tmp[21];
 public:
     DLMS_TRANSLATOR_OUTPUT_TYPE GetOutputType();
 

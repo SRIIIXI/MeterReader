@@ -149,11 +149,11 @@ static const char* OBIS_CODES_ABSTRACT_1 = "\
 0.0-64.29.0.0.255;90;;Ch. $B;G3-PLC MAC layer counters;;;\n\
 0.0-64.29.1.0.255;91;;Ch. $B;G3-PLC MAC setup;;;\n\
 0.0-64.29.2.0.255;92;;Ch. $B;G3-PLC 6LoWPAN adaptation layer setup;;;\n\
-0.0-64.30.0.0-127.255;101;;Ch. $B;ZigBeeÆ SAS startup;;#$(E+1);\n\
-0.0-64.30.1.0-127.255;102;;Ch. $B;ZigBeeÆ SAS join;;#$(E+1);\n\
-0.0-64.30.2.0-127.255;103;;Ch. $B;ZigBeeÆ SAS APS fragmentation;;#$(E+1);\n\
-0.0-64.30.3.0-127.255;104;;Ch. $B;ZigBeeÆ network control;;#$(E+1);\n\
-0.0-64.30.4.0-127.255;105;;Ch. $B;ZigBeeÆ tunnel setup;;#$(E+1);\n\
+0.0-64.30.0.0-127.255;101;;Ch. $B;ZigBee¬Æ SAS startup;;#$(E+1);\n\
+0.0-64.30.1.0-127.255;102;;Ch. $B;ZigBee¬Æ SAS join;;#$(E+1);\n\
+0.0-64.30.2.0-127.255;103;;Ch. $B;ZigBee¬Æ SAS APS fragmentation;;#$(E+1);\n\
+0.0-64.30.3.0-127.255;104;;Ch. $B;ZigBee¬Æ network control;;#$(E+1);\n\
+0.0-64.30.4.0-127.255;105;;Ch. $B;ZigBee¬Æ tunnel setup;;#$(E+1);\n\
 0.0-64.31.0.0.255;73;;Ch. $B;Wireless Mode Q channel;;;\n\
 0.0-64.33.0.0.255;140;;Ch. $B;HS-PLC ISO/IEC 12139-1 MAC setup;;;\n\
 0.0-64.33.1.0.255;141;;Ch. $B;HS-PLC ISO/IEC 12139-1 CPAS setup;;;\n\
@@ -1016,8 +1016,8 @@ static const char* OBIS_CODES_GAS_1 ="\
 7.0-64.0.11.31.255;1,3,4;5,6,15,16,17,18,23,24;Ch. $B;Ambient device temperature, average month;;;\n\
 7.0-64.0.12.8.255;1,3,4;5,6,15,16,17,18,23,24;Ch. $B;Reference pressure of gas analysis;;;\n\
 7.0-64.0.12.9.255;1,3,4;5,6,15,16,17,18,23,24;Ch. $B;Reference temperature of gas analysis;;;\n\
-7.0-64.0.12.10.255;1,3,4;5,6,15,16,17,18,23,24;Ch. $B;Superior Wobbe number 0 ∞C;;;\n\
-7.0-64.0.12.11.255;1,3,4;5,6,15,16,17,18,23,24;Ch. $B;Inferior Wobbe number 0 ∞C;;;\n\
+7.0-64.0.12.10.255;1,3,4;5,6,15,16,17,18,23,24;Ch. $B;Superior Wobbe number 0 ¬∞C;;;\n\
+7.0-64.0.12.11.255;1,3,4;5,6,15,16,17,18,23,24;Ch. $B;Inferior Wobbe number 0 ¬∞C;;;\n\
 7.0-64.0.12.12.255;1,3,4;5,6,15,16,17,18,23,24;Ch. $B;Methane number;;;\n\
 7.0-64.0.12.13.255;1,3,4;5,6,15,16,17,18,23,24;Ch. $B;Total sulphur;;;\n\
 7.0-64.0.12.14.255;1,3,4;5,6,15,16,17,18,23,24;Ch. $B;Hydrogen sulphide H2S;;;\n\
@@ -1074,7 +1074,7 @@ static const char* OBIS_CODES_GAS_1 ="\
 static const char* OBIS_CODES_GAS_2 = "\
 7.0-64.1-8,11-16,21-26,31-36,61-66.0.0-63.255;3,4,7;5,6,9,10,13,15,16,17,18,20,21,23,24;Ch. $B;$0;Index, Value at metering conditions, Current;Rate $E (0 is total);Billing period $F (255 is current)\n\
 7.0-64.1-8,11-16,21-26,31-36,61-66.1.0-63.255;3,4,7;5,6,9,10,13,15,16,17,18,20,21,23,24;Ch. $B;$0;Index, Corrected value, Current;Rate $E (0 is total);Billing period $F (255 is current)\n\
-7.0-64.1-8,11-16,21-26,31-36,61-66.2.0-63.255;3,4,7;5,6,9,10,13,15,16,17,18,20,21,23,24;Ch. $B;$0;Index, Value at base conditions / ìConverted valueî, Current;Rate $E (0 is total);Billing period $F (255 is current)\n\
+7.0-64.1-8,11-16,21-26,31-36,61-66.2.0-63.255;3,4,7;5,6,9,10,13,15,16,17,18,20,21,23,24;Ch. $B;$0;Index, Value at base conditions / ‚ÄúConverted value‚Äù, Current;Rate $E (0 is total);Billing period $F (255 is current)\n\
 7.0-64.1-8,11-16,21-26,31-36,61-66.3.0-63.255;3,4,7;5,6,9,10,13,15,16,17,18,20,21,23,24;Ch. $B;$0;Index, Current redundant value at metering conditions, Current;Rate $E (0 is total);Billing period $F (255 is current)\n\
 7.0-64.1-8,11-16,21-26,31-36,61-66.6.0-63.0-99,101-126,255;3,4,7;5,6,9,10,13,15,16,17,18,20,21,23,24;Ch. $B;$0;Value relative to measurement period 1, Index difference, Value at metering conditions, Current period;Rate $E (0 is total);Billing period $F (255 is current)\n\
 7.0-64.1-8,11-16,21-26,31-36,61-66.7.0-63.0-99,101-126,255;3,4,7;5,6,9,10,13,15,16,17,18,20,21,23,24;Ch. $B;$0;Value relative to measurement period 1, Index difference, Corrected value, Current period;Rate $E (0 is total);Billing period $F (255 is current)\n\
@@ -1173,7 +1173,7 @@ static const char* OBIS_CODES_GAS_3 = "\
 7.0-64.1-8,11-16,21-26,31-36,61-66.98.0-63.0-99,101-126,255;3,4,7;5,6,9,10,13,15,16,17,18,20,21,23,24;Ch. $B;$0;Values relative to billing period 4, Maximum of Index differences over measurement period 3, Value at base conditions;Rate $E (0 is total) (0 is total);Billing period $F (255 is current)\n\
 7.0-64.43.0.0.255;3,4,7;5,6,9,10,13,15,16,17,18,20,21,23,24;Ch. $B;Flow rate;Instantaneous, Current value at metering conditions;;Billing period $F (255 is current)\n\
 7.0-64.43.1.0.255;3,4,7;5,6,9,10,13,15,16,17,18,20,21,23,24;Ch. $B;Flow rate;Instantaneous, Corrected value;;Billing period $F (255 is current)\n\
-7.0-64.43.2.0.255;3,4,7;5,6,9,10,13,15,16,17,18,20,21,23,24;Ch. $B;Flow rate;Instantaneous, Value at base conditions / ìConverted valueî;;Billing period $F (255 is current)\n\
+7.0-64.43.2.0.255;3,4,7;5,6,9,10,13,15,16,17,18,20,21,23,24;Ch. $B;Flow rate;Instantaneous, Value at base conditions / ‚ÄúConverted value‚Äù;;Billing period $F (255 is current)\n\
 7.0-64.43.13.0.255;3,4,7;5,6,9,10,13,15,16,17,18,20,21,23,24;Ch. $B;Flow rate;Instantaneous, Value at standard conditions;;Billing period $F (255 is current)\n\
 7.0-64.43.15.0.0-99,101-126,255;3,4,5,7;5,6,9,10,13,15,16,17,18,20,21,23,24;Ch. $B;Flow rate;Current average for averaging period 1, Value at metering conditions;;Billing period $F (255 is current)\n\
 7.0-64.43.16.0.0-99,101-126,255;3,4,5,7;5,6,9,10,13,15,16,17,18,20,21,23,24;Ch. $B;Flow rate;Current average for averaging period 1, Corrected value;;Billing period $F (255 is current)\n\
@@ -1234,7 +1234,7 @@ static const char* OBIS_CODES_GAS_4 = "\
 7.0-64.43.69.0.0-99,101-126,255;3,4,5,7;5,6,9,10,13,15,16,17,18,20,21,23,24;Ch. $B;Flow rate;Last average for averaging period 4, Value at base conditions;;Billing period $F (255 is current)\n\
 7.0-64.43.70.0.0-99,101-126,255;3,4,5,7;5,6,9,10,13,15,16,17,18,20,21,23,24;Ch. $B;Flow rate;Last average for averaging period 4, Value at standard conditions;;Billing period $F (255 is current)\n\
 7.0-64.41,42,44-49.0.0.255;3,4,7;5,6,9,10,13,15,16,17,18,20,21,23,24;Ch. $B;$1;Instantaneous, Current value at metering conditions;;Billing period $F (255 is current)\n\
-7.0-64.41,42,44-49.2.0.255;3,4,7;5,6,9,10,13,15,16,17,18,20,21,23,24;Ch. $B;$1;Instantaneous Value at base conditions / ìConverted valueî;;Billing period $F (255 is current)\n\
+7.0-64.41,42,44-49.2.0.255;3,4,7;5,6,9,10,13,15,16,17,18,20,21,23,24;Ch. $B;$1;Instantaneous Value at base conditions / ‚ÄúConverted value‚Äù;;Billing period $F (255 is current)\n\
 7.0-64.41,42,44-49.3.0.255;3,4,7;5,6,9,10,13,15,16,17,18,20,21,23,24;Ch. $B;$1;Instantaneous, Backup value;;Billing period $F (255 is current)\n\
 7.0-64.41,42,44-49.10.0.255;3,4,7;5,6,9,10,13,15,16,17,18,20,21,23,24;Ch. $B;$1;Instantaneous, Actual value;;Billing period $F (255 is current)\n\
 7.0-64.41,42,44-49.11.0.255;3,4,7;5,6,9,10,13,15,16,17,18,20,21,23,24;Ch. $B;$1;Instantaneous, Preset value;;Billing period $F (255 is current)\n\

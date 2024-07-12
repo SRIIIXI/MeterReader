@@ -120,6 +120,29 @@ Item
     { // plot
         id: plot
 
+        Rectangle
+        {
+            anchors.fill: parent
+            color:"transparent"
+            border.width: 1
+            border.color:
+            {
+                if(points.length < 1)
+                {
+                    return "transparent"
+                }
+
+                if(applicationData.IsDarkTheme === true)
+                {
+                    return "white";
+                }
+                else
+                {
+                    return "black";
+                }
+            }
+        }
+
         anchors
         {
             fill: parent;

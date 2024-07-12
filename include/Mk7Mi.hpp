@@ -28,6 +28,7 @@ extern const char* OBIS_CIU_KEYS;
 extern const char* OBIS_ACCOUNT_STATUS;
 extern const char* OBIS_TOKEN_GATEWAY;
 
+extern const char* OBIS_CLOCK;
 extern const char* OBIS_ALARMS;
 extern const char* OBIS_ALARMS_REGISTER1;
 extern const char* OBIS_ALARMS_REGISTER2;
@@ -52,6 +53,26 @@ extern const char* OBIS_ACTIVE_ENERGY_EXPORT_TARIFF2;
 extern const char* OBIS_REACTIVE_ENERGY_IMPORT_TARIFF2;
 extern const char* OBIS_REACTIVE_ENERGY_EXPORT_TARIFF2;
 
+extern const char* OBIS_H_ACTIVE_ENERGY_IMPORT_TARIFF1;
+extern const char* OBIS_H_ACTIVE_ENERGY_EXPORT_TARIFF1;
+extern const char* OBIS_H_REACTIVE_ENERGY_IMPORT_TARIFF1;
+extern const char* OBIS_H_REACTIVE_ENERGY_EXPORT_TARIFF1;
+
+extern const char* OBIS_H_ACTIVE_ENERGY_IMPORT_TARIFF2;
+extern const char* OBIS_H_ACTIVE_ENERGY_EXPORT_TARIFF2;
+extern const char* OBIS_H_REACTIVE_ENERGY_IMPORT_TARIFF2;
+extern const char* OBIS_H_REACTIVE_ENERGY_EXPORT_TARIFF2;
+
+extern const char* OBIS_D_ACTIVE_ENERGY_IMPORT_TARIFF1;
+extern const char* OBIS_D_ACTIVE_ENERGY_EXPORT_TARIFF1;
+extern const char* OBIS_D_REACTIVE_ENERGY_IMPORT_TARIFF1;
+extern const char* OBIS_D_REACTIVE_ENERGY_EXPORT_TARIFF1;
+
+extern const char* OBIS_D_ACTIVE_ENERGY_IMPORT_TARIFF2;
+extern const char* OBIS_D_ACTIVE_ENERGY_EXPORT_TARIFF2;
+extern const char* OBIS_D_REACTIVE_ENERGY_IMPORT_TARIFF2;
+extern const char* OBIS_D_REACTIVE_ENERGY_EXPORT_TARIFF2;
+
 extern const char* OBIS_TOTAL_CREDIT_PURCHASED;
 extern const char* OBIS_TOTAL_CREDIT_USED;
 
@@ -67,5 +88,16 @@ extern const char* OBIS_INSTANTENOUS_NET_FREQUENCY;
 extern const char* OBIS_AVERAGE_THD_VOLTAGE_A;
 extern const char* OBIS_AVERAGE_THD_VOLTAGE_B;
 extern const char* OBIS_AVERAGE_THD_VOLTAGE_C;
+
+extern const char* OBIS_TOKEN_HISTORY_CLOCK;
+extern const char* OBIS_TOKEN_HISTORY_TOKEN;
+extern const char* OBIS_TOKEN_HISTORY_VALUE;
+
+extern const char* OBIS_PROFILE_TOKEN_HISTORY;
+extern const char* OBIS_PROFILE_HOURLY_LOAD;
+extern const char* OBIS_PROFILE_DAILY_LOAD;
+extern const char* OBIS_PROFILE_POWER_QUALITY;
+
+
 
 #endif

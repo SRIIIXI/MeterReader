@@ -897,7 +897,7 @@ void DateTime::SetDeviation(int value)
 
 std::string DateTime::ToString()
 {
-    char buff[50];
+    char buff[51] = {0};
     int ret;
     if (m_Skip != DATETIME_SKIPS_NONE)
     {
@@ -1023,11 +1023,8 @@ std::string DateTime::ToString()
             {
                 ba.SetUInt8(' ');
             }
-#if _MSC_VER > 1000
-            sprintf_s(buff, 50, "%.2d", m_Value.tm_hour);
-#else
-            sprintf(buff, "%.2d", m_Value.tm_hour);
-#endif
+
+            snprintf(buff, 50, "%.2d", m_Value.tm_hour);
             ba.AddString(buff);
         }
         //Add minutes.
@@ -1037,11 +1034,8 @@ std::string DateTime::ToString()
             {
                 ba.SetUInt8(':');
             }
-#if _MSC_VER > 1000
-            sprintf_s(buff, 50, "%.2d", m_Value.tm_min);
-#else
-            sprintf(buff, "%.2d", m_Value.tm_min);
-#endif
+
+            snprintf(buff, 50, "%.2d", m_Value.tm_min);
             ba.AddString(buff);
         }
         //Add seconds.
@@ -1051,13 +1045,11 @@ std::string DateTime::ToString()
             {
                 ba.SetUInt8(':');
             }
-#if _MSC_VER > 1000
-            sprintf_s(buff, 50, "%.2d", m_Value.tm_sec);
-#else
-            sprintf(buff, "%.2d", m_Value.tm_sec);
-#endif
+
+            snprintf(buff, 50, "%.2d", m_Value.tm_sec);
             ba.AddString(buff);
         }
+
         return ba.ToString();
     }
     //If value is not set return empty std::string.

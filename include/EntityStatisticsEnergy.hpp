@@ -135,7 +135,8 @@ public:
     bool createStatisticsEnergy(const StatisticsEnergy &rec);
     bool allStatisticsEnergys(QList<StatisticsEnergy> &list, QString serial_no);
     bool selectedStatisticsEnergys(QList<StatisticsEnergy> &list, QString serial_no, QString keyname, QVariant value);
-    bool getRanges(QString serial_no,uint32_t &startRowIndex, uint32_t &endRowIndex, uint32_t &startTimestamp, uint32_t &endTimestamp, uint32_t lptype);
+    bool getIndexRanges(QString serial_no,uint32_t &startRowIndex, uint32_t &endRowIndex, uint32_t lptype);
+    bool getTimestampRanges(QString serial_no, uint32_t &startTimestamp, uint32_t &endTimestamp, uint32_t lptype);
     bool getStartIndex(QString serial_no,uint32_t &startRowIndex, uint32_t &startTimestamp, uint32_t currentTimestamp, uint32_t lptype);
     bool selectedStatisticsEnergysByWeek(QList<BarData> &barlist, QList<LineData> &linelist, QString serial_no, QString keyname, uint32_t datetimestart, uint32_t datetimeend, float &max, float &total, float &average);
     bool selectedStatisticsEnergysByMonth(QList<BarData> &barlist, QList<LineData> &linelist, QString serial_no, QString keyname, uint32_t datetimestart, uint32_t datetimeend, float &max, float &total, float &average);

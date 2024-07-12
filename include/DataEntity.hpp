@@ -3,9 +3,6 @@
 
 #include <QObject>
 #include <QtSql>
-#include <stdint.h>
-#include <stdbool.h>
-
 
 class DataEntity
 {
@@ -23,6 +20,7 @@ public:
     QVariant maximumValue(QString keyname);
     QVariant maximumValue(QString keyname, QString filter, QVariant filterval);
 protected:
+    bool executeQuery(const QString &querystring);
     void normalizeDateString(QString &str);
     void normalizeDateString(uint32_t val, QString &str);
     void substitueValue(QVariant &var, QString &str);

@@ -7,8 +7,6 @@
         <file>qml/AvailableMeters.qml</file>
         <file>qml/AddToken.qml</file>
         <file>qml/AvailableTokens.qml</file>
-        <file>qml/AddTariff.qml</file>
-        <file>qml/AvailableTariffs.qml</file>
         <file>qml/Alarms.qml</file>
         <file>qml/AlarmSettings.qml</file>
         <file>qml/Energy.qml</file>
@@ -20,7 +18,10 @@
         <file>qml/QRCodeScanner.qml</file>
         <file>qml/CustomBarChart.qml</file>
         <file>qml/CustomLineChart.qml</file>
-        <file>qml/DatePicker.qml</file>
+        <file>qml/CustomButton.qml</file>
+        <file>qml/CustomDatePicker.qml</file>
+        <file>qml/CustomSelector.qml</file>
+        <file>qml/CustomTab.qml</file>
         <file>qml/CreateUserStage1.qml</file>
         <file>qml/CreateUserStage2.qml</file>
         <file>qml/CreateUserStage3.qml</file>
@@ -28,58 +29,44 @@
         <file>qml/ResetPasscodeStage2.qml</file>
         <file>qml/ResetPasscodeStage3.qml</file>
         <file>qml/Help.qml</file>
-	<file>qml/Settings.qml</file>
-	<file>qml/PowerQuality.qml</file>
-
-        <file>images/Bluetooth.png</file>
-        <file>images/BluetoothGrey.png</file>
-        <file>images/ScanBlack.png</file>
-	<file>images/ScanWhite.png</file>
-        <file>images/EDMISplashLogo.png</file>
+        <file>qml/Settings.qml</file>
+        <file>qml/Trace.qml</file>
+		
+        <file>images/AnimationSplash.gif</file>
+        <file>images/MeterReader.png</file>
+        <file>images/Logo.png</file>
         <file>images/NextWhite.png</file>
-	<file>images/NextBlack.png</file>
+        <file>images/NextBlack.png</file>
         <file>images/BackspaceWhite.png</file>
-	<file>images/BackspaceBlack.png</file>
-        <file>images/Alarm.png</file>
-        <file>images/AlarmRed.png</file>
-        <file>images/Token.png</file>
-        <file>images/TokenRed.png</file>
-        <file>images/Energy.png</file>
-        <file>images/EnergyRed.png</file>
-        <file>images/Tariff.png</file>
-        <file>images/TariffRed.png</file>
-        <file>images/AddMeter.png</file>
-        <file>images/MyMeters.png</file>
-        <file>images/EMail.png</file>
-        <file>images/Phone.png</file>
-        <file>images/SaveBlack.png</file>
-        <file>images/SaveWhite.png</file>
-        <file>images/CalendarWhite.png</file>
-        <file>images/CalendarBlack.png</file>
-        <file>images/AddWhite.png</file>
-        <file>images/AddBlack.png</file>
-        <file>images/Settings.png</file>
+        <file>images/BackspaceBlack.png</file>
         <file>images/MenuWhite.png</file>
         <file>images/MenuBlack.png</file>
+        <file>images/GreenDot.png</file>
+        <file>images/Token.png</file>
+        <file>images/User.png</file>
+        <file>images/Home.png</file>
+        <file>images/Meter.png</file>
+        <file>images/MeterItem.png</file>
+        <file>images/Token.png</file>
+        <file>images/TokenItem.png</file>
+        <file>images/Alarm.png</file>
+        <file>images/Energy.png</file>
+        <file>images/Settings.png</file>
+        <file>images/ContactUs.png</file>
+        <file>images/Help.png</file>
+        <file>images/Trace.png</file>
+        <file>images/Exit.png</file>
+        <file>images/EMail.png</file>
+        <file>images/Phone.png</file>
+        <file>images/Add.png</file>
+        <file>images/AddGrey.png</file>
         <file>images/Pass.png</file>
         <file>images/Fail.png</file>
-        <file>images/ArrowLeftWhite.png</file>
-        <file>images/ArrowLeftBlack.png</file>
-        <file>images/RefreshWhite.png</file>
-        <file>images/RefreshBlack.png</file>
-        <file>images/ContactUs.png</file>
-        <file>images/EdmiCsa.png</file>
-        <file>images/Exit.png</file>
-        <file>images/Home.png</file>
-        <file>images/User.png</file>
         <file>images/Done.png</file>
-        <file>images/FilterWhite.png</file>
-        <file>images/FilterBlack.png</file>
+        <file>images/Filter.png</file>
+        <file>images/Calendar.png</file>
         <file>images/Warning.png</file>
-        <file>images/Help.png</file>
-	<file>images/PowerQuality.png</file>
-        <file>images/AnimationSplash.gif</file>
-        <file>images/RoundProgressBar.gif</file>
-	<file>images/Wallpaper.png</file>
+        <file>images/Scan.png</file>
+        <file>images/ScanGrey.png</file>
     </qresource>
 </RCC>

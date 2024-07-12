@@ -55,12 +55,10 @@ bool StandardObisCodeCollection::EqualsInterface(StandardObisCode item, int ic)
     {
         return true;
     }
-    char type[10];
-#if _MSC_VER > 1000
-    sprintf_s(type, 10, "%d", ic);
-#else
-    sprintf(type, "%d", ic);
-#endif
+    char type[11] = {0};
+
+    snprintf(type, 10, "%d", ic);
+
     std::vector< std::string > tmp = Helpers::Split(item.GetInterfaces(), ',');
     for (std::vector< std::string >::iterator it = tmp.begin(); it != tmp.end(); ++it)
     {
@@ -504,7 +502,7 @@ static const char* GetN1CDescription(std::string& str)
     {
         return "";;
     }
-    const char* tmp;
+    const char* tmp = nullptr;
     switch (value)
     {
     case 41:
@@ -538,7 +536,7 @@ static const char* GetN1CDescription(std::string& str)
 // Find Standard OBIS Code description.
 void StandardObisCodeCollection::Find(unsigned char* pObisCode, int IC, std::vector<StandardObisCode*>& list)
 {
-    char buff[6];
+    char buff[7] = {0};
     std::string desc;
     for (std::vector<StandardObisCode*>::iterator it = this->begin(); it != this->end(); ++it)
     {
@@ -583,88 +581,55 @@ void StandardObisCodeCollection::Find(unsigned char* pObisCode, int IC, std::vec
                 }
             }
             std::vector< std::string > obis = obj->GetOBIS();
-#if _MSC_VER > 1000
-            sprintf_s(buff, 6, "%d", pObisCode[0]);
-#else
-            sprintf(buff, "%d", pObisCode[0]);
-#endif
+
+            snprintf(buff, 6, "%d", pObisCode[0]);
+
             obis[0] = buff;
-#if _MSC_VER > 1000
-            sprintf_s(buff, 6, "%d", pObisCode[1]);
-#else
-            sprintf(buff, "%d", pObisCode[1]);
-#endif
+
+            snprintf(buff, 6, "%d", pObisCode[1]);
 
             obis[1] = buff;
-#if _MSC_VER > 1000
-            sprintf_s(buff, 6, "%d", pObisCode[2]);
-#else
-            sprintf(buff, "%d", pObisCode[2]);
-#endif
+
+            snprintf(buff, 6, "%d", pObisCode[2]);
 
             obis[2] = buff;
-#if _MSC_VER > 1000
-            sprintf_s(buff, 6, "%d", pObisCode[3]);
-#else
-            sprintf(buff, "%d", pObisCode[3]);
-#endif
+
+            snprintf(buff, 6, "%d", pObisCode[3]);
 
             obis[3] = buff;
-#if _MSC_VER > 1000
-            sprintf_s(buff, 6, "%d", pObisCode[4]);
-#else
-            sprintf(buff, "%d", pObisCode[4]);
-#endif
+
+            snprintf(buff, 6, "%d", pObisCode[4]);
 
             obis[4] = buff;
-#if _MSC_VER > 1000
-            sprintf_s(buff, 6, "%d", pObisCode[5]);
-#else
-            sprintf(buff, "%d", pObisCode[5]);
-#endif
+
+            snprintf(buff, 6, "%d", pObisCode[5]);
 
             obis[5] = buff;
+
             obj->SetOBIS(obis);
             desc = obj->GetDescription();
-#if _MSC_VER > 1000
-            sprintf_s(buff, 6, "%d", pObisCode[0]);
-#else
-            sprintf(buff, "%d", pObisCode[0]);
-#endif
+            snprintf(buff, 6, "%d", pObisCode[0]);
+
             Helpers::Replace(desc, "$A", buff);
-#if _MSC_VER > 1000
-            sprintf_s(buff, 6, "%d", pObisCode[1]);
-#else
-            sprintf(buff, "%d", pObisCode[1]);
-#endif
+
+            snprintf(buff, 6, "%d", pObisCode[1]);
 
             Helpers::Replace(desc, "$B", buff);
-#if _MSC_VER > 1000
-            sprintf_s(buff, 6, "%d", pObisCode[2]);
-#else
-            sprintf(buff, "%d", pObisCode[2]);
-#endif
+
+            snprintf(buff, 6, "%d", pObisCode[2]);
 
             Helpers::Replace(desc, "$C", buff);
-#if _MSC_VER > 1000
-            sprintf_s(buff, 6, "%d", pObisCode[3]);
-#else
-            sprintf(buff, "%d", pObisCode[3]);
-#endif
+
+            snprintf(buff, 6, "%d", pObisCode[3]);
 
             Helpers::Replace(desc, "$D", buff);
-#if _MSC_VER > 1000
-            sprintf_s(buff, 6, "%d", pObisCode[4]);
-#else
-            sprintf(buff, "%d", pObisCode[4]);
-#endif
+
+            snprintf(buff, 6, "%d", pObisCode[4]);
 
             Helpers::Replace(desc, "$E", buff);
-#if _MSC_VER > 1000
-            sprintf_s(buff, 6, "%d", pObisCode[5]);
-#else
-            sprintf(buff, "%d", pObisCode[5]);
-#endif
+
+            snprintf(buff, 6, "%d", pObisCode[5]);
+
             Helpers::Replace(desc, "$F", buff);
             //Increase value
             int begin = (int)desc.find("#$");
@@ -702,18 +667,13 @@ void StandardObisCodeCollection::Find(unsigned char* pObisCode, int IC, std::vec
                 if (plus != -1)
                 {
                     int value;
-#if _MSC_VER > 1000
-                    sscanf_s(desc.substr(plus + 1, plus + 1 + end - plus - 1).c_str(), "%d", &value);
-#else
+
                     sscanf(desc.substr(plus + 1, plus + 1 + end - plus - 1).c_str(), "%d", &value);
-#endif
+
                     ch += value;
                 }
-#if _MSC_VER > 1000
-                sprintf_s(buff, 6, "%d", ch);
-#else
-                sprintf(buff, "%d", ch);
-#endif
+
+                snprintf(buff, 6, "%d", ch);
                 desc = desc.substr(0, begin).append(buff);
             }
             Helpers::Replace(desc, ";", " ");
@@ -729,50 +689,31 @@ void StandardObisCodeCollection::Find(unsigned char* pObisCode, int IC, std::vec
         StandardObisCode* obj = new StandardObisCode();
         std::string desc = "Invalid";
         obj->SetDescription(desc);
-#if _MSC_VER > 1000
-        sprintf_s(buff, 6, "%d", IC);
-#else
-        sprintf(buff, "%d", IC);
-#endif
+
+        snprintf(buff, 6, "%d", IC);
+
         std::string str = buff;
         obj->SetInterfaces(str);
         std::vector <std::string > obis;
-#if _MSC_VER > 1000
-        sprintf_s(buff, 6, "%d", pObisCode[0]);
-#else
-        sprintf(buff, "%d", pObisCode[0]);
-#endif
+
+        snprintf(buff, 6, "%d", pObisCode[0]);
         obis.push_back(buff);
-#if _MSC_VER > 1000
-        sprintf_s(buff, 6, "%d", pObisCode[1]);
-#else
-        sprintf(buff, "%d", pObisCode[1]);
-#endif
+
+        snprintf(buff, 6, "%d", pObisCode[1]);
         obis.push_back(buff);
-#if _MSC_VER > 1000
-        sprintf_s(buff, 6, "%d", pObisCode[2]);
-#else
-        sprintf(buff, "%d", pObisCode[2]);
-#endif
+
+        snprintf(buff, 6, "%d", pObisCode[2]);
         obis.push_back(buff);
-#if _MSC_VER > 1000
-        sprintf_s(buff, 6, "%d", pObisCode[3]);
-#else
-        sprintf(buff, "%d", pObisCode[3]);
-#endif
+
+        snprintf(buff, 6, "%d", pObisCode[3]);
         obis.push_back(buff);
-#if _MSC_VER > 1000
-        sprintf_s(buff, 6, "%d", pObisCode[4]);
-#else
-        sprintf(buff, "%d", pObisCode[4]);
-#endif
+
+        snprintf(buff, 6, "%d", pObisCode[4]);
         obis.push_back(buff);
-#if _MSC_VER > 1000
-        sprintf_s(buff, 6, "%d", pObisCode[5]);
-#else
-        sprintf(buff, "%d", pObisCode[5]);
-#endif
+
+        snprintf(buff, 6, "%d", pObisCode[5]);
         obis.push_back(buff);
+
         obj->SetOBIS(obis);
         list.push_back(obj);
     }

@@ -5,7 +5,6 @@
 #include <QtSql>
 #include "DataEntity.hpp"
 
-
 class AlarmFilter
 {
 public:

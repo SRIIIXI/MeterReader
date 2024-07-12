@@ -198,7 +198,10 @@ public:
     static unsigned char SwapBits(unsigned char value);
 
     static bool checkLuhn(const std::string userdata);
+
     static std::string hexString(std::string decimalString);
+
+    static bool isFloat(std::string realString);
 
 };
 #endif

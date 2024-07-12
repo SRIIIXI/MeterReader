@@ -8,20 +8,10 @@ Page
     id: resetPasscodeStage1Page
 
     Material.theme: Material.Light
-    Material.accent: "#961C1C"
+    Material.accent: applicationData.Theme.AccentColor
 
     property string consumerName: applicationData.CurrentUser.UserId
 
-    Header
-    {
-        id:headerID
-        headerTitle: "Passcode Reset"
-        isOptionsBtnVisible:  false
-        isMeterNameVisible: false
-        isSyncDateVisible: false
-        isBackBtnVisible: false
-        isInfoVisible: false
-    }
 
     Component.onCompleted:
     {
@@ -34,19 +24,19 @@ Page
     {
         id: background
         width: parent.width
-        height: parent.height - headerID.height
-        anchors.top: headerID.bottom
-        color:
-        {
-            if(applicationData.IsDarkTheme === true)
-            {
-                return "black";
-            }
-            else
-            {
-                return "white";
-            }
-        }
+        height: parent.height - headerPanel.height
+        anchors.top: headerPanel.bottom
+        color: applicationData.Theme.BackgroundColor
+    }
+
+    Header
+    {
+        id:headerPanel
+        headerTitle: "Passcode Reset"
+        isMenuButtonVisible: false
+        isMeterNameVisible: false
+        isSyncDateVisible: false
+        isConnectionIndicatorVisible: false
     }
 
     Label
@@ -54,13 +44,13 @@ Page
         id: welcomelbl
         width: resetPasscodeStage1Page.width * 0.9
         height: resetPasscodeStage1Page.width * 0.05
-        anchors.top: headerID.bottom
+        anchors.top: headerPanel.bottom
         anchors.horizontalCenter: parent.horizontalCenter
-        anchors.topMargin: headerID.height/2
+        anchors.topMargin: 0
         font.bold: true
-        font.pointSize: headerID.fontSizeBig
+        font.pointSize: headerPanel.fontSizeBig
         text: "Welcome " + consumerName
-        color: "#961C1C"
+        color: applicationData.Theme.AccentColor
     }
 
     //
@@ -72,21 +62,9 @@ Page
         height: resetPasscodeStage1Page.width * 0.05
         anchors.top: welcomelbl.bottom
         anchors.horizontalCenter: parent.horizontalCenter
-        anchors.topMargin: headerID.height*0.55
         font.bold: true
         text: "Enter Consumer Id"
-
-        color:
-        {
-            if(applicationData.IsDarkTheme === true)
-            {
-                return "white";
-            }
-            else
-            {
-                return "black";
-            }
-        }
+        color: applicationData.Theme.FontColor
     }
 
     TextField
@@ -98,11 +76,11 @@ Page
         text: ""
         anchors.horizontalCenter: parent.horizontalCenter
         anchors.top: userIdlbl.bottom
-        anchors.topMargin: 10
+        anchors.topMargin: 0
         placeholderText: "8 digit customer Id"
         maximumLength: 8
         inputMethodHints: Qt.ImhDigitsOnly
-        font.pointSize: headerID.fontSizeSmall       
+        font.pointSize: headerPanel.fontSizeSmall
         Material.theme:
         {
             if(applicationData.IsDarkTheme === true)
@@ -125,25 +103,25 @@ Page
     Label
     {
         id: errorLabel
-        width: resetPasscodeStage1Page.width * 0.9
-        height: resetPasscodeStage1Page.width * 0.05
         anchors.top: userIdinput.bottom
         anchors.horizontalCenter: parent.horizontalCenter
-        anchors.topMargin: headerID.height*0.55
+        anchors.topMargin: 0
         font.bold: true
         text: "Error"
         color: "red"
     }
 
-    Button
+    CustomButton
     {
         id: btnNext
         text: "Next"
-        height: parent.width*0.15
-        width: (parent.width*0.2)*2
-        anchors.bottom: parent.bottom
-        anchors.bottomMargin: 20
+        height: parent.width*0.125
+        width: (parent.width*0.2)*2.5
+        anchors.bottom: btnCancel.top
+        anchors.bottomMargin: 5
         anchors.horizontalCenter: parent.horizontalCenter
+        accentColor: applicationData.Theme.AccentColor
+        isDefault: true
 
         onClicked:
         {
@@ -163,24 +141,23 @@ Page
 
             applicationData.invokeResetPasscodeStage1(userIdinput.text)
         }
+    }
 
-        background: Rectangle
-        {
-            color: "#961C1C"
-            border.width: 1
-            border.color: "#961C1C"
-            radius: 0.2  * btnNext.height
-        }
+    CustomButton
+    {
+        id:btnCancel
+        height: parent.width*0.125
+        width: (parent.width*0.2)*2.5
+        text: "Cancel"
+        anchors.bottom: parent.bottom
+        anchors.bottomMargin: 5
+        anchors.horizontalCenter: parent.horizontalCenter
+        accentColor: applicationData.Theme.AccentColor
+        isDefault: false
 
-        contentItem: Text
+        onClicked:
         {
-           text: "Reset Passcode"
-           font: btnNext.font
-           opacity: enabled ? 1.0 : 0.3
-           color: btnNext.down ? "gray" : "white"
-           horizontalAlignment: Text.AlignHCenter
-           verticalAlignment: Text.AlignVCenter
-           elide: Text.ElideRight
+            applicationData.invokeChangePage(9)
         }
     }
 

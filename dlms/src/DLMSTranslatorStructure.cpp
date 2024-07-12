@@ -410,11 +410,9 @@ int DLMSTranslatorStructure::IntegerToHex(long value, int desimals, bool forceHe
     {
         std::string f = "%." + Helpers::IntToString(desimals);
         f.append("X");
-#if _MSC_VER > 1000
-        sprintf_s(tmp, 20, f.c_str(), value);
-#else
-        sprintf(tmp, f.c_str(), value);
-#endif
+
+        memset(tmp, 0, sizeof(tmp));
+        snprintf(tmp, sizeof(tmp)-1, f.c_str(), value);
         //Negative values are handled wrong.
         if (value < 0)
         {
@@ -426,12 +424,10 @@ int DLMSTranslatorStructure::IntegerToHex(long value, int desimals, bool forceHe
     }
     else
     {
-#if _MSC_VER > 1000
-            sprintf_s(tmp, 20, "%ld", value);
-#else
-            sprintf(tmp, "%ld", value);
-#endif
+        memset(tmp, 0, sizeof(tmp));
+        snprintf(tmp, sizeof(tmp)-1, "%ld", value);
     }
+
     result = tmp;
     return 0;
 }
@@ -442,19 +438,14 @@ int DLMSTranslatorStructure::IntegerToHex(unsigned long value, int desimals, boo
     {
         std::string f = "%." + Helpers::IntToString(desimals);
         f.append("X");
-#if _MSC_VER > 1000
-        sprintf_s(tmp, 20, f.c_str(), value);
-#else
-        sprintf(tmp, f.c_str(), value);
-#endif
+
+        memset(tmp, 0, sizeof(tmp));
+        snprintf(tmp, sizeof(tmp)-1, f.c_str(), value);
     }
     else
     {
-#if _MSC_VER > 1000
-        sprintf_s(tmp, 20, "%lu", value);
-#else
-        sprintf(tmp, "%lu", value);
-#endif
+        memset(tmp, 0, sizeof(tmp));
+        snprintf(tmp, sizeof(tmp)-1, "%lu", value);
     }
     result = tmp;
     return 0;
@@ -464,19 +455,13 @@ int DLMSTranslatorStructure::IntegerToHex(unsigned long value, std::string& resu
 {
     if (m_ShowNumericsAsHex && m_OutputType == DLMS_TRANSLATOR_OUTPUT_TYPE_SIMPLE_XML)
     {
-#if _MSC_VER > 1000
-        sprintf_s(tmp, 20, "%.8X", value);
-#else
-        sprintf(tmp, "%.8lX", value);
-#endif
+        memset(tmp, 0, sizeof(tmp));
+        snprintf(tmp, sizeof(tmp)-1, "%.8lX", value);
     }
     else
     {
-#if _MSC_VER > 1000
-        sprintf_s(tmp, 20, "%lu", value);
-#else
-        sprintf(tmp, "%lu", value);
-#endif
+        memset(tmp, 0, sizeof(tmp));
+        snprintf(tmp, sizeof(tmp)-1, "%lu", value);
     }
     result = tmp;
     return 0;
@@ -486,24 +471,13 @@ int DLMSTranslatorStructure::IntegerToHex(long long value, std::string& result)
 {
     if (m_ShowNumericsAsHex && m_OutputType == DLMS_TRANSLATOR_OUTPUT_TYPE_SIMPLE_XML)
     {
-#if _MSC_VER > 1000
-        sprintf_s(tmp, 20, "%.16llX", value);
-#else
-        sprintf(tmp, "%.16llX", value);
-#endif
+        memset(tmp, 0, sizeof(tmp));
+        snprintf(tmp, sizeof(tmp)-1, "%.16llX", value);
     }
     else
     {
-#if defined(_WIN32) || defined(_WIN64)//Windows
-#if _MSC_VER > 1000
-        sprintf_s(tmp, 20, "%lld", value);
-#else
-        sprintf(tmp, "%I64d", value);
-#endif
-
-#else
-        sprintf(tmp, "%lld", value);
-#endif
+        memset(tmp, 0, sizeof(tmp));
+        snprintf(tmp, sizeof(tmp)-1, "%lld", value);
     }
     result = tmp;
     return 0;
@@ -513,21 +487,16 @@ int DLMSTranslatorStructure::IntegerToHex(unsigned long long value, std::string&
 {
     if (m_ShowNumericsAsHex && m_OutputType == DLMS_TRANSLATOR_OUTPUT_TYPE_SIMPLE_XML)
     {
-#if _MSC_VER > 1000
-        sprintf_s(tmp, 20, "%.16I64X", value);
-#else
-        sprintf(tmp, "%.16llX", value);
-#endif
+        memset(tmp, 0, sizeof(tmp));
+        snprintf(tmp, sizeof(tmp)-1, "%.16llX", value);
     }
     else
     {
-#if _MSC_VER > 1000
-        sprintf_s(tmp, 20, "%I64u", value);
-#else
-        sprintf(tmp, "%llu", value);
-#endif
+        memset(tmp, 0, sizeof(tmp));
+        snprintf(tmp, sizeof(tmp)-1, "%llu", value);
     }
     result = tmp;
     return 0;
 }
+
 #endif //DLMS_IGNORE_XML_TRANSLATOR

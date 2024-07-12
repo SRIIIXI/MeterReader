@@ -13,12 +13,19 @@ Item
 
     property int animationDuration: 1000
 
+    signal valueChange()
+
     width: size
     height: size
 
     onValueChanged:
     {
-        canvas.degree = value * 360;
+        canvas.degree = (value * 360)/100;
+    }
+
+    onValueChange:
+    {
+        canvas.degree = (value * 360)/100;
     }
 
     Canvas
@@ -55,10 +62,6 @@ Item
             ctx.arc(x, y, radius, startAngle, fullAngle);
             ctx.strokeStyle = root.primaryColor;
             ctx.stroke();
-
-            //ctx.reset()
-            //ctx.lineCap = 'round';
-            //ctx.lineWidth = root.lineWidth;
 
             ctx.beginPath();
             ctx.arc(x, y, radius, startAngle, progressAngle);

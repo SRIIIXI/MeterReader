@@ -1212,11 +1212,11 @@ int GetString(ByteBuffer& buff, DataInfo& info, bool knownType, DLMSVariant& val
         tmp[len] = '\0';
         if ((ret = buff.Get((unsigned char*)tmp, len)) != 0)
         {
-            delete tmp;
+            delete [] tmp;
             return ret;
         }
         value = tmp;
-        delete tmp;
+        delete [] tmp;
     }
     else
     {
@@ -2285,7 +2285,7 @@ static int SetUtfString(ByteBuffer& buff, DLMSVariant& value)
 void Helpers::GetLogicalName(unsigned char* buff, std::string& ln)
 {
     int dataSize;
-    char tmp[25];
+    char tmp[33] = {0};
     //If Script Action target is not set it is null
     if (buff == NULL)
     {
@@ -2294,23 +2294,20 @@ void Helpers::GetLogicalName(unsigned char* buff, std::string& ln)
     }
     else
     {
-#if _MSC_VER > 1000
-        dataSize = sprintf_s(tmp, 25, "%d.%d.%d.%d.%d.%d", buff[0], buff[1], buff[2], buff[3], buff[4], buff[5]) + 1;
-#else
-        dataSize = sprintf(tmp, "%d.%d.%d.%d.%d.%d", buff[0], buff[1], buff[2], buff[3], buff[4], buff[5]) + 1;
-#endif
+
+        dataSize = snprintf(tmp, 32, "%d.%d.%d.%d.%d.%d", buff[0], buff[1], buff[2], buff[3], buff[4], buff[5]) + 1;
         if (dataSize > 25)
         {
             assert(0);
-    }
+        }
         ln.clear();
         ln.append(tmp, dataSize - 1);
-}
+    }
 }
 
 void Helpers::GetLogicalName(ByteBuffer& buff, std::string& ln)
 {
-    unsigned char tmp[6];
+unsigned char tmp[7] = {0};
     buff.Get(tmp, 6);
     GetLogicalName(tmp, ln);
 }
@@ -2687,23 +2684,15 @@ int Helpers::GetDataTypeSize(DLMS_DATA_TYPE type)
 
 std::string Helpers::GeneralizedTime(struct tm* date)
 {
-    char tmp[20];
-#if _MSC_VER > 1000
-    sprintf_s(tmp, 20, "%.4d%.2d%.2d%.2d%.2d%.2dZ", date->tm_year, date->tm_mon, date->tm_mday, date->tm_hour, date->tm_min, date->tm_sec);
-#else
-    sprintf(tmp, "%.4d%.2d%.2d%.2d%.2d%.2dZ", date->tm_year, date->tm_mon, date->tm_mday, date->tm_hour, date->tm_min, date->tm_sec);
-#endif
+    char tmp[21] = {0};
+    snprintf(tmp, 20, "%.4d%.2d%.2d%.2d%.2d%.2dZ", date->tm_year, date->tm_mon, date->tm_mday, date->tm_hour, date->tm_min, date->tm_sec);
     return tmp;
 }
 
 std::string Helpers::IntToString(int value)
 {
-    char buff[20];
-#if _MSC_VER > 1000
-    sprintf_s(buff, 20, "%d", value);
-#else
-    sprintf(buff, "%d", value);
-#endif
+    char buff[21] = {0};
+    snprintf(buff, 20, "%d", value);
     return buff;
 }
 
@@ -2760,4 +2749,24 @@ std::string Helpers::hexString(std::string decimalString)
     unsigned long long val = std::stoull(decimalString);
     ss << std::hex << val;
     return ss.str();
+}
+
+bool Helpers::isFloat(std::string realString)
+{
+    int len = realString.length();
+
+    for(int x = 0; x < len; x++)
+    {
+        char ch = realString.at(x);
+
+        if(!isdigit(ch))
+        {
+            if(ch != '.')
+            {
+                return false;
+            }
+        }
+    }
+
+    return true;
 }

@@ -8,7 +8,6 @@
 #include "ReadBarcode.h"
 
 #include <QImage>
-#include <QDebug>
 #include <QMetaType>
 #include <QScopeGuard>
 
@@ -341,7 +340,6 @@ public:
 		if (formats() != newVal) {
 			DecodeHints::setFormats(static_cast<ZXing::BarcodeFormat>(newVal));
 			emit formatsChanged();
-			qDebug() << DecodeHints::formats();
 		}
 	}
 	Q_SIGNAL void formatsChanged();

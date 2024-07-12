@@ -50,111 +50,66 @@ int DLMSVariant::Convert(DLMSVariant* item, DLMS_DATA_TYPE type)
             item->vt = type;
             return DLMS_ERROR_CODE_OK;
         }
-        char buff[250];
+        char buff[251] ={0};
         if (tmp.vt == DLMS_DATA_TYPE_INT32)
         {
-#if _MSC_VER > 1000
-            sprintf_s(buff, 250, "%ld", tmp.lVal);
-#else
-            sprintf(buff, "%ld", tmp.lVal);
-#endif
+            snprintf(buff, 250, "%ld", tmp.lVal);
             item->strVal = buff;
             item->vt = type;
             return DLMS_ERROR_CODE_OK;
         }
         if (tmp.vt == DLMS_DATA_TYPE_UINT32)
         {
-#if _MSC_VER > 1000
-            sprintf_s(buff, 250, "%lu", tmp.ulVal);
-#else
-            sprintf(buff, "%lu", tmp.ulVal);
-#endif
+            snprintf(buff, 250, "%lu", tmp.ulVal);
             item->strVal = buff;
             item->vt = type;
             return DLMS_ERROR_CODE_OK;
         }
         if (tmp.vt == DLMS_DATA_TYPE_INT8)
         {
-#if _MSC_VER > 1000
-            sprintf_s(buff, 250, "%d", tmp.cVal);
-#else
-            sprintf(buff, "%d", tmp.cVal);
-#endif
+            snprintf(buff, 250, "%d", tmp.cVal);
             item->strVal = buff;
             item->vt = type;
             return DLMS_ERROR_CODE_OK;
         }
         if (tmp.vt == DLMS_DATA_TYPE_INT16)
         {
-#if _MSC_VER > 1000
-            sprintf_s(buff, 250, "%d", tmp.iVal);
-#else
-            sprintf(buff, "%d", tmp.iVal);
-#endif
+            snprintf(buff, 250, "%d", tmp.iVal);
             item->strVal = buff;
             item->vt = type;
             return DLMS_ERROR_CODE_OK;
         }
         if (tmp.vt == DLMS_DATA_TYPE_UINT8)
         {
-#if _MSC_VER > 1000
-            sprintf_s(buff, 250, "%d", tmp.bVal);
-#else
-            sprintf(buff, "%d", tmp.bVal);
-#endif
+            snprintf(buff, 250, "%d", tmp.bVal);
             item->strVal = buff;
             item->vt = type;
             return DLMS_ERROR_CODE_OK;
         }
         if (tmp.vt == DLMS_DATA_TYPE_UINT16)
         {
-#if _MSC_VER > 1000
-            sprintf_s(buff, 250, "%d", tmp.uiVal);
-#else
-            sprintf(buff, "%d", tmp.uiVal);
-#endif
+            snprintf(buff, 250, "%d", tmp.uiVal);
             item->strVal = buff;
             item->vt = type;
             return DLMS_ERROR_CODE_OK;
         }
         if (tmp.vt == DLMS_DATA_TYPE_INT64)
         {
-#if defined(_WIN32) || defined(_WIN64)//Windows
-#if _MSC_VER > 1000
-            sprintf_s(buff, 250, "%lld", tmp.llVal);
-#else
-            sprintf(buff, "%I64d", tmp.llVal);
-#endif
-
-#else
-            sprintf(buff, "%lld", tmp.llVal);
-#endif
+            snprintf(buff, 250, "%lld", tmp.llVal);
             item->strVal = buff;
             item->vt = type;
             return DLMS_ERROR_CODE_OK;
         }
         if (tmp.vt == DLMS_DATA_TYPE_UINT64)
         {
-#if defined(_WIN32) || defined(_WIN64)//Windows
-#if _MSC_VER > 1000
-            sprintf_s(buff, 250, "%llu", tmp.ullVal);
-#else
-            sprintf(buff, "%I64u", tmp.llVal);
-#endif
-#else
-            sprintf(buff, "%llu", tmp.ullVal);
-#endif
+            snprintf(buff, 250, "%llu", tmp.ullVal);
             item->strVal = buff;
             item->vt = type;
             return DLMS_ERROR_CODE_OK;
         }
         if (tmp.vt == DLMS_DATA_TYPE_ENUM)
         {
-#if _MSC_VER > 1000
-            sprintf_s(buff, 250, "%d", tmp.bVal);
-#else
-            sprintf(buff, "%d", tmp.bVal);
-#endif
+            snprintf(buff, 250, "%d", tmp.bVal);
             item->strVal = buff;
             item->vt = type;
             return DLMS_ERROR_CODE_OK;

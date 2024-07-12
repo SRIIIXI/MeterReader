@@ -137,13 +137,13 @@ bool DataInterface::exists()
 
 bool DataInterface::executeSQL(const QString &sqlstr)
 {
-    QSqlQuery qryresult;
+    QSqlQuery qryresult(sqlstr, _Database);
 
     try
     {
         _Database.transaction();
 
-        qryresult = _Database.exec(sqlstr);
+        qryresult.exec();
 
         _Database.commit();
     }

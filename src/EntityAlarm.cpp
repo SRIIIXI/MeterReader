@@ -19,77 +19,19 @@ bool EntityAlarm::createTable()
                         alarm_name Text NOT NULL, \
                         alarm_timestamp Integer NOT NULL )";
 
-    QSqlQuery qryresult;
-
-    try
-    {
-        _Database->transaction();
-
-        qryresult = _Database->exec(sqlString);
-
-        _Database->commit();
-    }
-    catch(QException e)
-    {
-       _Database->rollback();
-       QString errString = _Database->lastError().text();
-       return false;
-    }
-
-    return true;
-
+    return executeQuery(sqlString);
 }
 
 bool EntityAlarm::createAlarm(const Alarm &rec)
 {
-    QSqlQuery qryresult;
-    QString err;
+    QString sqlString = "insert into alarm (alarm_id, serial_no, alarm_name, alarm_timestamp) values(alarm_id__, 'serial_no__', 'alarm_name__', alarm_timestamp__)";
 
-    QString sql = "insert into alarm (alarm_id, serial_no, alarm_name, alarm_timestamp) values(alarm_id__, 'serial_no__', 'alarm_name__', alarm_timestamp__)";
+    sqlString = sqlString.replace("alarm_id__", QVariant(rec.AlarmId_).toString());
+    sqlString = sqlString.replace("alarm_name__", rec.AlarmName_);
+    sqlString = sqlString.replace("serial_no__", rec.SerialNo_);
+    sqlString = sqlString.replace("alarm_timestamp__", QVariant(rec.AlarmTimestamp_).toString());
 
-    sql = sql.replace("alarm_id__", QVariant(rec.AlarmId_).toString());
-    sql = sql.replace("alarm_name__", rec.AlarmName_);
-    sql = sql.replace("serial_no__", rec.SerialNo_);
-    sql = sql.replace("alarm_timestamp__", QVariant(rec.AlarmTimestamp_).toString());
-
-    try
-    {
-        _Database->transaction();
-
-        qryresult = _Database->exec(sql);
-
-        _Database->commit();
-    }
-    catch(QException e)
-    {
-       _Database->rollback();
-       err = _Database->lastError().text();
-       return false;
-    }
-
-    return true;
-}
-
-bool EntityAlarm::allAlarms(QList<Alarm> &list)
-{
-    QString str;
-    QList<QSqlRecord> *reclist = getAllRecords(str);
-
-    for(int ctr = 0; ctr < reclist->count(); ctr++)
-    {
-        QSqlRecord rec = reclist->at(ctr);
-
-        Alarm struc;
-
-        struc.AlarmId_ = rec.value(0).toInt();
-        struc.SerialNo_ = rec.value(1).toString();
-        struc.AlarmName_ = rec.value(2).toString();
-        struc.AlarmTimestamp_ = rec.value(3).toInt();
-
-        list.append(struc);
-    }
-
-    return true;
+    return executeQuery(sqlString);
 }
 
 bool EntityAlarm::selectedAlarms(QList<Alarm> &list, QString keyname, QVariant value)

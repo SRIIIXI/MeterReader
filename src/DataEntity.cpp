@@ -19,8 +19,7 @@ void DataEntity::truncate()
 {
     QString querystring;
     querystring = "delete from " + _TableName;
-
-    QSqlQuery query = _Database->exec(querystring);
+    executeQuery(querystring);
 }
 
 QList<QSqlRecord>* DataEntity::getAllRecords(QString str)
@@ -38,7 +37,8 @@ QList<QSqlRecord>* DataEntity::getAllRecords(QString str)
         querystring = str;
     }
 
-    QSqlQuery query = _Database->exec(querystring);
+    QSqlQuery query(querystring, *_Database);
+    query.exec();
 
     while(query.next())
     {
@@ -67,7 +67,8 @@ QList<QSqlRecord>* DataEntity::getSelectedRecords(QString keyname, QVariant valu
         querystring += " where " + keyname + " = " + valsub;
     }
 
-    QSqlQuery query = _Database->exec(querystring);
+    QSqlQuery query(querystring, *_Database);
+    query.exec();
 
     while(query.next())
     {
@@ -81,7 +82,8 @@ QList<QSqlRecord>* DataEntity::getCustomRecords(QString str)
 {
     _RecordList.clear();
 
-    QSqlQuery query = _Database->exec(str);
+    QSqlQuery query(str, *_Database);
+    query.exec();
 
     while(query.next())
     {
@@ -102,23 +104,7 @@ bool DataEntity::remove(QString keyname, QVariant value)
 
     QString querystring = "delete from " + _TableName + " where " + keyname + " = " + valsub;
 
-    try
-    {
-        _Database->transaction();
-
-        qryresult = _Database->exec(querystring);
-
-        _Database->commit();
-    }
-    catch(QException e)
-    {
-       _Database->rollback();
-       err = _Database->lastError().text();
-       qDebug() << err;
-       return false;
-    }
-
-    return true;
+    return executeQuery(querystring);
 }
 
 bool DataEntity::update(QString uniquekeyname, QVariant uniquevalue, QString keyname, QVariant value)
@@ -133,23 +119,24 @@ bool DataEntity::update(QString uniquekeyname, QVariant uniquevalue, QString key
 
     QString querystring = "update " + _TableName + " set " + keyname + " = " + valsub+ " where " + uniquekeyname + " = " + uniquevalsub;
 
+    return executeQuery(querystring);
+}
+
+bool DataEntity::executeQuery(const QString &querystring)
+{
     try
     {
-        _Database->transaction();
-
-        qryresult = _Database->exec(querystring);
-
-        _Database->commit();
+       QSqlQuery query(querystring, *_Database);
+       _Database->transaction();
+       query.exec();
+       _Database->commit();
+       return true;
     }
     catch(QException e)
     {
        _Database->rollback();
-       err = _Database->lastError().text();
-       qDebug() << err;
        return false;
     }
-
-    return true;
 }
 
 QVariant DataEntity::maximumValue(QString keyname)
@@ -160,7 +147,8 @@ QVariant DataEntity::maximumValue(QString keyname)
     sqlstring = sqlstring.replace("_table_", _TableName);
     sqlstring = sqlstring.replace("_key_", keyname);
 
-    QSqlQuery query = _Database->exec(sqlstring);
+    QSqlQuery query(sqlstring, *_Database);
+    query.exec();
 
     if(query.next())
     {
@@ -183,7 +171,8 @@ QVariant DataEntity::maximumValue(QString keyname, QString filter, QVariant filt
     sqlstring = sqlstring.replace("_filter_", filter);
     sqlstring = sqlstring.replace("_filterval_", valsub);
 
-    QSqlQuery query = _Database->exec(sqlstring);
+    QSqlQuery query(sqlstring, *_Database);
+    query.exec();
 
     if(query.next())
     {
@@ -195,20 +184,20 @@ QVariant DataEntity::maximumValue(QString keyname, QString filter, QVariant filt
 
 void DataEntity::substitueValue(QVariant &var, QString &str)
 {
-    switch(var.type())
+    switch(var.typeId())
     {
-        case QVariant::Char:
-        case QVariant::String:
+        case QMetaType::Char:
+        case QMetaType::QString:
         {
             str = "'" + var.toString() + "'";
         }
         break;
 
-        case QVariant::Double:
-        case QVariant::Int:
-        case QVariant::LongLong:
-        case QVariant::UInt:
-        case QVariant::ULongLong:
+        case QMetaType::Double:
+        case QMetaType::Int:
+        case QMetaType::LongLong:
+        case QMetaType::UInt:
+        case QMetaType::ULongLong:
         {
             str = var.toString();
         }
@@ -223,8 +212,8 @@ void DataEntity::substitueValue(QVariant &var, QString &str)
 
 QString DataEntity::getFloatString(const float val)
 {
-    char temp[24] = {0};
-    sprintf(temp, "%0.4f", val);
+    char temp[25] = {0};
+    snprintf(temp, 24, "%0.4f", val);
     return temp;
 }
 

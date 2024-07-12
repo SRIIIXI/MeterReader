@@ -1,7 +1,5 @@
 #include "Logger.hpp"
-#include <stdarg.h>
 #include <stdio.h>
-#include <limits>
 #include <time.h>
 
 #if defined(_WIN32) || defined(WIN32) || defined (_WIN64) || defined (WIN64)
@@ -44,9 +42,9 @@ Logger::Logger()
 	_LogDirectory = "";
 	_LogFileSize = 1024;
 
-	char pidstr[16];
+    char pidstr[17] = {0};
 	memset((char*)&pidstr[0], 0, 16);
-	sprintf(pidstr, "%d", getpid());
+    snprintf(pidstr, 16, "%d", getpid());
 	_ModuleName = pidstr;
 
 	_LogLevelMap.clear();
@@ -104,7 +102,8 @@ void Logger::write(std::string logEntry, LogLevel llevel)
 	{
 		int sz = ftell(_LogFile);
 
-		if (sz >= _LogFileSize * 1024)
+        //Max 100MB
+        if (sz >= _LogFileSize * 1024 * 100)
 		{
 			stopLogging();
 			startLogging();
@@ -112,18 +111,18 @@ void Logger::write(std::string logEntry, LogLevel llevel)
 
 		std::string lvel = _LogLevelMap[llevel];
 
-		char tstamp[32] = {0};
+        char tstamp[33] = {0};
 		time_t t;
 		struct tm* tmp;
 		time(&t);
 		tmp = localtime(&t);
 
-		sprintf(tstamp, "%02d.%02d.%04d-%02d.%02d.%02d", tmp->tm_mday, (tmp->tm_mon + 1), (tmp->tm_year + 1), tmp->tm_hour, tmp->tm_min, tmp->tm_sec);
+        snprintf(tstamp, 33, "%02d.%02d.%04d-%02d.%02d.%02d", tmp->tm_mday, (tmp->tm_mon + 1), (tmp->tm_year + 1), tmp->tm_hour, tmp->tm_min, tmp->tm_sec);
 
-		char temp[1024];
+        char temp[1025] = {0};
 		memset((char*)&temp[0], 0, 16);
 	
-		sprintf(temp, "%s|%s|%s\n", tstamp, lvel.c_str(), logEntry.c_str());
+        snprintf(temp, 1024, "%s|%s|%s\n", tstamp, lvel.c_str(), logEntry.c_str());
 
 		fwrite(temp, strlen(temp), 1, _LogFile);
 		fflush(_LogFile);

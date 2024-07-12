@@ -27,11 +27,16 @@ class MeterReader : public QGuiApplication
 public:
     explicit MeterReader(int argc, char *argv[]);
     virtual ~MeterReader();
-    bool StartApplication();
+    bool InitializeDatabase();
+    void ResetDemoStatistics();
 private:
     void populateAlarmFilters();
-    void populateDemoData();
+    void populateDemoMasterData();
+    void populateMeterObjects();
+    void populateEnergyProfileData(QString serialNo);
     DataInterface db;
 };
+
+extern MeterReader* csa;
 
 #endif

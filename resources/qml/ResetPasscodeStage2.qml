@@ -6,7 +6,7 @@ import QtQuick.Controls.Material 2.3
 Page
 {
     Material.theme: Material.Light
-    Material.accent: "#961C1C"
+    Material.accent: applicationData.Theme.AccentColor
 
     id: resetPasscodeStage2Page
 
@@ -32,30 +32,19 @@ Page
     {
         id: background
         width: parent.width
-        height: parent.height - headerID.height
-        anchors.top: headerID.bottom
-        color:
-        {
-            if(applicationData.IsDarkTheme === true)
-            {
-                return "black";
-            }
-            else
-            {
-                return "white";
-            }
-        }
+        height: parent.height - headerPanel.height
+        anchors.top: headerPanel.bottom
+        color: applicationData.Theme.BackgroundColor
     }
 
     Header
     {
-        id:headerID
+        id:headerPanel
         headerTitle: "Passcode Reset"
-        isOptionsBtnVisible:  false
+        isMenuButtonVisible: false
         isMeterNameVisible: false
         isSyncDateVisible: false
-        isBackBtnVisible: false
-        isInfoVisible: false
+        isConnectionIndicatorVisible: false
     }
 
     Text
@@ -63,11 +52,11 @@ Page
         id: name
         text: "Welcome " + consumerName
         font.bold: true
-        color: "#961C1C"
-        font.pointSize: headerID.fontSizeBig
+        color: applicationData.Theme.AccentColor
+        font.pointSize: headerPanel.fontSizeBig
         anchors.horizontalCenter: parent.horizontalCenter
-        anchors.topMargin: headerID.height/2
-        anchors.top: headerID.bottom
+        anchors.topMargin: 0
+        anchors.top: headerPanel.bottom
     }
 
     Text
@@ -76,19 +65,8 @@ Page
         text: "Please enter new passcode "
         font.bold: true
         anchors.top: name.bottom
-        anchors.topMargin: headerID.height/2
         anchors.horizontalCenter: parent.horizontalCenter    
-        color:
-        {
-            if(applicationData.IsDarkTheme === true)
-            {
-                return "white";
-            }
-            else
-            {
-                return "black";
-            }
-        }
+        color: applicationData.Theme.FontColor
     }
 
     Rectangle
@@ -97,23 +75,12 @@ Page
         width: parent.width * 0.6
         height: (parent.width * 0.6)/4
         anchors.top: enterPass1Txt.bottom
-        anchors.topMargin: 20
         anchors.horizontalCenter: parent.horizontalCenter
 
         Rectangle
         {
             anchors.fill: parent
-            color:
-            {
-                if(applicationData.IsDarkTheme === true)
-                {
-                    return "black";
-                }
-                else
-                {
-                    return "white";
-                }
-            }
+            color: applicationData.Theme.BackgroundColor
         }
 
         Grid
@@ -126,18 +93,7 @@ Page
                 height: rectdummy.width/4
                 width:  rectdummy.width/4
                 radius: width*0.5
-
-                color:
-                {
-                    if(applicationData.IsDarkTheme === true)
-                    {
-                        return "black";
-                    }
-                    else
-                    {
-                        return "white";
-                    }
-                }
+                color: applicationData.Theme.BackgroundColor
 
                 Rectangle
                 {
@@ -146,17 +102,7 @@ Page
                     height: (parent.width*0.75)/3
                     border.width: 1
                     radius: width*0.5
-                    color:
-                    {
-                        if(applicationData.IsDarkTheme === true)
-                        {
-                            return "white";
-                        }
-                        else
-                        {
-                            return "black";
-                        }
-                    }
+                    color: applicationData.Theme.FontColor
                     anchors.horizontalCenter: parent.horizontalCenter
                     anchors.verticalCenter: parent.verticalCenter
                 }
@@ -167,18 +113,7 @@ Page
                 height: rectdummy.width/4
                 width:  rectdummy.width/4
                 radius: width*0.5
-
-                color:
-                {
-                    if(applicationData.IsDarkTheme === true)
-                    {
-                        return "black";
-                    }
-                    else
-                    {
-                        return "white";
-                    }
-                }
+                color: applicationData.Theme.BackgroundColor
 
                 Rectangle
                 {
@@ -187,17 +122,7 @@ Page
                     height: (parent.width*0.75)/3
                     border.width: 1
                     radius: width*0.5
-                    color:
-                    {
-                        if(applicationData.IsDarkTheme === true)
-                        {
-                            return "white";
-                        }
-                        else
-                        {
-                            return "black";
-                        }
-                    }
+                    color: applicationData.Theme.FontColor
                     anchors.horizontalCenter: parent.horizontalCenter
                     anchors.verticalCenter: parent.verticalCenter
                 }
@@ -208,18 +133,7 @@ Page
                 height: rectdummy.width/4
                 width:  rectdummy.width/4
                 radius: width*0.5
-
-                color:
-                {
-                    if(applicationData.IsDarkTheme === true)
-                    {
-                        return "black";
-                    }
-                    else
-                    {
-                        return "white";
-                    }
-                }
+                color: applicationData.Theme.BackgroundColor
 
                 Rectangle
                 {
@@ -228,17 +142,7 @@ Page
                     height: (parent.width*0.75)/3
                     border.width: 1
                     radius: width*0.5
-                    color:
-                    {
-                        if(applicationData.IsDarkTheme === true)
-                        {
-                            return "white";
-                        }
-                        else
-                        {
-                            return "black";
-                        }
-                    }
+                    color: applicationData.Theme.FontColor
                     anchors.horizontalCenter: parent.horizontalCenter
                     anchors.verticalCenter: parent.verticalCenter
                 }
@@ -249,18 +153,7 @@ Page
                 height: rectdummy.width/4
                 width:  rectdummy.width/4
                 radius: width*0.5
-
-                color:
-                {
-                    if(applicationData.IsDarkTheme === true)
-                    {
-                        return "black";
-                    }
-                    else
-                    {
-                        return "white";
-                    }
-                }
+                color: applicationData.Theme.BackgroundColor
 
                 Rectangle
                 {
@@ -269,17 +162,7 @@ Page
                     height: (parent.width*0.75)/3
                     border.width: 1
                     radius: width*0.5
-                    color:
-                    {
-                        if(applicationData.IsDarkTheme === true)
-                        {
-                            return "white";
-                        }
-                        else
-                        {
-                            return "black";
-                        }
-                    }
+                    color: applicationData.Theme.FontColor
                     anchors.horizontalCenter: parent.horizontalCenter
                     anchors.verticalCenter: parent.verticalCenter
                 }
@@ -292,7 +175,7 @@ Page
         id:numberpadId
         visible: true
         anchors.top: rectdummy.bottom
-        anchors.topMargin: 10
+        anchors.topMargin: 0
         anchors.horizontalCenter: parent.horizontalCenter
         onButtonPressed :
         {
@@ -398,6 +281,13 @@ Page
             {
                 errorLabel.text = "Passcode must be 4 digits";
                 errorLabel.visible = true;
+                dot1.visible = false;
+                dot2.visible = false;
+                dot3.visible = false;
+                dot4.visible = false;
+                keycount = 0;
+                passcode = ""
+
                 return;
             }
 
@@ -408,14 +298,30 @@ Page
     Label
     {
         id: errorLabel
-        width: resetPasscodeStage2Page.width * 0.9
-        height: resetPasscodeStage2Page.width * 0.05
         anchors.top: numberpadId.bottom
         anchors.horizontalCenter: parent.horizontalCenter
-        anchors.topMargin: headerID.height*0.55
+        anchors.topMargin: 0
         font.bold: true
         text: "Error"
         color: "red"
+    }
+
+    CustomButton
+    {
+        id:btnCancel
+        height: parent.width*0.125
+        width: (parent.width*0.2)*2.5
+        text: "Cancel"
+        anchors.bottom: parent.bottom
+        anchors.bottomMargin: 5
+        anchors.horizontalCenter: parent.horizontalCenter
+        accentColor: applicationData.Theme.AccentColor
+        isDefault: false
+
+        onClicked:
+        {
+            applicationData.invokeChangePage(9)
+        }
     }
 
     Connections

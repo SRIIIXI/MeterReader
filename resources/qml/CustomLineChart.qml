@@ -59,7 +59,6 @@ Item
         root.yMinimum  = Math.floor(yMinimum / yInterval) * yInterval
 
         var xLog10     = Math.log(xMaximum - xMinimum) / Math.LN10 //  take log, convert to integer, and then raise 10 to this power
-        //root.xInterval = Math.pow(10, Math.floor(xLog10)) // distance between ticks
         root.xInterval =  Math.round(xMaximum / points.length);
         root.xMaximum  = Math.ceil( xMaximum / xInterval) * xInterval
         root.xMinimum  = Math.floor(xMinimum / xInterval) * xInterval

@@ -6,186 +6,79 @@ import QtQuick.Layouts 1.3
 Page
 {
     id: homePage
-    objectName: "homePage"
-    visible: true
 
     Material.theme: Material.Light
-    Material.accent: "#961C1C"
-
-    property bool meterStatus: false
-    property string lastSyncTime: applicationData.AppSyncTime
-    property string meterName: applicationData.CurrentMeter.SerialNo
+    Material.accent: applicationData.Theme.AccentColor
 
     Component.onCompleted:
     {
-        progress1.value = (((applicationData.GrossCredit - applicationData.AvailableCredit)/applicationData.GrossCredit)).toFixed(2);
-    }
-
-    Header
-    {
-        id                  : headerID
-        backBtn.icon.source :
-        if(applicationData.IsDarkTheme === true)
-        {
-            return "../images/MenuWhite.png";
-        }
-        else
-        {
-            return "../images/MenuBlack.png";
-        }
-        backBtn.action      : openMenuAction
-        headerTitle         : applicationData.CurrentMeter.SerialNo + " Connected"
-        meterName           : "last sync: "+ applicationData.AppSyncTime
-        isOptionsBtnVisible: true
-        isTitleVisible:
-        {
-            if(applicationData.IsDemoMode === true)
-            {
-                return true
-            }
-            else
-            {
-                applicationData.IsAppConnected
-            }
-        }
-        isInfoVisible:
-        {
-            if(applicationData.IsDemoMode === true)
-            {
-                return true
-            }
-            else
-            {
-                applicationData.IsAppConnected
-            }
-        }
+        creditBalanceGraph.value = applicationData.RemainingCreditPercent.toFixed(2);
     }
 
     Rectangle
     {
         id: background
         width: parent.width
-        height: parent.height - headerID.height
-        anchors.top: headerID.bottom
-        color:
-        {
-            if(applicationData.IsDarkTheme === true)
-            {
-                return "black";
-            }
-            else
-            {
-                return "white";
-            }
-        }
+        height: parent.height - headerPanel.height
+        anchors.top: headerPanel.bottom
+        color: applicationData.Theme.BackgroundColor
+    }
+
+    Header
+    {
+        id : headerPanel
+        headerTitle: "Home"
+        isMenuButtonVisible: true
+        isMeterNameVisible: true
+        isSyncDateVisible: true
+        isConnectionIndicatorVisible: applicationData.IsAppConnected
     }
 
     Rectangle
     {
         id: graphRect
         width: homePage.width*0.9
-        height: (homePage.height - (headerID.height + quickArea.height + rectEnergy.height + rectAlarms.height + rectAlarms.height*0.6))
+        height: (homePage.height - (headerPanel.height + quickArea.height + rectEnergy.height + rectAlarms.height + rectAlarms.height*0.6 + 10))
         anchors.horizontalCenter: parent.horizontalCenter
         anchors.bottom: quickArea.top
         anchors.bottomMargin: rectAlarms.height*0.2
-        color:
-        {
-            if(applicationData.IsDarkTheme === true)
-            {
-                return "#1C2833";
-            }
-            else
-            {
-                return "whitesmoke";
-            }
-        }
-
+        anchors.topMargin: 0
         radius: 5
+        color: applicationData.Theme.ControlColor
 
-        Rectangle
+        Text
         {
-            id: rectselector
-            width: graphRect.width
-            height: graphRect.height*0.2
+            id: txtAccountCurrency
             anchors.horizontalCenter: parent.horizontalCenter
             anchors.topMargin: 10
-            color:
-            {
-                if(applicationData.IsDarkTheme === true)
-                {
-                    return "#1C2833";
-                }
-                else
-                {
-                    return "whitesmoke";
-                }
-            }
-
-            Text
-            {
-                id: selector
-                height: parent.height
-                anchors.horizontalCenter: parent.horizontalCenter
-                anchors.verticalCenter: parent.verticalCenter
-                Material.accent: "#961C1C"
-                text: applicationData.CreditCurrency;
-                font.bold: true
-
-                Material.theme:
-                {
-                    if(applicationData.IsDarkTheme === true)
-                    {
-                        return Material.Dark;
-                    }
-                    else
-                    {
-                        return Material.Light;
-                    }
-                }
-
-                color:
-                {
-                    if(applicationData.IsDarkTheme === true)
-                    {
-                        return "white";
-                    }
-                    else
-                    {
-                        return "black";
-                    }
-                }
-            }
+            anchors.top: graphRect.top
+            Material.accent: applicationData.Theme.AccentColor
+            text: applicationData.CreditCurrency;
+            font.bold: true
+            color: applicationData.Theme.FontColor
         }
 
         CircularProgressBar
         {
-            id: progress1
+            id: creditBalanceGraph
             lineWidth: (graphRect.height*0.6)*0.1
-            value: (((applicationData.GrossCredit - applicationData.AvailableCredit)/applicationData.GrossCredit)).toFixed(2)
+            value: applicationData.RemainingCreditPercent.toFixed(2)
             size: graphRect.height*0.7
-            secondaryColor: "#e0e0e0"
-            primaryColor: "#961C1C"
+            secondaryColor: applicationData.Theme.AccentColorLow
+            primaryColor: applicationData.Theme.AccentColor
             anchors.horizontalCenter: parent.horizontalCenter
-            anchors.top: rectselector.bottom
+            anchors.verticalCenter: parent.verticalCenter
+        }
 
-            Text
-            {
-                id: mainText
-                text: "Remaining\n" + applicationData.AvailableCredit.toFixed(2) + " " + applicationData.CreditCurrency
-                anchors.centerIn: parent
-                font.pointSize: headerID.fontSizeSmall
-                color:
-                {
-                    if(applicationData.IsDarkTheme === true)
-                    {
-                        return "white";
-                    }
-                    else
-                    {
-                        return "black";
-                    }
-                }
-            }
+        Text
+        {
+            id: mainText
+            text: "Remaining\n" + applicationData.RemainingCreditStr + " " + applicationData.CreditCurrency
+            anchors.centerIn: parent
+            font.pointSize: headerPanel.fontSizeSmall
+            anchors.horizontalCenter: parent.horizontalCenter
+            anchors.verticalCenter: parent.verticalCenter
+            color: applicationData.Theme.FontColor
         }
 
         Rectangle
@@ -195,49 +88,31 @@ Page
             height: parent.height
             color:"transparent"
             radius: 2
-            anchors.top: parent.top
+            anchors.bottom: parent.bottom
             anchors.topMargin: 0
             anchors.horizontalCenter: parent.horizontalCenter
         }
 
         Text
         {
-            id: lblRemaining
+            id: lblTotal
             text: "Total"
             anchors.right: divider.right
             anchors.rightMargin: 10
-            anchors.top: progress1.bottom
-            color:
-            {
-                if(applicationData.IsDarkTheme === true)
-                {
-                    return "white";
-                }
-                else
-                {
-                    return "black";
-                }
-            }
+            anchors.bottom: parent.bottom
+            anchors.bottomMargin: 10
+            color: applicationData.Theme.FontColor
         }
 
         Text
         {
-            id: txtRemaining
-            text: applicationData.GrossCredit.toFixed(2) + " " + applicationData.CreditCurrency
+            id: txtTotal
+            text: applicationData.GrossCreditStr + " " + applicationData.CreditCurrency
             anchors.left: divider.left
             anchors.leftMargin:  10
-            anchors.top: progress1.bottom
-            color:
-            {
-                if(applicationData.IsDarkTheme === true)
-                {
-                    return "white";
-                }
-                else
-                {
-                    return "black";
-                }
-            }
+            anchors.bottom: parent.bottom
+            anchors.bottomMargin: 10
+            color: applicationData.Theme.FontColor
         }
     }
 
@@ -249,18 +124,9 @@ Page
         anchors.horizontalCenter: parent.horizontalCenter
         anchors.bottom: rectEnergy.top
         anchors.bottomMargin: rectAlarms.height*0.2
-        anchors.topMargin: 20
-        color:
-        {
-            if(applicationData.IsDarkTheme === true)
-            {
-                return "#1C2833";
-            }
-            else
-            {
-                return "whitesmoke";
-            }
-        }        radius: 5
+        anchors.topMargin: 10
+        color: applicationData.Theme.ControlColor
+        radius: 5
 
         Text
         {
@@ -271,7 +137,7 @@ Page
             anchors.topMargin: 10
             text: qsTr("Quick Status")
             font.bold: true
-            color: "#961C1C"
+            color:applicationData.Theme.FontColor
         }
 
         Text
@@ -294,7 +160,7 @@ Page
             }
 
             font.bold: true
-            color: "#961C1C"
+            color: applicationData.Theme.FontColor
         }
 
         Rectangle
@@ -302,7 +168,7 @@ Page
             id:horizontalLine
             width: parent.width
             height: 2
-            color:"#961C1C"
+            color:applicationData.Theme.AccentColor
             radius: 0
             anchors.horizontalCenter: parent.horizontalCenter
             anchors.top:parent.top
@@ -314,7 +180,7 @@ Page
             id:verticalLine
             width:2
             height: parent.height - quickArea.height*0.3 - horizontalLine.height
-            color:"#961C1C"
+            color: applicationData.Theme.AccentColor
             radius: 2
             anchors.top: horizontalLine.bottom
             anchors.topMargin: 0
@@ -328,10 +194,10 @@ Page
             anchors.rightMargin: 10
             anchors.top: horizontalLine.bottom
             anchors.topMargin: 10
-            text:  applicationData.InstantaneousPower.toFixed(2) +" kWh"
+            text:  applicationData.DeliveredEnergyStr + " kWh"
             font.bold: true
-            color: "#961C1C"
-            font.pointSize: headerID.fontSizeLarge
+            color: applicationData.Theme.FontColor
+            font.pointSize: headerPanel.fontSizeLarge
         }
 
         Text
@@ -345,29 +211,9 @@ Page
             width: parent.width*0.4
             wrapMode: "Wrap"
             font.bold: true
-            Material.theme:
-            {
-                if(applicationData.IsDarkTheme === true)
-                {
-                    return Material.Dark;
-                }
-                else
-                {
-                    return Material.Light;
-                }
-            }
-            font.pointSize: headerID.fontSizeSmall
-            color:
-            {
-                if(applicationData.IsDarkTheme === true)
-                {
-                    return "white";
-                }
-                else
-                {
-                    return "black";
-                }
-            }
+            horizontalAlignment: Text.AlignRight
+            font.pointSize: headerPanel.fontSizeSmall
+            color: applicationData.Theme.FontColor
         }
 
         Text
@@ -377,10 +223,10 @@ Page
             anchors.leftMargin:  10
             anchors.top: horizontalLine.bottom
             anchors.topMargin: 10
-            text: applicationData.DeliveredEnergy.toFixed(2) +" kW"
+            text: applicationData.InstantaneousPowerStr + " kW"
             font.bold: true
-            color: "#961C1C"
-            font.pointSize: headerID.fontSizeLarge
+            color: applicationData.Theme.FontColor
+            font.pointSize: headerPanel.fontSizeLarge
         }
 
         Text
@@ -394,29 +240,8 @@ Page
             wrapMode: "Wrap"
             width: parent.width*0.4
             font.bold: true
-            Material.theme:
-            {
-                if(applicationData.IsDarkTheme === true)
-                {
-                    return Material.Dark;
-                }
-                else
-                {
-                    return Material.Light;
-                }
-            }
-            font.pointSize: headerID.fontSizeSmall
-            color:
-            {
-                if(applicationData.IsDarkTheme === true)
-                {
-                    return "white";
-                }
-                else
-                {
-                    return "black";
-                }
-            }
+            font.pointSize: headerPanel.fontSizeSmall
+            color: applicationData.Theme.FontColor
         }
     }
 
@@ -425,17 +250,8 @@ Page
         id: rectEnergy
         width:homePage.width * 0.4
         height:homePage.height * 0.125
-        color:
-        {
-            if(applicationData.IsDarkTheme === true)
-            {
-                return "#1C2833";
-            }
-            else
-            {
-                return "whitesmoke";
-            }
-        }        radius: 2
+        color: applicationData.Theme.ControlColor
+        radius: 2
         anchors.left: quickArea.left
         anchors.bottom: rectAlarms.top
         anchors.bottomMargin: rectAlarms.height*0.1
@@ -448,34 +264,13 @@ Page
             anchors.topMargin: 5
             text: qsTr("Energy")
             font.bold: true
-            Material.theme:
-            {
-                if(applicationData.IsDarkTheme === true)
-                {
-                    return Material.Dark;
-                }
-                else
-                {
-                    return Material.Light;
-                }
-            }
-            color:
-            {
-                if(applicationData.IsDarkTheme === true)
-                {
-                    return "white";
-                }
-                else
-                {
-                    return "black";
-                }
-            }
+            color: applicationData.Theme.FontColor
         }
 
         Image
         {
             id: imgEnergyID
-            source: "../images/EnergyRed.png"
+            source: "../images/Energy.png"
             anchors.horizontalCenter: parent.horizontalCenter
             anchors.bottom:  parent.bottom
             anchors.bottomMargin:  10
@@ -498,17 +293,8 @@ Page
         id: rectTariff
         width:homePage.width * 0.4
         height:homePage.height * 0.125
-        color:
-        {
-            if(applicationData.IsDarkTheme === true)
-            {
-                return "#1C2833";
-            }
-            else
-            {
-                return "whitesmoke";
-            }
-        }        radius: 2
+        color: applicationData.Theme.ControlColor
+        radius: 2
         anchors.right: quickArea.right
         anchors.bottom: rectTokens.top
         anchors.bottomMargin: rectTokens.height*0.1
@@ -519,47 +305,27 @@ Page
             anchors.horizontalCenter: parent.horizontalCenter
             anchors.top: parent.top
             anchors.topMargin: 5
-            text: qsTr("Tariff")
+            text: qsTr("Help")
             font.bold: true
-            Material.theme:
-            {
-                if(applicationData.IsDarkTheme === true)
-                {
-                    return Material.Dark;
-                }
-                else
-                {
-                    return Material.Light;
-                }
-            }
-            color:
-            {
-                if(applicationData.IsDarkTheme === true)
-                {
-                    return "white";
-                }
-                else
-                {
-                    return "black";
-                }
-            }
+            color: applicationData.Theme.FontColor
         }
 
         Image
         {
             id: imgTariff
-            source: "../images/TariffRed.png"
+            source: "../images/Help.png"
             anchors.horizontalCenter: parent.horizontalCenter
             anchors.bottom:  parent.bottom
             anchors.bottomMargin:  10
             height: parent.height*0.6
             width: parent.height*0.6
+
             MouseArea
             {
                 anchors.fill: parent
                 onClicked:
                 {
-                    applicationData.invokeChangePage(17)
+                    applicationData.invokeChangePage(19)
                 }
             }
         }
@@ -570,18 +336,7 @@ Page
         id: rectAlarms
         width:homePage.width * 0.4
         height:homePage.height * 0.125
-        color:
-        {
-            if(applicationData.IsDarkTheme === true)
-            {
-                return "#1C2833";
-            }
-            else
-            {
-                return "whitesmoke";
-            }
-        }
-
+        color: applicationData.Theme.ControlColor
         anchors.left: quickArea.left
         anchors.bottom: buffer.top
         radius: 2
@@ -595,37 +350,16 @@ Page
             anchors.topMargin: 5
             text: qsTr("Alarms")
             font.bold: true
-            Material.theme:
-            {
-                if(applicationData.IsDarkTheme === true)
-                {
-                    return Material.Dark;
-                }
-                else
-                {
-                    return Material.Light;
-                }
-            }
-            color:
-            {
-                if(applicationData.IsDarkTheme === true)
-                {
-                    return "white";
-                }
-                else
-                {
-                    return "black";
-                }
-            }
+            color: applicationData.Theme.FontColor
         }
 
         Image
         {
             id: imgAlarmId
-            source: "../images/AlarmRed.png"
+            source: "../images/Alarm.png"
             anchors.horizontalCenter: parent.horizontalCenter
             anchors.bottom:  parent.bottom
-            anchors.bottomMargin:  10
+            anchors.bottomMargin:  5
             height: parent.height*0.6
             width: parent.height*0.6
 
@@ -645,18 +379,7 @@ Page
         id: rectTokens
         width:homePage.width * 0.4
         height:homePage.height * 0.125
-        color:
-        {
-            if(applicationData.IsDarkTheme === true)
-            {
-                return "#1C2833";
-            }
-            else
-            {
-                return "whitesmoke";
-            }
-        }
-
+        color: applicationData.Theme.ControlColor
         radius: 2
         anchors.right: quickArea.right
         anchors.bottom: buffer.top
@@ -670,34 +393,13 @@ Page
             anchors.topMargin: 5
             text: qsTr("Tokens")
             font.bold: true
-            Material.theme:
-            {
-                if(applicationData.IsDarkTheme === true)
-                {
-                    return Material.Dark;
-                }
-                else
-                {
-                    return Material.Light;
-                }
-            }
-            color:
-            {
-                if(applicationData.IsDarkTheme === true)
-                {
-                    return "white";
-                }
-                else
-                {
-                    return "black";
-                }
-            }
+            color: applicationData.Theme.FontColor
         }
 
         Image
         {
             id: imgTokenID
-            source: "../images/TokenRed.png"
+            source: "../images/Token.png"
             anchors.horizontalCenter: parent.horizontalCenter
             anchors.bottom:  parent.bottom
             anchors.bottomMargin:  10
@@ -721,32 +423,18 @@ Page
         id: buffer
         anchors.bottom: parent.bottom
         width: parent.width
-        height: headerID.height*0.15
-
-        color:
-        {
-            if(applicationData.IsDarkTheme === true)
-            {
-                return "black";
-            }
-            else
-            {
-                return "white";
-            }
-        }
+        height: 5
+        color: applicationData.Theme.BackgroundColor
     }
 
     Connections
     {
         target: applicationData
-        function onDashboardRefreshed()
-        {
-            headerID.backBtn.enabled = true;
-            selector1.enabled = true;
-        }
 
-        function onDashboardError(str)
+        function onUpdateDashboard()
         {
+            creditBalanceGraph.value = applicationData.RemainingCreditPercent.toFixed(2);
+            creditBalanceGraph.valueChange();
         }
     }
 }

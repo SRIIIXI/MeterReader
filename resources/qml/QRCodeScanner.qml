@@ -1,12 +1,13 @@
 import QtQuick 2.12
 import QtQuick.Controls 2.12
+import QtQuick.Controls.Material 2.3
 import QtQuick.Window 2.12
 import QtMultimedia
 
 Page
 {
     Material.theme: Material.Light
-    Material.accent: "#961C1C"
+    Material.accent: applicationData.Theme.AccentColor
 
     id: scannerPage
     visible: true
@@ -15,78 +16,44 @@ Page
     {
         qrcodetext.text = applicationData.QRText
         camera.start()
-        console.log(Screen.height, headerID.height, infoBar.height, btnRect.height, videoRect.height)
-        console.log(Screen.width, videoRect.width)
-    }
+   }
 
     Rectangle
     {
         id: background
         width: parent.width
-        height: parent.height - headerID.height
-        anchors.top: headerID.bottom
-        color:
-        {
-            if(applicationData.IsDarkTheme === true)
-            {
-                return "#1C2833";
-            }
-            else
-            {
-                return "whitesmoke";
-            }
-        }
+        height: parent.height - headerPanel.height
+        anchors.top: headerPanel.bottom
+        color: applicationData.Theme.ControlColor
     }
 
     Header
     {
-        id: headerID
+        id: headerPanel
         headerTitle: "Scan QR Code"
-        isInfoVisible: false
-        optionsBtn.visible: false
-        backBtn.action:
-        {
-            camera.stop();
-            if(applicationData.ScanMode === 0)
-            {
-                return navigateAddMeter;
-            }
-            else
-            {
-                return navigateAvailableTokens;
-            }
-        }
+        isMenuButtonVisible: true
+        isMeterNameVisible: true
+        isSyncDateVisible: false
+        isConnectionIndicatorVisible: false
     }
 
     Rectangle
     {
         id: infoBar
-        height: headerID.height/3
+        height: headerPanel.height/3
         width: scannerPage.width
-        anchors.top: headerID.bottom
+        anchors.top: headerPanel.bottom
         anchors.horizontalCenter: parent.horizontalCenter
-        color:
-        {
-            if(applicationData.IsDarkTheme === true)
-            {
-                return "#1C2833";
-            }
-            else
-            {
-                return "whitesmoke";
-            }
-        }
+        color: applicationData.Theme.ControlColor
 
         Label
         {
             anchors.horizontalCenter: parent.horizontalCenter
             anchors.verticalCenter: parent.verticalCenter
             id: qrcodetext
-            font.pointSize: headerID.fontSizeBig
+            font.pointSize: headerPanel.fontSizeBig
             font.bold: true
             color: "darkgreen"
-            height: infoBar.height*0.7
-            width: infoBar.width*0.9
         }
     }
 
@@ -106,16 +73,13 @@ Page
 
             onErrorOccurred: function(requestId, error, message)
             {
-                console.log("Error occurred", requestId, error, message);
             }
             onImageCaptured: function(requestId, previewImage)
             {
-                console.log("Image captured", requestId, previewImage);
                 qrcodetext.text = applicationData.invokeCheckQRImage(previewImage);
             }
             onImageSaved: function(requestId, path)
             {
-                console.log("Image saved", requestId, path);
             }
         }
     }
@@ -124,20 +88,10 @@ Page
     {
         id: videoRect
         width: scannerPage.width
-        height: scannerPage.height - (headerID.height + btnRect.height + infoBar.height)
+        height: scannerPage.height - (headerPanel.height + btnRect.height + infoBar.height)
         anchors.top: infoBar.bottom
         anchors.horizontalCenter: parent.horizontalCenter
-        color:
-        {
-            if(applicationData.IsDarkTheme === true)
-            {
-                return "#1C2833";
-            }
-            else
-            {
-                return "whitesmoke";
-            }
-        }
+        color: applicationData.Theme.ControlColor
 
         VideoOutput
         {
@@ -164,23 +118,13 @@ Page
     {
         id: btnRect
         width: scannerPage.width
-        height: scannerPage.width*0.15
+        height: scannerPage.width*0.2
         anchors.bottom: parent.bottom
         anchors.topMargin: 10
         anchors.bottomMargin: 10
         anchors.rightMargin: 0
         anchors.right: parent.right
-        color:
-        {
-            if(applicationData.IsDarkTheme === true)
-            {
-                return "#1C2833";
-            }
-            else
-            {
-                return "whitesmoke";
-            }
-        }
+        color: applicationData.Theme.ControlColor
 
         Grid
         {
@@ -189,13 +133,16 @@ Page
             columns: 3
             spacing: 10
             anchors.right: parent.right
+            anchors.verticalCenter: parent.verticalCenter
 
-            Button
+            CustomButton
             {
                 id:btnCancel
                 height: scannerPage.width*0.15
                 width: (scannerPage.width*0.2)*2
                 text: "Cancel"
+                isDefault: false
+                accentColor: applicationData.Theme.AccentColor
                 onClicked:
                 {
                     camera.stop()
@@ -213,34 +160,16 @@ Page
                         applicationData.invokeChangePage(8)
                     }
                 }
-
-                background: Rectangle
-                {
-                        color: "white"
-                        border.width: 1
-                        border.color: "#961C1C"
-                        radius: 0.2  * btnCancel.height
-                }
-
-
-                contentItem: Text
-                {
-                       text: "Cancel"
-                       font: btnCancel.font
-                       opacity: enabled ? 1.0 : 0.3
-                       color: btnCancel.down ? "gray" : "black"
-                       horizontalAlignment: Text.AlignHCenter
-                       verticalAlignment: Text.AlignVCenter
-                       elide: Text.ElideRight
-                }
             }
 
-            Button
+            CustomButton
             {
                 id:btnAdd
                 height: scannerPage.width*0.15
                 width: (scannerPage.width*0.2)*2
                 text: "OK"
+                isDefault: true
+                accentColor: applicationData.Theme.AccentColor
                 onClicked:
                 {
                     camera.stop()
@@ -256,25 +185,6 @@ Page
                     {
                         applicationData.invokeChangePage(8)
                     }
-                }
-
-                background: Rectangle
-                {
-                        color: "#961C1C"
-                        border.width: 1
-                        border.color: "#961C1C"
-                        radius: 0.2  * btnAdd.height
-                }
-
-                contentItem: Text
-                {
-                       text: "Save"
-                       font: btnAdd.font
-                       opacity: enabled ? 1.0 : 0.3
-                       color: btnAdd.down ? "gray" : "white"
-                       horizontalAlignment: Text.AlignHCenter
-                       verticalAlignment: Text.AlignVCenter
-                       elide: Text.ElideRight
                 }
             }
         }

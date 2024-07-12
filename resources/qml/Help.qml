@@ -8,155 +8,137 @@ Page
     id: helpPage
 
     Material.theme: Material.Light
-    Material.accent: "#961C1C"
+    Material.accent: applicationData.Theme.AccentColor
 
-    property string lastSyncTime: applicationData.CurrentMeter.LastSyncStr
-    property string meterName: applicationData.CurrentMeter.SerialNo
-
-    property variant helpModel :  []
-
-    Header
-    {
-        id:headerID
-        backBtn.icon.source :
-        if(applicationData.IsDarkTheme === true)
-        {
-            return "../images/MenuWhite.png";
-        }
-        else
-        {
-            return "../images/MenuBlack.png";
-        }
-        backBtn.action      : openMenuAction
-        headerTitle: "Help"
-        isOptionsBtnVisible:  false
-        isMeterNameVisible: false
-        isSyncDateVisible: false
-        isInfoVisible: false
-    }
+    property int helpIndex: 0
+    property variant helpStringModel :  []
 
     Component.onCompleted:
     {
-        helpModel = applicationData.HelpStrings
+        helpStringModel = applicationData.HelpStrings;
+        topicList.currentIndex = helpIndex;
+        loadHelpContentsByIndex(helpIndex);
     }
 
     Rectangle
     {
         id: background
         width: parent.width
-        height: parent.height - headerID.height
-        anchors.top: headerID.bottom
-        color:
-        {
-            if(applicationData.IsDarkTheme === true)
-            {
-                return "black";
-            }
-            else
-            {
-                return "white";
-            }
-        }
+        height: parent.height - headerPanel.height
+        anchors.top: headerPanel.bottom
+        color: applicationData.Theme.BackgroundColor
     }
 
-    ListView
+    Header
     {
-        id: helpListView
-        width: parent.width*0.90
-        anchors.top:headerID.bottom
-        anchors.topMargin: 10
-        anchors.bottom: helpDummyRect.top
+        id:headerPanel
+        headerTitle: "Help"
+        isMenuButtonVisible: true
+        isMeterNameVisible: false
+        isSyncDateVisible: false
+        isConnectionIndicatorVisible: false
+    }
+
+    ComboBox
+    {
+        id: topicList
+        height: headerPanel.height*0.5
+        width: helpPage.width*0.9
+        font.pointSize: headerPanel.fontSizeSmall
         anchors.horizontalCenter: parent.horizontalCenter
-        visible: true
-        spacing: 10
-        clip: true
-        model: helpModel
-        delegate: helpstringsListDelegate
-    }
+        anchors.top:headerPanel.bottom
+        Material.accent: applicationData.Theme.AccentColor
 
-    Component
-    {
-        id: helpstringsListDelegate
-
-        Rectangle
+        popup: Popup
         {
-            id: helpItemID
-            width: helpListView.width
-            height: headerID.height*3
-            radius: 5
+            id:comboPopup
+            y: topicList.height - 1
+            width: topicList.width
+            height:contentItem.implicitHeight
+            padding: 1
+            font.pointSize: headerPanel.fontSizeSmall
 
-            color:
+            contentItem: ListView
             {
-                if(applicationData.IsDarkTheme === true)
-                {
-                    return "#1C2833";
-                }
-                else
-                {
-                    return "whitesmoke";
-                }
-            }
-
-            Label
-            {
-                id: title
-                width: helpItemID.width*0.9
-                horizontalAlignment: Qt.AlignHCenter
-                verticalAlignment: Qt.AlignTop
-                font.pointSize: headerID.fontSizeNormal
-                color: "#961C1C"
-                elide: Label.ElideRight
-                text: helpModel[index].Title
-                font.bold: true
-            }
-
-            Label
-            {
-                id: helptext
-                width: helpItemID.width*0.9
-                anchors.top: title.bottom
-                horizontalAlignment: Qt.AlignLeft
-                anchors.topMargin: 20
-                font.pointSize: headerID.fontSizeSmall
-                color:
+                id:listView
+                implicitHeight: contentHeight
+                model: topicList.popup.visible ? topicList.delegateModel : null
+                ScrollIndicator.vertical: ScrollIndicator { }
+                Material.accent: applicationData.Theme.AccentColor
+                Material.theme:
                 {
                     if(applicationData.IsDarkTheme === true)
                     {
-                        return "white";
+                        return Material.Dark;
                     }
                     else
                     {
-                        return "black";
+                        return Material.Light;
                     }
                 }
-                elide: Label.ElideRight
-                text: helpModel[index].Description
+
+                delegate: Text
+                {
+                    font.pointSize: headerPanel.fontSizeSmall
+                }
+            }
+
+            background: Rectangle
+            {
+                border.width: 1
+                border.color: applicationData.Theme.AccentColor
+                color: applicationData.Theme.ControlColor
             }
         }
-    }
 
-
-    Rectangle
-    {
-        id: helpDummyRect
-        width: helpPage.width
-        height: helpPage.width*0.1
-        radius: 5
-        color:
+        Material.theme:
         {
             if(applicationData.IsDarkTheme === true)
             {
-                return "black";
+                return Material.Dark;
             }
             else
             {
-                return "white";
+                return Material.Light;
             }
         }
-        anchors
+
+        onCurrentIndexChanged:
         {
-            bottom:parent.bottom
-            horizontalCenter: parent.horizontalCenter
+            helpIndex = currentIndex;
+            loadHelpContentsByIndex(helpIndex);
+        }
+
+        model: ["General", "Add a Meter", "Connect to a Meter", "Add a Token", "Transfer a Token"]
+    }
+
+    TextArea
+    {
+        id: helpText
+        readOnly: true
+        anchors.top: topicList.bottom
+        width: helpPage.width*0.9
+        anchors.horizontalCenter: parent.horizontalCenter
+        font.pointSize: headerPanel.fontSizeSmall
+        color: applicationData.Theme.FontColor
+
+        background: Rectangle
+        {
+            color: applicationData.Theme.BackgroundColor
+        }
+    }
+
+    function loadHelpContentsByIndex(idx)
+    {
+        helpText.clear();
+
+        applicationData.invokeLoadHelpStrings(idx);
+        helpStringModel = applicationData.HelpStrings;
+
+        for(var x = 0; x < helpStringModel.length; x++)
+        {
+            var str = helpStringModel[x];
+            helpText.append(str+"\n");
         }
     }
 }

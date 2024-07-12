@@ -1,5 +1,6 @@
 #include "WorkFlowTokenTransfer.hpp"
-#include "UICommandHandler.hpp"
+#include "EntityMeterSettings.hpp"
+#include "Controller.hpp"
 #include "Mk7Mi.hpp"
 
 const int TT_TRANSFER_TOKEN_SEND = 1;
@@ -8,20 +9,11 @@ const int TT_TRANSFER_TOKEN_RECV = 2;
 const int TT_TOKEN_STATUS_SEND = 3;
 const int TT_TOKEN_STATUS_RECV = 4;
 
-const int TT_TOKENS_CAPTURED_OBJECTS_SEND = 5;
-const int TT_TOKENS_CAPTURED_OBJECTS_RECV = 6;
-const int TT_TOKENS_CAPTURED_OBJECTS_RECEIVER_READY_SEND = 7;
-const int TT_TOKENS_CAPTURED_OBJECTS_PARTIAL_FRAME_RECV = 8;
-
-const int TT_TOKENS_RECORDS_SEND = 9;
-const int TT_TOKENS_RECORDS_RECV = 10;
-const int TT_TOKENS_RECORDS_RECEIVER_READY_SEND = 11;
-const int TT_TOKENS_RECORDS_PARTIAL_FRAME_RECV = 12;
-
-
-const int TT_COMPLETE = 13;
+const int TT_COMPLETE = 5;
 
 ///////////////////////////////////////
+
+int tt_currency_scalar = 0;
 
 const char* token_status_messages[] =
 {
@@ -35,8 +27,11 @@ const char* token_status_messages[] =
     "Execution Result Failure",
     "Received",
     "Not applied",
-    "Transfer Status Awaited"
+    "Transaction Failed",
+    "Status Awaited"
 };
+
+QString token_statusStr;
 
 WorkFlowTokenTransfer::WorkFlowTokenTransfer(QObject* parent): IWorkFlow(parent)
 {
@@ -48,9 +43,43 @@ void WorkFlowTokenTransfer::StartWorkFlow(QList<QVariant> startParamters)
     capturedTokenColumnCount = 0;
 
     tokenStr = startParamters.at(0).toString();
-    clientSecured = CommunicationClient::GetClient(CLIENT_SECURED_103);
+    token_status = 0;
+
+    clientSecured = DlmsClient::GetClient(secured_client_index);
+
+    if(clientSecured == NULL)
+    {
+        controllerInstance->Trace("Client connection is NULL");
+        token_statusStr = "Transaction Failed";
+        emit TokenTransferCompleted(controllerInstance->currentMeterSerialNo_, tokenStr, token_statusStr, false);
+        return;
+    }
+
+    char str[256] = {0};
+    snprintf(str, 255, "STS Transfer using client ID %d", clientSecured->GetClientId());
+    controllerInstance->Trace(str);
+
     protocolState = TT_TRANSFER_TOKEN_SEND;
-    completionParamters.clear();
+
+    QList<MeterSettings> msettingslist;
+    meterSettingsEntityPtr->selectedMetersSettings(msettingslist, "serial_no", controllerInstance->currentMeterSerialNo_);
+
+    for(int i = 0; i < msettingslist.count(); i++)
+    {
+        switch(msettingslist.at(i).Key_)
+        {
+
+        case 3:
+        {
+            tt_currency_scalar = msettingslist.at(i).Value_.toInt();
+            break;
+        }
+
+        default:
+            break;
+        }
+    }
+
     ProcessSendingFrame();
 }
 
@@ -62,112 +91,62 @@ void WorkFlowTokenTransfer::ProcessSendingFrame()
     {
         case TT_TRANSFER_TOKEN_SEND:
         {
-            qDebug() << "Applying token " << tokenStr;
+            controllerInstance->Trace("Applying token " + tokenStr);
+            tokenEntityPtr->update("token_id", tokenStr, "is_token_new", false);
             clientSecured->CreateTokenTransferRequestFrame(buffer, OBIS_TOKEN_GATEWAY, tokenStr);
-            //emit globalApplicationData->tokenTransferProgress("Transfering token");
-            emit globalApplicationData->tokenTransferProgress("40%");
+            emit controllerInstance->workflowProgress(30);
             break;
         }
 
         case TT_TOKEN_STATUS_SEND:
         {
             clientSecured->CreateTokenTransferStatusRequestFrame(buffer, OBIS_TOKEN_GATEWAY);
-            emit globalApplicationData->tokenTransferProgress("Querying token status");
-            qDebug() << "Querying token status";
-            break;
-        }
-
-        case TT_TOKENS_CAPTURED_OBJECTS_SEND:
-        {
-            capturedTokenColumnCount = 0;
-            clientSecured->StartProfileGenericDialog("0.0.99.15.0.255");
-            clientSecured->StartBatch();
-            clientSecured->CreateProfileGenericCapturedObjectsRequestFrame(buffer);
-            break;
-        }
-
-        case TT_TOKENS_CAPTURED_OBJECTS_RECEIVER_READY_SEND:
-        {
-            clientSecured->CreateReceiverReadyFrame(buffer);
-            break;
-        }
-
-        case TT_TOKENS_RECORDS_SEND:
-        {
-            uint32_t startidx;
-            tokenEntityPtr->getRanges(serialno, startidx, currentIndex);
-            clientSecured->StartBatch();
-
-            if(currentIndex == 0 || startidx == 0)
-            {
-                currentIndex = 1;
-            }
-
-            clientSecured->CreateProfileGenericBatchRecordsRequestFrame(buffer, currentIndex, 10);
-            break;
-        }
-
-        case TT_TOKENS_RECORDS_RECEIVER_READY_SEND:
-        {
-            clientSecured->CreateReceiverReadyFrame(buffer);
+            emit controllerInstance->workflowProgress(40);
+            controllerInstance->Trace("Querying token status");
             break;
         }
 
         case TT_COMPLETE:
         {
-            emit globalApplicationData->tokenTransferProgress("100%");
+            emit controllerInstance->workflowProgress(100);
             break;
         }
 
         default:
         {
-            qDebug() << "ERROR: UNHANDLED PROTOCOL STATE : " << protocolState;
+            controllerInstance->Trace("Token Transfer: Unhandled Protocol State : " + QVariant((uint32_t)protocolState).toString());
             break;
         }
     }
 
     if(protocolState == TT_COMPLETE)
     {
-        completionParamters.clear();
-        completionParamters.append(tokenStr);
-        completionParamters.append(token_status);
-        completionParamters.append(token_status_messages[token_status]);
-
+        token_statusStr = token_status_messages[token_status];
         if(token_status > 3 && token_status != 8)
         {
             //Token was transferred but the token was not accepted
-            emit Completed(completionParamters, TokenTransfer, false);
+            emit TokenTransferCompleted(controllerInstance->currentMeterSerialNo_, tokenStr, token_statusStr, false);
         }
         else
         {
-            emit Completed(completionParamters, TokenTransfer, true);
+            emit TokenTransferCompleted(controllerInstance->currentMeterSerialNo_, tokenStr, token_statusStr, true);
         }
         return;
     }
 
     if(buffer.length() > 0)
     {
-        //std::string str = Helpers::BytesToHex((unsigned char*)buffer.data(), buffer.length());
-        //std::stringstream ss;
-        //ss << protocolState << " TX [" << buffer.length() << "] " << str.c_str();
-        //qDebug() << ss.str().c_str();
-
-        centralPtr->SendData(buffer);
+        btInterfacePtr->Send(buffer);
         protocolState++;
     }
     else
     {
-        qDebug() << "PROTOCOL SEND BUFFER NOT READY -> STEP -> " << protocolState;
+        controllerInstance->Trace("Token Transfer: Protocol Buffer Not Ready : " + QVariant((uint32_t)protocolState).toString());
     }
 }
 
 void WorkFlowTokenTransfer::ProcessReceivedFrame(const QByteArray &buffer)
 {
-    //std::string str = Helpers::BytesToHex((unsigned char*)buffer.data(), buffer.length());
-    //std::stringstream ss;
-    //ss << protocolState << " RX [" << buffer.length() << "] " << str.c_str();
-    //qDebug() << ss.str().c_str();
-
     bool has_error = false;
 
     DLMSVariant responseObject;
@@ -185,12 +164,15 @@ void WorkFlowTokenTransfer::ProcessReceivedFrame(const QByteArray &buffer)
             {
                 has_error = true;
                 token_status = 9;
+                tokenEntityPtr->update("token_id", tokenStr, "token_status_description", "Transaction failed");
             }
             else
             {
-                qDebug() << "Token applied";
-                emit globalApplicationData->tokenTransferProgress("Token transferred");
+                token_status = 11;
+                controllerInstance->Trace("Token applied");
             }
+
+            emit controllerInstance->tokenTransferState(!has_error, QString(token_status_messages[token_status]));
 
             break;
         }
@@ -200,137 +182,36 @@ void WorkFlowTokenTransfer::ProcessReceivedFrame(const QByteArray &buffer)
             bool isfound = false;
             DLMSTokenGateway gatewayObject;
 
-            qDebug() << "Token status buffer received";
-
             if(!clientSecured->CheckTokenTransferStatusResponseFrame(buffer, OBIS_TOKEN_GATEWAY, gatewayObject))
             {
                 //Ignore - This could be a transient problem
-                token_status = 10;
+                token_status = 9;
+                tokenEntityPtr->update("token_id", tokenStr, "token_status_description", "Status Awaited");
             }
             else
             {
                 token_status = gatewayObject.GetStatusCode();
-                qDebug() << "Token status received" << token_status << token_status_messages[token_status];
-            }
+                controllerInstance->Trace("Token status received : " + QString(token_status_messages[token_status]));
 
-            break;
-        }
-
-        case TT_TOKENS_CAPTURED_OBJECTS_RECV:
-        case TT_TOKENS_CAPTURED_OBJECTS_PARTIAL_FRAME_RECV:
-        {
-            QString colnames;
-            if(!clientSecured->CheckBatchFrame(buffer, ispartial, islast))
-            {
-                //Ignore and proceed to completion state
-                protocolState =  TT_COMPLETE - 1;
-                break;
-            }
-
-            if(ispartial)
-            {
-                // If not a complete frame then, keep the buffer in accumulator and set next stage
-                protocolState = TT_TOKENS_CAPTURED_OBJECTS_RECEIVER_READY_SEND - 1;
-            }
-            else
-            {
-                if(islast)
+                if(token_status > 3)
                 {
-                    //Now assemble the complete frame
-                    if(!clientSecured->CheckProfileGenericCapturedObjectsResponseFrame(colnames, capturedTokenColumnCount))
-                    {
-                        qDebug() << clientSecured->ErrorMessage() << protocolState;
-                        has_error = true;
-                    }
-
-                    protocolState =  TT_TOKENS_RECORDS_SEND - 1;
+                    tokenEntityPtr->remove("token_id", tokenStr);
                 }
                 else
                 {
-                    protocolState =  TT_TOKENS_CAPTURED_OBJECTS_RECEIVER_READY_SEND - 1;
+                    tokenEntityPtr->update("token_id", tokenStr, "token_status_description", QString(token_status_messages[token_status]));
                 }
             }
-            break;
-        }
 
-        case TT_TOKENS_RECORDS_RECV:
-        case TT_TOKENS_RECORDS_PARTIAL_FRAME_RECV:
-        {
-            if(!clientSecured->CheckBatchFrame(buffer, ispartial, islast))
-            {
-                //Ignore and proceed to completion state
-                protocolState =  TT_COMPLETE - 1;
-                break;
-            }
+            emit controllerInstance->tokenTransferState(!has_error, QString(token_status_messages[token_status]));
 
-            if(ispartial)
-            {
-                // If not a complete frame then, keep the buffer in accumulator and set next stage
-                protocolState =  TT_TOKENS_RECORDS_RECEIVER_READY_SEND - 1;
-            }
-            else
-            {
-                if(islast)
-                {
-                    //Now assemble the complete frame
-                    std::vector<std::vector<DLMSVariant>> buffer;
-                    if(!clientSecured->CheckProfileGenericBatchRecordsResponseFrame(buffer))
-                    {
-                        //qDebug() << clientSecured->ErrorMessage() << protocolState;
-                        has_error = true;
-                    }
-                    else
-                    {
-                        long recTimeStamp = 0;
-                        long rows = 0;
+            protocolState =  TT_COMPLETE - 1;
 
-                        if(buffer.size() > 0)
-                        {
-                            rows = buffer.size();
-                        }
-
-                        for(int x = 0; x < rows; x++)
-                        {
-                            Token t1;
-                            t1.TokenStatusText_ = "OK";
-                            t1.IsApplied_ = true;
-                            t1.SerialNo_ = serialno;
-                            t1.AppliedDate_ = buffer[x][1].dateTime.ToUnixTime();
-                            t1.AppliedDateStr_ = QDateTime::fromSecsSinceEpoch(t1.AppliedDate_).toString("MMMM dd yyyy");
-                            ByteBuffer buff;
-                            std::string syst_hex = buffer[x][2].ToString();
-                            Helpers::HexToBytes(syst_hex, buff);
-                            t1.TokenId_ = (char*)buff.GetData();
-
-                            if(capturedTokenColumnCount == 4)
-                            {
-                                t1.TokenValue_ = buffer[x][3].ToInteger();
-                            }
-                            else
-                            {
-                                t1.TokenValue_ = 0;
-                            }
-
-                            QString tempts;
-
-                            clientSecured->ExtractStringData(buffer[x][1], tempts);
-
-                            tokenEntityPtr->createToken(t1);
-                        }
-
-                        protocolState =  TT_COMPLETE - 1;
-                    }
-                }
-                else
-                {
-                    protocolState =  TT_TOKENS_RECORDS_RECEIVER_READY_SEND - 1;
-                }
-            }
             break;
         }
 
         default:
-            qDebug() << "ERROR: UNHANDLED PROTOCOL STATE : " << protocolState;
+            controllerInstance->Trace("Token Transfer: Unhandled Protocol State : " + QVariant((uint32_t)protocolState).toString());
             break;
     }
 
@@ -346,7 +227,9 @@ void WorkFlowTokenTransfer::ProcessReceivedFrame(const QByteArray &buffer)
     }
     else
     {
+        controllerInstance->Trace(clientSecured->ErrorMessage() + QString(" ") + QVariant((uint32_t)protocolState).toString());
         protocolState = TT_COMPLETE;
-        emit Completed(completionParamters, TokenTransfer, false);
+        token_statusStr = token_status_messages[token_status];
+        emit TokenTransferCompleted(controllerInstance->currentMeterSerialNo_, tokenStr, token_statusStr, true);
     }
 }

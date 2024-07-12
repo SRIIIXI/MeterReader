@@ -3,7 +3,6 @@
 #include "DLMS.h"
 #include "DLMSValueEventCollection.h"
 #include "DLMSClient.h"
-#include "DLMSObjectFactory.h"
 #include "DLMSSecuritySetup.h"
 #include "DLMSAccessItem.h"
 
@@ -1244,8 +1243,20 @@ int DLMSLNCommandHandler::MethodRequestNextBlock(
 
     p.SetStreaming(streaming);
     p.SetWindowSize(settings.GetGbtWindowSize());
+
+    bool is_null_transaction = true;
+
+    if(server != nullptr)
+    {
+        if(server->m_Transaction != nullptr)
+        {
+            is_null_transaction = false;
+        }
+    }
+
     //If transaction is not in progress.
-    if (&server->m_Transaction == NULL)
+    //if (&server->m_Transaction == NULL)
+    if (is_null_transaction)
     {
         p.SetStatus(DLMS_ERROR_CODE_NO_LONG_GET_OR_READ_IN_PROGRESS);
     }

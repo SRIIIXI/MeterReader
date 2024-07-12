@@ -68,7 +68,6 @@ public:
     virtual ~EntityAlarm();
     bool createTable();
     bool createAlarm(const Alarm &rec);
-    bool allAlarms(QList<Alarm> &list);
     bool selectedAlarms(QList<Alarm> &list, QString keyname, QVariant value);
 };
 

@@ -31,54 +31,18 @@ bool EntityMeterSettings::createTable()
                         PRIMARY KEY (serial_no, key) \
                         )";
 
-    QSqlQuery qryresult;
-
-    try
-    {
-        _Database->transaction();
-
-        qryresult = _Database->exec(sqlString);
-
-        _Database->commit();
-    }
-    catch(QException e)
-    {
-       _Database->rollback();
-       QString errString = _Database->lastError().text();
-       return false;
-    }
-
-    return true;
-
+    return executeQuery(sqlString);
 }
 
 bool EntityMeterSettings::createMeterSettings(const MeterSettings &rec)
 {
-    QSqlQuery qryresult;
-    QString err;
+    QString sqlString = "insert into meter_settings (serial_no, key, value) values('serial_no__', key__, 'value__')";
 
-    QString sql = "insert into meter_settings (serial_no, key, value) values('serial_no__', key__, 'value__')";
+    sqlString = sqlString.replace("serial_no__", rec.SerialNo_);
+    sqlString = sqlString.replace("key__", QVariant(rec.Key_).toString());
+    sqlString = sqlString.replace("value__", rec.Value_);
 
-    sql = sql.replace("serial_no__", rec.SerialNo_);
-    sql = sql.replace("key__", QVariant(rec.Key_).toString());
-    sql = sql.replace("value__", rec.Value_);
-
-    try
-    {
-        _Database->transaction();
-
-        qryresult = _Database->exec(sql);
-
-        _Database->commit();
-    }
-    catch(QException e)
-    {
-       _Database->rollback();
-       err = _Database->lastError().text();
-       return false;
-    }
-
-    return true;
+    return executeQuery(sqlString);
 }
 
 bool EntityMeterSettings::allMetersSettings(QList<MeterSettings> &list)

@@ -8,7 +8,7 @@ ApplicationWindow
     id: mainView
 
     Material.theme: Material.Light
-    Material.accent: "#961C1C"
+    Material.accent: applicationData.Theme.AccentColor
 
     objectName: "mainViewID"
     visible: true
@@ -27,51 +27,9 @@ ApplicationWindow
         close.accepted = isClosing;
     }
 
-    Loader
+    Component.onCompleted:
     {
-        id:loader_one
-        active: true
-        visible: true
-        anchors.fill: parent
-        asynchronous: true
-        source: "SplashScreen.qml"
-
-        onLoaded:
-        {
-            if(applicationData.invokeRetreiveLastPage() === "")
-            {
-                show_content_timer.start()
-            }
-            else
-            {
-                applicationData.invokeThemeUpdate()
-                stackView.push(applicationData.invokeRetreiveLastPage())
-            }
-        }
-    }
-
-    Timer
-    {
-        id: show_content_timer
-        interval: 3000
-        repeat: false
-        running: false
-        triggeredOnStart: false
-        onTriggered:
-        {
-            repeat: false
-            running: false
-            show_content_timer.stop()
-
-            if(isfirst === true)
-            {
-                stackView.push("CreateUserStage1.qml")
-            }
-            else
-            {
-                stackView.push("Login.qml")
-            }
-        }
+        stackView.push("SplashScreen.qml")
     }
 
     Action
@@ -108,6 +66,7 @@ ApplicationWindow
         onTriggered:
         {
             applicationData.invokeSaveCurrentPage("Dashboard.qml")
+            stackView.pop()
             stackView.push("Dashboard.qml")
         }
     }
@@ -119,6 +78,7 @@ ApplicationWindow
         onTriggered:
         {
             applicationData.invokeSaveCurrentPage("ResetPasscodeStage1.qml")
+            stackView.pop()
             stackView.push("ResetPasscodeStage1.qml")
         }
     }
@@ -130,6 +90,7 @@ ApplicationWindow
         onTriggered:
         {
             applicationData.invokeSaveCurrentPage("AddMeter.qml")
+            stackView.pop()
             stackView.push("AddMeter.qml")
         }
     }
@@ -141,18 +102,8 @@ ApplicationWindow
         onTriggered:
         {
             applicationData.invokeSaveCurrentPage("AvailableMeters.qml")
+            stackView.pop()
             stackView.push("AvailableMeters.qml")
-        }
-    }
-
-    Action
-    {
-        id: navigateAvailableTariffs
-        icon.name: stackView.depth
-        onTriggered:
-        {
-            applicationData.invokeSaveCurrentPage("AvailableTariffs.qml")
-            stackView.push("AvailableTariffs.qml")
         }
     }
 
@@ -163,6 +114,7 @@ ApplicationWindow
         onTriggered:
         {
             applicationData.invokeSaveCurrentPage("AvailableTokens.qml")
+            stackView.pop()
             stackView.push("AvailableTokens.qml")
         }
     }
@@ -174,18 +126,8 @@ ApplicationWindow
         onTriggered:
         {
             applicationData.invokeSaveCurrentPage("AddToken.qml")
+            stackView.pop()
             stackView.push("AddToken.qml")
-        }
-    }
-
-    Action
-    {
-        id: navigateAddTariff
-        icon.name: stackView.depth
-        onTriggered:
-        {
-            applicationData.invokeSaveCurrentPage("AddTariff.qml")
-            stackView.push("AddTariff.qml")
         }
     }
 
@@ -196,6 +138,7 @@ ApplicationWindow
         onTriggered:
         {
             applicationData.invokeSaveCurrentPage("AlarmSettings.qml")
+            stackView.pop()
             stackView.push("AlarmSettings.qml")
         }
     }
@@ -207,6 +150,7 @@ ApplicationWindow
         onTriggered:
         {
             applicationData.invokeSaveCurrentPage("Alarms.qml")
+            stackView.pop()
             stackView.push("Alarms.qml")
         }
     }
@@ -218,6 +162,7 @@ ApplicationWindow
         onTriggered:
         {
             applicationData.invokeSaveCurrentPage("Login.qml")
+            stackView.pop()
             stackView.push("Login.qml")
         }
     }
@@ -229,21 +174,10 @@ ApplicationWindow
         onTriggered:
         {
             applicationData.invokeSaveCurrentPage("Energy.qml")
+            stackView.pop()
             stackView.push("Energy.qml")
         }
     }
-
-    Action
-    {
-        id: navigatePowerQuality
-        icon.name: stackView.depth
-        onTriggered:
-        {
-            applicationData.invokeSaveCurrentPage("PowerQuality.qml")
-            stackView.push("PowerQuality.qml")
-        }
-    }
-
 
     Drawer
     {
@@ -251,7 +185,7 @@ ApplicationWindow
         width: mainView.width * 0.75
         height: mainView.height
 
-        Material.accent: "#961C1C"
+        Material.accent: applicationData.Theme.AccentColor
         Material.theme:
         {
             if(applicationData.IsDarkTheme === true)
@@ -290,6 +224,7 @@ ApplicationWindow
                 {                   
                     drawer.close()
                     applicationData.invokeSaveCurrentPage("Dashboard.qml")
+                    stackView.pop()
                     stackView.push("Dashboard.qml")
                 }
 
@@ -302,43 +237,12 @@ ApplicationWindow
 
                 enabled:
                 {
-                    if(applicationData.IsDemoMode === true)
-                    {
-                        return true
-                    }
-
-                    if(applicationData.IsAppConnected === false)
+                    if(applicationData.CurrentMeterSerialNo === "")
                     {
                         return false
                     }
-                    else
-                    {
-                        if(applicationData.CurrentMeter.SerialNo === "")
-                        {
-                            return false
-                        }
-                    }
 
                     return true
-                }
-            }
-
-            ItemDelegate
-            {
-                text: qsTr("Add New Meter")
-                width: parent.width
-                onClicked:
-                {
-                    applicationData.invokeSaveCurrentPage("AddMeter.qml")
-                    stackView.push("AddMeter.qml")
-                    drawer.close()
-                }
-
-                icon
-                {
-                    source: "../images/AddMeter.png"
-                    width: iconWidth
-                    height: iconHeight
                 }
             }
 
@@ -349,13 +253,14 @@ ApplicationWindow
                 onClicked:
                 {
                     applicationData.invokeSaveCurrentPage("AvailableMeters.qml")
+                    stackView.pop()
                     stackView.push("AvailableMeters.qml")
                     drawer.close()
                 }
 
                 icon
                 {
-                    source: "../images/MyMeters.png"
+                    source: "../images/Meter.png"
                     width: iconWidth
                     height: iconHeight
                 }
@@ -370,6 +275,7 @@ ApplicationWindow
                 {
                     drawer.close()
                     applicationData.invokeSaveCurrentPage("AvailableTokens.qml")
+                    stackView.pop()
                     stackView.push("AvailableTokens.qml")
                 }
 
@@ -382,21 +288,9 @@ ApplicationWindow
 
                 enabled:
                 {
-                    if(applicationData.IsDemoMode === true)
-                    {
-                        return true
-                    }
-
-                    if(applicationData.IsAppConnected === false)
+                    if(applicationData.CurrentMeterSerialNo === "")
                     {
                         return false
-                    }
-                    else
-                    {
-                        if(applicationData.CurrentMeter.SerialNo === "")
-                        {
-                            return false
-                        }
                     }
 
                     return true
@@ -412,6 +306,7 @@ ApplicationWindow
                 {
                     drawer.close()
                     applicationData.invokeSaveCurrentPage("Alarms.qml")
+                    stackView.pop()
                     stackView.push("Alarms.qml")
                 }
 
@@ -424,63 +319,9 @@ ApplicationWindow
 
                 enabled:
                 {
-                    if(applicationData.IsDemoMode === true)
-                    {
-                        return true
-                    }
-
-                    if(applicationData.IsAppConnected === false)
+                    if(applicationData.CurrentMeterSerialNo === "")
                     {
                         return false
-                    }
-                    else
-                    {
-                        if(applicationData.CurrentMeter.SerialNo === "")
-                        {
-                            return false
-                        }
-                    }
-
-                    return true
-                }
-            }
-
-            ItemDelegate
-            {
-                text: qsTr("Tariff")
-                width: parent.width
-
-                onClicked:
-                {
-                    drawer.close()
-                    applicationData.invokeSaveCurrentPage("AvailableTariffs.qml")
-                    stackView.push("AvailableTariffs.qml")
-                }
-
-                icon
-                {
-                    source: "../images/Tariff.png"
-                    width: iconWidth
-                    height: iconHeight
-                }
-
-                enabled:
-                {
-                    if(applicationData.IsDemoMode === true)
-                    {
-                        return true
-                    }
-
-                    if(applicationData.IsAppConnected === false)
-                    {
-                        return false
-                    }
-                    else
-                    {
-                        if(applicationData.CurrentMeter.SerialNo === "")
-                        {
-                            return false
-                        }
                     }
 
                     return true
@@ -496,6 +337,7 @@ ApplicationWindow
                 {
                     drawer.close()
                     applicationData.invokeSaveCurrentPage("Energy.qml")
+                    stackView.pop()
                     stackView.push("Energy.qml")
                 }
 
@@ -508,64 +350,9 @@ ApplicationWindow
 
                 enabled:
                 {
-                    if(applicationData.IsDemoMode === true)
-                    {
-                        return true
-                    }
-
-                    if(applicationData.IsAppConnected === false)
+                    if(applicationData.CurrentMeterSerialNo === "")
                     {
                         return false
-                    }
-                    else
-                    {
-                        if(applicationData.CurrentMeter.SerialNo === "")
-                        {
-                            return false
-                        }
-                    }
-
-                    return true
-                }
-            }
-
-            ItemDelegate
-            {
-                text: qsTr("PowerQuality")
-                width: parent.width
-                visible: false
-
-                onClicked:
-                {
-                    drawer.close()
-                    applicationData.invokeSaveCurrentPage("PowerQuality.qml")
-                    stackView.push("PowerQuality.qml")
-                }
-
-                icon
-                {
-                    source: "../images/PowerQuality.png"
-                    width: iconWidth
-                    height: iconHeight
-                }
-
-                enabled:
-                {
-                    if(applicationData.IsDemoMode === true)
-                    {
-                        return true
-                    }
-
-                    if(applicationData.IsAppConnected === false)
-                    {
-                        return false
-                    }
-                    else
-                    {
-                        if(applicationData.CurrentMeter.SerialNo === "")
-                        {
-                            return false
-                        }
                     }
 
                     return true
@@ -579,6 +366,7 @@ ApplicationWindow
                 onClicked:
                 {
                     applicationData.invokeSaveCurrentPage("Settings.qml")
+                    stackView.pop()
                     stackView.push("Settings.qml")
                     drawer.close()
                 }
@@ -598,6 +386,7 @@ ApplicationWindow
                 onClicked:
                 {
                     applicationData.invokeSaveCurrentPage("Contact.qml")
+                    stackView.pop()
                     stackView.push("Contact.qml")
                     drawer.close()
                 }
@@ -617,6 +406,7 @@ ApplicationWindow
                 onClicked:
                 {
                     applicationData.invokeSaveCurrentPage("Help.qml")
+                    stackView.pop()
                     stackView.push("Help.qml")
                     drawer.close()
                 }
@@ -627,6 +417,28 @@ ApplicationWindow
                     width: iconWidth
                     height: iconHeight
                 }
+            }
+
+            ItemDelegate
+            {
+                text: qsTr("Trace")
+                width: parent.width
+                onClicked:
+                {
+                    applicationData.invokeSaveCurrentPage("Trace.qml")
+                    stackView.pop()
+                    stackView.push("Trace.qml")
+                    drawer.close()
+                }
+
+                icon
+                {
+                    source: "../images/Trace.png"
+                    width: iconWidth
+                    height: iconHeight
+                }
+
+                visible: applicationData.IsTraceEnabled
             }
 
             ItemDelegate
@@ -662,15 +474,24 @@ ApplicationWindow
     Connections
     {
         target: applicationData
-        function onLogMessage(str)
+
+        function onInitializationComplete()
         {
-            console.log(str)
+            if(isfirst === true)
+            {
+                stackView.pop()
+                stackView.push("CreateUserStage1.qml")
+            }
+            else
+            {
+                stackView.pop()
+                stackView.push("Login.qml")
+            }
         }
 
         function onOperationCancelled()
         {
-            stackView.pop();
-
+            stackView.pop()
             applicationData.invokeSaveCurrentPage("Dashboard.qml")
             stackView.push("Dashboard.qml")
         }
@@ -680,13 +501,6 @@ ApplicationWindow
             stackView.pop();
             applicationData.invokeSaveCurrentPage("AvailableTokens.qml")
             stackView.push("AvailableTokens.qml");
-        }
-
-        function onTariffAdded()
-        {
-            stackView.pop();
-            applicationData.invokeSaveCurrentPage("AvailableTariffs.qml")
-            stackView.push("AvailableTariffs.qml");
         }
 
         function onMeterAdded()
@@ -726,7 +540,6 @@ ApplicationWindow
                 applicationData.invokeSaveCurrentPage("Energy.qml")
                 stackView.push("Energy.qml");
             }
-
 
             if(pg === 3)
             {
@@ -827,18 +640,11 @@ ApplicationWindow
                 stackView.push("ResetPasscodeStage3.qml");
             }
 
-            if(pg === 17)
+            if(pg === 19)
             {
                 stackView.pop();
-                applicationData.invokeSaveCurrentPage("AvailableTariffs.qml")
-                stackView.push("AvailableTariffs.qml");
-            }
-
-            if(pg === 18)
-            {
-                stackView.pop();
-                applicationData.invokeSaveCurrentPage("PowerQuality.qml")
-                stackView.push("PowerQuality.qml");
+                applicationData.invokeSaveCurrentPage("Help.qml")
+                stackView.push("Help.qml");
             }
         }
     }

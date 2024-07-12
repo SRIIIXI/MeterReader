@@ -5,11 +5,14 @@
 
 class WorkFlowAddMeter : public IWorkFlow
 {
+    Q_OBJECT
 public:
     WorkFlowAddMeter(QObject* parent = nullptr);
     void StartWorkFlow(QList<QVariant> startParamters);
     void ProcessSendingFrame();
     void ProcessReceivedFrame(const QByteArray &buffer);
+signals:
+    void AddMeterCompleted(QString &serialNo, bool status);
 private:
     long AM_FRAME_COUNTER_PAIRING;
     long AM_FRAME_COUNTER_SECURED_103;

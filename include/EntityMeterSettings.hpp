@@ -64,6 +64,13 @@ public:
         Value_ = other.Value_;
         return *this;
     }
+
+    void Clear()
+    {
+        SerialNo_ = "";
+        Key_ = -1;
+        Value_ = "";
+    }
 };
 
 class EntityMeterSettings : public DataEntity

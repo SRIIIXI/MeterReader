@@ -1,7 +1,5 @@
 #include "DLMS.h"
-#include "APDU.h"
 #include "DLMSClient.h"
-#include "DLMSObjectFactory.h"
 #include "ByteBuffer.h"
 #include "DLMSTranslator.h"
 #include "DLMSLNCommandHandler.h"
@@ -4247,12 +4245,36 @@ int DLMS::GetMBusData(
         if (data.GetXml() != NULL && data.GetXml()->GetComments())
         {
             std::string man = DecryptManufacturer(manufacturerID);
-            data.GetXml()->AppendComment("Command: " + cmd);
+
+            char str_hex[128] = {0};
+            std::string cstr_hex;
+
+            memset(str_hex, 0, 128);
+            snprintf(str_hex, 128, "0x%X", cmd);
+            cstr_hex = str_hex;
+            data.GetXml()->AppendComment("Command: " + cstr_hex);
+
             data.GetXml()->AppendComment("Manufacturer: " + man);
-            data.GetXml()->AppendComment("Meter Version: " + meterVersion);
-            data.GetXml()->AppendComment("Meter Type: " + type);
-            data.GetXml()->AppendComment("Control Info: " + ci);
-            data.GetXml()->AppendComment("Encryption: " + encryption);
+
+            memset(str_hex, 0, 128);
+            snprintf(str_hex, 128, "0x%X", meterVersion);
+            cstr_hex = str_hex;
+            data.GetXml()->AppendComment("Meter Version: " + cstr_hex);
+
+            memset(str_hex, 0, 128);
+            snprintf(str_hex, 128, "0x%X", type);
+            cstr_hex = str_hex;
+            data.GetXml()->AppendComment("Meter Type: " + cstr_hex);
+
+            memset(str_hex, 0, 128);
+            snprintf(str_hex, 128, "0x%X", ci);
+            cstr_hex = str_hex;
+            data.GetXml()->AppendComment("Control Info: " + cstr_hex);
+
+            memset(str_hex, 0, 128);
+            snprintf(str_hex, 128, "0x%X", encryption);
+            cstr_hex = str_hex;
+            data.GetXml()->AppendComment("Encryption: " + cstr_hex);
         }
     }
     return ret;

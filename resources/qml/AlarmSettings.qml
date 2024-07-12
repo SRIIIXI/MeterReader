@@ -8,72 +8,42 @@ Page
     id: alarmsSettingsPage
 
     Material.theme: Material.Light
-    Material.accent: "#961C1C"
-
-    property string lastSyncTime: applicationData.CurrentMeter.LastSyncStr
-    property string meterName: applicationData.CurrentMeter.SerialNo
+    Material.accent: applicationData.Theme.AccentColor
 
     property variant alarmFilterModel :  []
 
-    Header
-    {
-        id:headerID
-        headerTitle: "Selected alarm to be displayed"
-        isOptionsBtnVisible:  true
-        isMeterNameVisible: false
-        isSyncDateVisible: false
-        isInfoVisible: false
-        backBtn.action      : navigatActiveAlarms
-        optionsBtn.icon.source:
-        if(applicationData.IsDarkTheme === true)
-        {
-            return "../images/SaveWhite.png";
-        }
-        else
-        {
-            return "../images/SaveBlack.png";
-        }
-        onOptionsBtnClicked:
-        {
-            headerID.optionsBtn.enabled = false;
-            applicationData.invokeApplyAlarmFilters();
-            errorLabel.text = "Alarm filters saved";
-        }
-    }
 
     Component.onCompleted:
     {
-        errorLabel.text = ""
         alarmFilterModel = applicationData.AlarmFilter
-        headerID.optionsBtn.enabled = false;
     }
 
     Rectangle
     {
         id: background
         width: parent.width
-        height: parent.height - headerID.height
-        anchors.top: headerID.bottom
-        color:
-        {
-            if(applicationData.IsDarkTheme === true)
-            {
-                return "black";
-            }
-            else
-            {
-                return "white";
-            }
-        }
+        height: parent.height - headerPanel.height
+        anchors.top: headerPanel.bottom
+        color: applicationData.Theme.BackgroundColor
+    }
+
+    Header
+    {
+        id:headerPanel
+        headerTitle: "Alarm Filters"
+        isMenuButtonVisible: true
+        isConnectionIndicatorVisible: false
+        isMeterNameVisible: false
+        isSyncDateVisible: false
     }
 
     ListView
     {
         id: alarmSettingsListView
         width: parent.width*0.90
-        anchors.top:headerID.bottom
+        anchors.top:headerPanel.bottom
         anchors.topMargin: 10
-        anchors.bottom: errorLabel.top
+        anchors.bottom: btnRect.top
         anchors.horizontalCenter: parent.horizontalCenter
         visible: true
         spacing: 10
@@ -92,18 +62,7 @@ Page
             width: alarmSettingsListView.width
             height: alarmsSettingsPage.width*0.1
             radius: 5
-
-            color:
-            {
-                if(applicationData.IsDarkTheme === true)
-                {
-                    return "#1C2833";
-                }
-                else
-                {
-                    return "whitesmoke";
-                }
-            }
+            color: applicationData.Theme.ControlColor
 
             CheckBox
             {
@@ -112,7 +71,7 @@ Page
                 anchors.left: availableAlarmSettingsItemID.left
                 anchors.leftMargin: 30
                 checked: alarmFilterModel[index].IsSet
-                Material.accent: "#961C1C"
+                Material.accent: applicationData.Theme.AccentColor
                 Material.theme:
                 {
                     if(applicationData.IsDarkTheme === true)
@@ -126,29 +85,15 @@ Page
                 }
                 onCheckedChanged:
                 {
-                    errorLabel.text = ""
                     applicationData.invokeUpdateAlarmFilterState(index, checkState)
-                    headerID.optionsBtn.enabled = true;
                 }
             }
 
             Label
             {
                 id:activeAlarmNamelbl
-                font.pointSize: headerID.fontSizeSmall
-
-                color:
-                {
-                    if(applicationData.IsDarkTheme === true)
-                    {
-                        return "white";
-                    }
-                    else
-                    {
-                        return "black";
-                    }
-                }
-
+                font.pointSize: headerPanel.fontSizeSmall
+                color: applicationData.Theme.FontColor
                 elide: Label.ElideRight
                 verticalAlignment: Qt.AlignVCenter
                 anchors.verticalCenter: parent.verticalCenter
@@ -159,42 +104,56 @@ Page
         }
     }
 
-    Label
-    {
-        id: errorLabel
-        width: alarmsSettingsPage.width * 0.9
-        height: alarmsSettingsPage.width * 0.05
-        anchors.bottom: alarmSettingsDummyRect.top
-        anchors.horizontalCenter: parent.horizontalCenter
-        font.bold: true
-        text: "Error"
-        color: "red"
-        wrapMode: "Wrap"
-        anchors.topMargin: 5
-        anchors.bottomMargin: 5
-    }
-
     Rectangle
     {
-        id: alarmSettingsDummyRect
+        id: btnRect
         width: alarmsSettingsPage.width
-        height: alarmsSettingsPage.width*0.1
-        radius: 5
-        color:
+        height: alarmsSettingsPage.width*0.2
+        anchors.bottom: parent.bottom
+        anchors.topMargin: 10
+        anchors.bottomMargin: 10
+        anchors.rightMargin: 0
+        anchors.right: parent.right
+        color: applicationData.Theme.ControlColor
+
+        Grid
         {
-            if(applicationData.IsDarkTheme === true)
+            id: grid
+            rows: 1
+            columns: 3
+            spacing: 10
+            anchors.right: parent.right
+            anchors.verticalCenter: parent.verticalCenter
+
+            CustomButton
             {
-                return "black";
+                id:btnCancel
+                height: alarmsSettingsPage.width*0.125
+                width: (alarmsSettingsPage.width*0.2)*2
+                text: "Cancel"
+                isDefault: false
+                accentColor: applicationData.Theme.AccentColor
+                onClicked:
+                {
+                    applicationData.invokeReloadAlarmFilters();
+                    applicationData.invokeChangePage(3)
+                }
             }
-            else
+
+            CustomButton
             {
-                return "white";
+                id:btnAdd
+                height: alarmsSettingsPage.width*0.125
+                width: (alarmsSettingsPage.width*0.2)*2
+                text: "OK"
+                isDefault: true
+                accentColor: applicationData.Theme.AccentColor
+                onClicked:
+                {
+                    applicationData.invokeApplyAlarmFilters();
+                    applicationData.invokeChangePage(3)
+                }
             }
-        }
-        anchors
-        {
-            bottom:parent.bottom
-            horizontalCenter: parent.horizontalCenter
         }
     }
 }

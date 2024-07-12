@@ -5,7 +5,7 @@ import QtQuick.Controls.Material 2.3
 Rectangle
 {
     Material.theme: Material.Light
-    Material.accent: "#961C1C"
+    Material.accent: applicationData.Theme.AccentColor
 
     id:numberKeyPadID
     width: parent.width * 0.6
@@ -16,17 +16,8 @@ Rectangle
     property bool isTickMarkVisible: false
     property int currentButtonPressed: -1
 
-    color:
-    {
-        if(applicationData.IsDarkTheme === true)
-        {
-            return "black";
-        }
-        else
-        {
-            return "white";
-        }
-    }
+    color: applicationData.Theme.BackgroundColor
+
 
     Grid
     {
@@ -58,29 +49,8 @@ Rectangle
             {
                 border.width: 1
                 radius: width*0.5
-                border.color:
-                {
-                    if(applicationData.IsDarkTheme === true)
-                    {
-                        return "#1C2833";
-                    }
-                    else
-                    {
-                        return "whitesmoke";
-                    }
-                }
-
-                color:
-                {
-                    if(applicationData.IsDarkTheme === true)
-                    {
-                        return "#1C2833";
-                    }
-                    else
-                    {
-                        return "whitesmoke";
-                    }
-                }
+                border.color: applicationData.Theme.ControlColor
+                color: applicationData.Theme.ControlColor
             }
 
             onClicked:
@@ -113,29 +83,8 @@ Rectangle
             {
                 border.width: 1
                 radius: width*0.5
-                border.color:
-                {
-                    if(applicationData.IsDarkTheme === true)
-                    {
-                        return "#1C2833";
-                    }
-                    else
-                    {
-                        return "whitesmoke";
-                    }
-                }
-
-                color:
-                {
-                    if(applicationData.IsDarkTheme === true)
-                    {
-                        return "#1C2833";
-                    }
-                    else
-                    {
-                        return "whitesmoke";
-                    }
-                }
+                border.color: applicationData.Theme.ControlColor
+                color: applicationData.Theme.ControlColor
             }
 
             onClicked:
@@ -168,29 +117,8 @@ Rectangle
             {
                 border.width: 1
                 radius: width*0.5
-                border.color:
-                {
-                    if(applicationData.IsDarkTheme === true)
-                    {
-                        return "#1C2833";
-                    }
-                    else
-                    {
-                        return "whitesmoke";
-                    }
-                }
-
-                color:
-                {
-                    if(applicationData.IsDarkTheme === true)
-                    {
-                        return "#1C2833";
-                    }
-                    else
-                    {
-                        return "whitesmoke";
-                    }
-                }
+                border.color: applicationData.Theme.ControlColor
+                color: applicationData.Theme.ControlColor
             }
 
             onClicked:
@@ -223,29 +151,8 @@ Rectangle
             {
                 border.width: 1
                 radius: width*0.5
-                border.color:
-                {
-                    if(applicationData.IsDarkTheme === true)
-                    {
-                        return "#1C2833";
-                    }
-                    else
-                    {
-                        return "whitesmoke";
-                    }
-                }
-
-                color:
-                {
-                    if(applicationData.IsDarkTheme === true)
-                    {
-                        return "#1C2833";
-                    }
-                    else
-                    {
-                        return "whitesmoke";
-                    }
-                }
+                border.color: applicationData.Theme.ControlColor
+                color: applicationData.Theme.ControlColor
             }
 
             onClicked:
@@ -278,29 +185,8 @@ Rectangle
             {
                 border.width: 1
                 radius: width*0.5
-                border.color:
-                {
-                    if(applicationData.IsDarkTheme === true)
-                    {
-                        return "#1C2833";
-                    }
-                    else
-                    {
-                        return "whitesmoke";
-                    }
-                }
-
-                color:
-                {
-                    if(applicationData.IsDarkTheme === true)
-                    {
-                        return "#1C2833";
-                    }
-                    else
-                    {
-                        return "whitesmoke";
-                    }
-                }
+                border.color: applicationData.Theme.ControlColor
+                color: applicationData.Theme.ControlColor
             }
 
             onClicked:
@@ -333,29 +219,8 @@ Rectangle
             {
                 border.width: 1
                 radius: width*0.5
-                border.color:
-                {
-                    if(applicationData.IsDarkTheme === true)
-                    {
-                        return "#1C2833";
-                    }
-                    else
-                    {
-                        return "whitesmoke";
-                    }
-                }
-
-                color:
-                {
-                    if(applicationData.IsDarkTheme === true)
-                    {
-                        return "#1C2833";
-                    }
-                    else
-                    {
-                        return "whitesmoke";
-                    }
-                }
+                border.color: applicationData.Theme.ControlColor
+                color: applicationData.Theme.ControlColor
             }
 
             onClicked:
@@ -388,29 +253,8 @@ Rectangle
             {
                 border.width: 1
                 radius: width*0.5
-                border.color:
-                {
-                    if(applicationData.IsDarkTheme === true)
-                    {
-                        return "#1C2833";
-                    }
-                    else
-                    {
-                        return "whitesmoke";
-                    }
-                }
-
-                color:
-                {
-                    if(applicationData.IsDarkTheme === true)
-                    {
-                        return "#1C2833";
-                    }
-                    else
-                    {
-                        return "whitesmoke";
-                    }
-                }
+                border.color: applicationData.Theme.ControlColor
+                color: applicationData.Theme.ControlColor
             }
 
             onClicked:
@@ -443,29 +287,8 @@ Rectangle
             {
                 border.width: 1
                 radius: width*0.5
-                border.color:
-                {
-                    if(applicationData.IsDarkTheme === true)
-                    {
-                        return "#1C2833";
-                    }
-                    else
-                    {
-                        return "whitesmoke";
-                    }
-                }
-
-                color:
-                {
-                    if(applicationData.IsDarkTheme === true)
-                    {
-                        return "#1C2833";
-                    }
-                    else
-                    {
-                        return "whitesmoke";
-                    }
-                }
+                border.color: applicationData.Theme.ControlColor
+                color: applicationData.Theme.ControlColor
             }
 
             onClicked:
@@ -498,29 +321,8 @@ Rectangle
             {
                 border.width: 1
                 radius: width*0.5
-                border.color:
-                {
-                    if(applicationData.IsDarkTheme === true)
-                    {
-                        return "#1C2833";
-                    }
-                    else
-                    {
-                        return "whitesmoke";
-                    }
-                }
-
-                color:
-                {
-                    if(applicationData.IsDarkTheme === true)
-                    {
-                        return "#1C2833";
-                    }
-                    else
-                    {
-                        return "whitesmoke";
-                    }
-                }
+                border.color: applicationData.Theme.ControlColor
+                color: applicationData.Theme.ControlColor
             }
 
             onClicked:
@@ -553,29 +355,8 @@ Rectangle
             {
                 border.width: 1
                 radius: width*0.5
-                border.color:
-                {
-                    if(applicationData.IsDarkTheme === true)
-                    {
-                        return "#1C2833";
-                    }
-                    else
-                    {
-                        return "whitesmoke";
-                    }
-                }
-
-                color:
-                {
-                    if(applicationData.IsDarkTheme === true)
-                    {
-                        return "#1C2833";
-                    }
-                    else
-                    {
-                        return "whitesmoke";
-                    }
-                }
+                border.color: applicationData.Theme.ControlColor
+                color: applicationData.Theme.ControlColor
             }
 
             onClicked:
@@ -617,29 +398,8 @@ Rectangle
             {
                 border.width: 1
                 radius: width*0.5
-                border.color:
-                {
-                    if(applicationData.IsDarkTheme === true)
-                    {
-                        return "#1C2833";
-                    }
-                    else
-                    {
-                        return "whitesmoke";
-                    }
-                }
-
-                color:
-                {
-                    if(applicationData.IsDarkTheme === true)
-                    {
-                        return "#1C2833";
-                    }
-                    else
-                    {
-                        return "whitesmoke";
-                    }
-                }
+                border.color: applicationData.Theme.ControlColor
+                color: applicationData.Theme.ControlColor
             }
 
             onClicked:
@@ -682,29 +442,8 @@ Rectangle
             {
                 border.width: 1
                 radius: width*0.5
-                border.color:
-                {
-                    if(applicationData.IsDarkTheme === true)
-                    {
-                        return "#1C2833";
-                    }
-                    else
-                    {
-                        return "whitesmoke";
-                    }
-                }
-
-                color:
-                {
-                    if(applicationData.IsDarkTheme === true)
-                    {
-                        return "#1C2833";
-                    }
-                    else
-                    {
-                        return "whitesmoke";
-                    }
-                }
+                border.color: applicationData.Theme.ControlColor
+                color: applicationData.Theme.ControlColor
             }
 
             onClicked:

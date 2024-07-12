@@ -8,51 +8,44 @@ Page
     id: settingsPage
 
     Material.theme: Material.Light
-    Material.accent: "#961C1C"
-
-    property string lastSyncTime: applicationData.CurrentMeter.LastSyncStr
-    property string meterName: applicationData.CurrentMeter.SerialNo
-
-    Header
-    {
-        id:headerID
-        backBtn.icon.source :
-        if(applicationData.IsDarkTheme === true)
-        {
-            return "../images/MenuWhite.png";
-        }
-        else
-        {
-            return "../images/MenuBlack.png";
-        }
-        backBtn.action      : openMenuAction
-        headerTitle: "Settings"
-        isOptionsBtnVisible:  false
-        isMeterNameVisible: false
-        isSyncDateVisible: false
-        isInfoVisible: false
-    }
+    Material.accent: applicationData.Theme.AccentColor
 
     Component.onCompleted:
     {
         if(applicationData.IsDemoMode === true)
         {
-            demoChoice.checked = true;
+            demoSelector.checked = true;
         }
         else
         {
-            demoChoice.checked = false;
+            demoSelector.checked = false;
         }
 
-        if(applicationData.IsDarkTheme === true)
+        if(applicationData.IsTraceEnabled === true)
         {
-            themeChoice.text = "Dark Theme";
-            themeChoice.checked = true;
+            traceSelector.checked = true;
         }
         else
         {
-            themeChoice.text = "Light Theme"
-            themeChoice.checked = false;
+            traceSelector.checked = false;
+        }
+
+        if(applicationData.IsTraceEnabled === true)
+        {
+            dumpSelector.enabled = true;
+        }
+        else
+        {
+            dumpSelector.enabled = false;
+        }
+
+        if(applicationData.IsDumpRxTxEnabled === true)
+        {
+            dumpSelector.checked = true;
+        }
+        else
+        {
+            dumpSelector.checked = false;
         }
     }
 
@@ -62,96 +55,114 @@ Page
         width: parent.width
         height: parent.height - headerID.height
         anchors.top: headerID.bottom
-        color:
-        {
-            if(applicationData.IsDarkTheme === true)
-            {
-                return "black";
-            }
-            else
-            {
-                return "white";
-            }
-        }
+        color: applicationData.Theme.BackgroundColor
     }
 
-    Switch
+    Header
     {
-        id: demoChoice
-        anchors.top:  headerID.bottom
+        id:headerID
+        headerTitle: "Settings"
+        isMenuButtonVisible: true
+        isMeterNameVisible: false
+        isSyncDateVisible: false
+        isConnectionIndicatorVisible: false
+    }
+
+    Rectangle
+    {
+        id: line0
+        width: settingsPage.width*0.9
+        height: 2
+        border.width: 1
+        anchors.top: headerID.bottom
+        anchors.horizontalCenter: parent.horizontalCenter
+        border.color: applicationData.Theme.BackgroundColor
+    }
+
+    CustomSelector
+    {
+        id: demoSelector
+        anchors.top:  line0.bottom
+        anchors.topMargin: headerID.height*0.05
+        anchors.left: line0.left
+        selectorSize: 32
         text: "Demo Mode"
-        Material.accent: "#961C1C"
-        Material.theme:
-        {
-            if(applicationData.IsDarkTheme === true)
-            {
-                return Material.Dark;
-            }
-            else
-            {
-                return Material.Light;
-            }
-        }
+        accentColor: applicationData.Theme.AccentColor
+        fontColor: applicationData.Theme.FontColor
+        backgroundColor: applicationData.Theme.BackgroundColor
 
         onClicked:
         {
-            applicationData.IsDemoMode = checked
+            applicationData.IsDemoMode = demoSelector.checked
         }
     }
 
     Rectangle
     {
-        id: line1
+        id: line2
         width: settingsPage.width*0.9
         height: 2
         border.width: 1
-        anchors.top: demoChoice.bottom
+        anchors.top: demoSelector.bottom
         anchors.topMargin: headerID.height*0.05
         anchors.horizontalCenter: parent.horizontalCenter
-        border.color:
+        border.color: applicationData.Theme.AccentColor
+    }
+
+    CustomSelector
+    {
+        id: traceSelector
+        anchors.top:  line2.bottom
+        anchors.topMargin: headerID.height*0.05
+        anchors.left: line0.left
+        selectorSize: 32
+        text: "Trace"
+        accentColor: applicationData.Theme.AccentColor
+        fontColor: applicationData.Theme.FontColor
+        backgroundColor: applicationData.Theme.BackgroundColor
+
+        onClicked:
         {
-            if(applicationData.IsDarkTheme === true)
+            applicationData.IsTraceEnabled = traceSelector.checked
+
+            if(applicationData.IsTraceEnabled === true)
             {
-                return "white";
+                dumpSelector.enabled = true;
             }
             else
             {
-                return "black";
+                dumpSelector.enabled = false;
             }
         }
     }
 
-    Switch
+    Rectangle
     {
-        id: themeChoice
-        anchors.top:  line1.bottom
+        id: line3
+        width: settingsPage.width*0.9
+        height: 2
+        border.width: 1
+        anchors.top: traceSelector.bottom
         anchors.topMargin: headerID.height*0.05
-        text: "Dark Theme"
-        Material.accent: "#961C1C"
-        Material.theme:
-        {
-            if(applicationData.IsDarkTheme === true)
-            {
-                return Material.Dark;
-            }
-            else
-            {
-                return Material.Light;
-            }
-        }
+        anchors.horizontalCenter: parent.horizontalCenter
+        border.color: applicationData.Theme.AccentColor
+    }
+
+    CustomSelector
+    {
+        id: dumpSelector
+        anchors.top:  line3.bottom
+        anchors.topMargin: headerID.height*0.05
+        anchors.left: line0.left
+        selectorSize: 32
+        text: "Dump Rx/Tx"
+        accentColor: applicationData.Theme.AccentColor
+        fontColor: applicationData.Theme.FontColor
+        backgroundColor: applicationData.Theme.BackgroundColor
 
         onClicked:
         {
-            applicationData.IsDarkTheme = checked
-
-            if(applicationData.IsDarkTheme === true)
-            {
-                text = "Dark Theme";
-            }
-            else
-            {
-                text = "Light Theme";
-            }
+            applicationData.IsDumpRxTxEnabled = dumpSelector.checked
         }
     }
 

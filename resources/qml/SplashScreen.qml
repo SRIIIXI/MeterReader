@@ -8,7 +8,7 @@ Page
     id: splashScreen
 
     Material.theme: Material.Light
-    Material.accent: "#961C1C"
+    Material.accent: applicationData.Theme.AccentColor
 
     property double fontSizeNormal: fontlabel.font.pointSize
     property double fontSizeSmall: fontlabel.font.pointSize -  2.5
@@ -19,27 +19,12 @@ Page
 
     Component.onCompleted:
     {
-        headerID.visible = false
         visible = true
         fontSizeNormal: fontlabel.font.pointSize
         fontSizeSmall: fontlabel.font.pointSize -  2.5
         fontSizeTiny: fontlabel.font.pointSize - 5.0
         fontSizeBig: fontlabel.font.pointSize +  2.5
         fontSizeLarge: fontlabel.font.pointSize + 5.0
-    }
-
-    Header
-    {
-        id:headerID
-        headerTitle: ""
-
-        isBackBtnVisible: false
-        isOptionsBtnVisible:  false
-
-        isMeterNameVisible: false
-        isSyncDateVisible: false
-        isInfoVisible: true
-        isTitleVisible: true
     }
 
     Label
@@ -72,7 +57,7 @@ Page
            anchors.top: animation_splash.bottom
            anchors.topMargin: 40
            font.bold: true
-           color: "#961C1C"
+           color: applicationData.Theme.AccentColor
        }
     }
 
@@ -89,7 +74,7 @@ Page
         {
             id: companyimg
             anchors.horizontalCenter: parent.horizontalCenter
-            source: "../images/EDMISplashLogo.png"
+            source: "../images/MeterReader.png"
             height: companyName.height
             width: companyName.width
         }

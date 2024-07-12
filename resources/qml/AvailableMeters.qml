@@ -8,36 +8,17 @@ Page
     id: availableMetersPage
 
     Material.theme: Material.Light
-    Material.accent: "#961C1C"
+    Material.accent: applicationData.Theme.AccentColor
 
     property variant availableMetersModel :  []
-    property string errorstring: ""
+    property string selectedMeter:  " "
 
-    Header
-    {
-        id:headerID
-        headerTitle: "Available Meters"
-        isOptionsBtnVisible:  false
-        isMeterNameVisible: false
-        isSyncDateVisible: false
-        isInfoVisible: false
-        backBtn.icon.source :
-        if(applicationData.IsDarkTheme === true)
-        {
-            return "../images/MenuWhite.png";
-        }
-        else
-        {
-            return "../images/MenuBlack.png";
-        }
-        backBtn.action      : openMenuAction
-    }
 
     Component.onCompleted:
     {
         confirm.close()
-        headerID.visible = true
-        headerID.isSyncDateVisible = false
+        headerPanel.visible = true
+        headerPanel.isSyncDateVisible = false
         availableMetersModel = applicationData.MeterList
         errorLabel.text = ""
     }
@@ -46,26 +27,26 @@ Page
     {
         id: background
         width: parent.width
-        height: parent.height - headerID.height
-        anchors.top: headerID.bottom
-        color:
-        {
-            if(applicationData.IsDarkTheme === true)
-            {
-                return "black";
-            }
-            else
-            {
-                return "white";
-            }
-        }
+        height: parent.height - headerPanel.height
+        anchors.top: headerPanel.bottom
+        color: applicationData.Theme.BackgroundColor
+    }
+
+    Header
+    {
+        id:headerPanel
+        headerTitle: "Available Meters"
+        isMenuButtonVisible: true
+        isConnectionIndicatorVisible: applicationData.IsAppConnected
+        isMeterNameVisible: applicationData.IsAppConnected
+        isSyncDateVisible: applicationData.IsAppConnected
     }
 
     ListView
     {
         id: meterListView
         width: parent.width*0.90
-        anchors.top:headerID.bottom
+        anchors.top:headerPanel.bottom
         anchors.topMargin: 5
         anchors.bottom: errorLabel.top
         anchors.horizontalCenter: parent.horizontalCenter
@@ -86,68 +67,71 @@ Page
             width: meterListView.width
             height: availableMetersPage.width*0.3
             radius: 5
-
-            color:
-            {
-                if(applicationData.IsDarkTheme === true)
-                {
-                    return "#1C2833";
-                }
-                else
-                {
-                    return "whitesmoke";
-                }
-            }
+            color: applicationData.Theme.ControlColor
 
             property string meterStatus  : availableMetersModel[index].StatusStr
 
             Column
             {
-                id: infocol
+                id: imagecol
+                anchors.left: availableMetersItemID.left
+                height: parent.height
+                width: availableMetersItemID.height*0.45
 
+                Rectangle
+                {
+                    height: imagecol.height
+                    width: imagecol.width
+                    color: "transparent"
+
+                   ToolButton
+                   {
+                       id: imageBtnID
+                       height: imagecol.width*0.9
+                       width: imagecol.width*0.9
+                       anchors.verticalCenter: parent.verticalCenter
+
+                       onClicked:
+                       {
+                           applicationData.invokeSelectMeter(availableMetersModel[index].SerialNo)
+                       }
+
+                       icon.source: "../images/MeterItem.png"
+                       icon.color: "transparent"
+                       icon.height: availableMetersItemID.height*0.35
+                       icon.width: availableMetersItemID.height*0.35
+
+                       background: Rectangle
+                       {
+                           color: applicationData.Theme.ControlColor
+                       }
+                   }
+                }
+            }
+
+            Column
+            {
+                id: infocol
                 anchors.verticalCenter: parent.verticalCenter
                 anchors.margins: 20
-                anchors.left: availableMetersItemID.left
-
+                anchors.left: imagecol.right
 
                 Rectangle
                 {
                     id: rectData
                     height: availableMetersItemID.height
                     width:  availableMetersItemID.height*1.5
-
-                    color:
-                    {
-                        if(applicationData.IsDarkTheme === true)
-                        {
-                            return "#1C2833";
-                        }
-                        else
-                        {
-                            return "whitesmoke";
-                        }
-                    }
+                    color: applicationData.Theme.ControlColor
 
                     Text
                     {
                         id: meterNamelabel
                         text: availableMetersModel[index].MeterName
-                        font.pointSize: headerID.fontSizeSmall
+                        font.pointSize: headerPanel.fontSizeSmall
                         font.bold: true
                         anchors.top: rectData.top
                         anchors.topMargin: rectData.height*0.1
-
-                        color:
-                        {
-                            if(applicationData.IsDarkTheme === true)
-                            {
-                                return "white";
-                            }
-                            else
-                            {
-                                return "black";
-                            }
-                        }
+                        color: applicationData.Theme.FontColor
                     }
 
                     Text
@@ -155,21 +139,10 @@ Page
                         id: serialNolabel
                         anchors.top: meterNamelabel.bottom
                         text: availableMetersModel[index].SerialNo
-                        font.pointSize: headerID.fontSizeSmall
+                        font.pointSize: headerPanel.fontSizeNormal
                         font.bold: availableMetersModel[index].IsSelected ? true : false
                         font.underline: availableMetersModel[index].IsSelected ? true : false
-
-                        color:
-                        {
-                            if(applicationData.IsDarkTheme === true)
-                            {
-                                return "white";
-                            }
-                            else
-                            {
-                                return "black";
-                            }
-                        }
+                        color: applicationData.Theme.FontColor
                     }
 
                     Text
@@ -177,20 +150,9 @@ Page
                         id: syncDatelabel
                         anchors.top: serialNolabel.bottom
                         text: availableMetersModel[index].LastSyncStr
-                        font.pointSize: headerID.fontSizeSmall
+                        font.pointSize: headerPanel.fontSizeSmall
                         font.bold: false
-
-                        color:
-                        {
-                            if(applicationData.IsDarkTheme === true)
-                            {
-                                return "white";
-                            }
-                            else
-                            {
-                                return "black";
-                            }
-                        }
+                        color: applicationData.Theme.FontColor
                     }
 
                     Text
@@ -198,29 +160,18 @@ Page
                         id: rssilabel
                         anchors.top: syncDatelabel.bottom
                         text: "Signal " + availableMetersModel[index].RSSIStr
-                        font.pointSize: headerID.fontSizeSmall
+                        font.pointSize: headerPanel.fontSizeSmall
                         font.bold: false
-
-                        color:
-                        {
-                            if(applicationData.IsDarkTheme === true)
-                            {
-                                return "white";
-                            }
-                            else
-                            {
-                                return "black";
-                            }
-                        }
+                        color: applicationData.Theme.FontColor
                     }
 
                     Text
                     {
                         anchors.top: rssilabel.bottom
-                        font.pointSize: headerID.fontSizeNormal
+                        font.pointSize: headerPanel.fontSizeNormal
                         color:
                         {
-                            if(meterStatus === '0')
+                            if(meterStatus === "0")
                                 return "red"
                             else
                                 return "green"
@@ -228,7 +179,7 @@ Page
 
                         font.bold:
                         {
-                            if(meterStatus === '0')
+                            if(meterStatus === "0")
                                 return false
                             else
                                 return true
@@ -239,10 +190,22 @@ Page
                         verticalAlignment: Qt.AlignVCenter
                         text:
                         {
-                            if(meterStatus === '0')
+                            if(meterStatus === "0")
                                 return "Not Connected"
                             else
                                 return "Connected"
+                        }
+
+                        visible:
+                        {
+                            if(availableMetersModel[index].SerialNo === "EDM1DEMO" || availableMetersModel[index].SerialNo === "EDM2DEMO")
+                            {
+                                return false
+                            }
+                            else
+                            {
+                                return true
+                            }
                         }
                     }
                 }
@@ -250,6 +213,7 @@ Page
 
             Column
             {
+                id: commandcol
                 anchors.verticalCenter: parent.verticalCenter
                 anchors.right: availableMetersItemID.right
                 anchors.rightMargin: 10
@@ -259,76 +223,95 @@ Page
                     id: rectButtons
                     height: availableMetersItemID.height
                     width: (availableMetersItemID.height*0.35)*3
+                    color: applicationData.Theme.ControlColor
 
-                    color:
-                    {
-                        if(applicationData.IsDarkTheme === true)
-                        {
-                            return "#1C2833";
-                        }
-                        else
-                        {
-                            return "whitesmoke";
-                        }
-                    }
-
-                    Button
+                    CustomButton
                     {
                         id: btnRemove
+                        text: "Remove"
                         anchors.right: rectButtons.right
                         anchors.top: rectButtons.top
                         anchors.topMargin: rectButtons.height*0.1
                         width: (availableMetersItemID.height*0.35)*3
-                        height: availableMetersItemID.height*0.4
+                        height: availableMetersItemID.height*0.35
+                        isDefault: false
+                        accentColor: applicationData.Theme.AccentColor
                         enabled:
                         {
-                            if(meterStatus === '0')
+                            if(meterStatus === "0")
                                 return true
                             else
                                 return false
                         }
 
-                        text: "Remove"
+                        visible:
+                        {
+                            if(availableMetersModel[index].SerialNo === "EDM1DEMO" || availableMetersModel[index].SerialNo === "EDM2DEMO")
+                            {
+                                return false
+                            }
+                            else
+                            {
+                                return true
+                            }
+                        }
+
                         onClicked:
                         {
                             confirm.itemIndex = index;
-                            confirm.itemValue = availableMetersModel[index].SerialNo;
+                            selectedMeter = availableMetersModel[index].SerialNo;
                             confirm.open();
-                        }
-
-                        background: Rectangle
-                        {
-                            color: "white"
-                            border.width: 1
-                            border.color: "#961C1C"
-                            radius: 0.2  * btnRemove.height
-                        }
-
-                        contentItem: Text
-                        {
-                           text: "Remove"
-                           font: btnRemove.font
-                           opacity: enabled ? 1.0 : 0.3
-                           color: btnRemove.down ? "gray" : "black"
-                           horizontalAlignment: Text.AlignHCenter
-                           verticalAlignment: Text.AlignVCenter
-                           elide: Text.ElideRight
                         }
                     }
 
-                    Button
+                    CustomButton
                     {
                         id: btnConnect
                         anchors.right: rectButtons.right
                         anchors.bottom: rectButtons.bottom
                         anchors.bottomMargin: rectButtons.height*0.1
                         width: (availableMetersItemID.height*0.35)*3
-                        height: availableMetersItemID.height*0.4
-                        enabled: true
+                        height: availableMetersItemID.height*0.35
+                        isDefault: true
+                        accentColor: applicationData.Theme.AccentColor
+                        enabled:
+                        {
+                            if(meterStatus === "0" && applicationData.IsAppConnected === true)
+                            {
+                                return false;
+                            }
+
+                            if(meterStatus === "0" && applicationData.IsAppConnected === false)
+                            {
+                                return true;
+                            }
+
+                            if(meterStatus === "1" && applicationData.IsAppConnected === true)
+                            {
+                                return true;
+                            }
+
+                            if(meterStatus === "1" && applicationData.IsAppConnected === false)
+                            {
+                                return false;
+                            }
+                        }
+
+                        visible:
+                        {
+                            if(availableMetersModel[index].SerialNo === "EDM1DEMO" || availableMetersModel[index].SerialNo === "EDM2DEMO")
+                            {
+                                return false
+                            }
+                            else
+                            {
+                                return true
+                            }
+                        }
 
                         text:
                         {
-                            if(meterStatus === '0')
+                            if(meterStatus === "0")
                                 return "Connect"
                             else
                                 return "Disconnect"
@@ -338,44 +321,22 @@ Page
                         {
                             errorLabel.text = ""
                             meterListView.enabled = false;
-                            headerID.backBtn.enabled = false;
                             meterAddCommandRect.enabled = false;
-                            if(meterStatus === '0')
+                            addMeterBtn.enabled = false;
+                            addMeterBtn.visible = false;
+                            addLbl.visible = false;
+                            headerPanel.isMenuButtonVisible = false
+                            if(meterStatus === "0")
                             {
-                                headerID.isInfoVisible = true;
-                                headerID.progressVisible = true;
-                                headerID.progressText = "0%";
                                 applicationData.invokeConnectMeter(availableMetersModel[index].SerialNo)
                             }
                             else
                             {
-                                if(meterStatus === '1')
+                                if(meterStatus === "1")
                                 {
-                                    headerID.isInfoVisible = true;
-                                    headerID.progressVisible = true;
-                                    headerID.progressText = "0%";
                                     applicationData.invokeDisconnectMeter(availableMetersModel[index].SerialNo)
                                 }
                             }
-                        }
-
-                        background: Rectangle
-                        {
-                            color: "#961C1C"
-                            border.width: 1
-                            border.color: "#961C1C"
-                            radius: 0.2  * btnConnect.height
-                        }
-
-                        contentItem: Text
-                        {
-                           text: btnConnect.text
-                           font: btnConnect.font
-                           opacity: enabled ? 1.0 : 0.3
-                           color: btnConnect.down ? "gray" : "white"
-                           horizontalAlignment: Text.AlignHCenter
-                           verticalAlignment: Text.AlignVCenter
-                           elide: Text.ElideRight
                         }
                     }
                 }
@@ -386,8 +347,6 @@ Page
     Label
     {
         id: errorLabel
-        width: availableMetersPage.width * 0.9
-        height: availableMetersPage.width * 0.05
         anchors.bottom: meterAddCommandRect.top
         anchors.horizontalCenter: parent.horizontalCenter
         font.bold: true
@@ -404,19 +363,7 @@ Page
         width: availableMetersPage.width
         height: availableMetersPage.width*0.2
         radius: 5
-
-        color:
-        {
-            if(applicationData.IsDarkTheme === true)
-            {
-                return "#1C2833";
-            }
-            else
-            {
-                return "whitesmoke";
-            }
-        }
-
+        color: applicationData.Theme.ControlColor
         anchors
         {
             bottom: parent.bottom
@@ -425,19 +372,10 @@ Page
 
         ToolButton
         {
-            id: name
+            id: addMeterBtn
             action: navigateAddMeter
             height: meterAddCommandRect.height*0.75
             width: meterAddCommandRect.height*0.75
-            icon.source:
-            if(applicationData.IsDarkTheme === true)
-            {
-                return "../images/AddWhite.png";
-            }
-            else
-            {
-                return "../images/AddBlack.png";
-            }
             icon.color: "transparent"
             icon.height: meterAddCommandRect.height*0.5
             icon.width: meterAddCommandRect.height*0.5
@@ -445,36 +383,41 @@ Page
 
             background: Rectangle
             {
-                color:
+                color: applicationData.Theme.ControlColor
+            }
+
+            enabled:
+            {
+               if(applicationData.IsAppConnected === true)
+               {
+                   return false;
+               }
+
+               if(applicationData.IsAppConnected === false)
+               {
+                   return true;
+               }
+            }
+
+            icon.source:
+            {
+                if(applicationData.IsAppConnected === true)
                 {
-                    if(applicationData.IsDarkTheme === true)
-                    {
-                        return "#1C2833";
-                    }
-                    else
-                    {
-                        return "whitesmoke";
-                    }
+                    return "../images/AddGrey.png";
+                }
+
+                if(applicationData.IsAppConnected === false)
+                {
+                    return "../images/Add.png";
                 }
             }
         }
 
         Label
         {
+            id: addLbl
             text: "Add a new Meter"
-
-            color:
-            {
-                if(applicationData.IsDarkTheme === true)
-                {
-                    return "white";
-                }
-                else
-                {
-                    return "black";
-                }
-            }
-
+            color: applicationData.Theme.FontColor
             height: meterAddCommandRect.height*0.5
             elide: Label.ElideRight
             horizontalAlignment: Qt.AlignHCenter
@@ -499,35 +442,15 @@ Page
 
         contentItem: Rectangle
         {
-            color:
-            {
-                if(applicationData.IsDarkTheme === true)
-                {
-                    return "#1C2833";
-                }
-                else
-                {
-                    return "whitesmoke";
-                }
-            }
+            color: applicationData.Theme.ControlColor
             anchors.fill: parent
-            border.color: "#961C1C"
+            border.color: applicationData.Theme.AccentColor
 
             Text
             {
                 id: confirmText
-                text: "Do you want to remove the meter " + availableMetersModel[confirm.itemIndex].SerialNo + " ?"
-                color:
-                {
-                    if(applicationData.IsDarkTheme === true)
-                    {
-                        return "white";
-                    }
-                    else
-                    {
-                        return "black";
-                    }
-                }
+                text: "Do you want to remove the meter " + selectedMeter + " ?"
+                color: applicationData.Theme.FontColor
                 wrapMode: "Wrap"
                 width: confirm.width*0.9
                 anchors.centerIn: parent
@@ -543,66 +466,33 @@ Page
                 anchors.rightMargin: 10
                 anchors.right: parent.right
                 spacing: 10
-                Button
+
+                CustomButton
                 {
                     id:btnNo
                     width: meterListView.width*0.25
                     height: meterListView.width*0.125
                     text: "No"
+                    isDefault: false
+                    accentColor: applicationData.Theme.AccentColor
                     onClicked:
                     {
                         confirm.close();
                     }
-
-                    background: Rectangle
-                    {
-                        color: "white"
-                        border.width: 1
-                        border.color: "#961C1C"
-                        radius: 0.1  * btnNo.height
-                    }
-
-                    contentItem: Text
-                    {
-                       text: "No"
-                       font: btnNo.font
-                       opacity: enabled ? 1.0 : 0.3
-                       color: btnNo.down ? "gray" : "black"
-                       horizontalAlignment: Text.AlignHCenter
-                       verticalAlignment: Text.AlignVCenter
-                       elide: Text.ElideRight
-                    }
                 }
 
-                Button
+                CustomButton
                 {
                     id:btnYes
                     width: meterListView.width*0.25
                     height: meterListView.width*0.125
                     text: "Yes"
+                    isDefault: true
+                    accentColor: applicationData.Theme.AccentColor
                     onClicked:
                     {
                         confirm.close()
                         applicationData.invokeRemoveMeter(availableMetersModel[confirm.itemIndex].SerialNo)
-                    }
-
-                    background: Rectangle
-                    {
-                        color: "#961C1C"
-                        border.width: 1
-                        border.color: "#961C1C"
-                        radius: 0.2  * btnYes.height
-                    }
-
-                    contentItem: Text
-                    {
-                       text: "Yes"
-                       font: btnYes.font
-                       opacity: enabled ? 1.0 : 0.3
-                       color: btnYes.down ? "gray" : "white"
-                       horizontalAlignment: Text.AlignHCenter
-                       verticalAlignment: Text.AlignVCenter
-                       elide: Text.ElideRight
                     }
                 }
             }
@@ -613,30 +503,49 @@ Page
     {
         target: applicationData
 
-        function onMeterAction()
+        function onMeterAction(fl)
         {
             confirm.close()
             availableMetersModel = applicationData.MeterList
-            meterListView.enabled = true;
-            headerID.backBtn.enabled = true;
-            meterAddCommandRect.enabled = true;
-            headerID.isInfoVisible = false;
-            headerID.progressVisible = false;
-            headerID.progressText = "0%";
 
+            if(fl === true)
+            {
+                meterListView.enabled = true;
+                meterAddCommandRect.enabled = true;
+                headerPanel.isMeterNameVisible = true;
+                headerPanel.isSyncDateVisible = true;
+                headerPanel.isMenuButtonVisible = true
+                addMeterBtn.enabled = true;
+                addMeterBtn.visible = true;
+                addLbl.visible = true;
+            }
+            else
+            {
+                meterListView.enabled = false;
+                meterAddCommandRect.enabled = false;
+                headerPanel.isMeterNameVisible = false;
+                headerPanel.isSyncDateVisible = false;
+                headerPanel.isMenuButtonVisible = false
+                addMeterBtn.enabled = false;
+                addMeterBtn.visible = false;
+                addLbl.visible = false;
+            }
         }
 
-        function onMeterError(str)
+        function onMeterMessage(fl, str)
         {
+            if(fl === true)
+            {
+                errorLabel.color = "green"
+            }
+            else
+            {
+                errorLabel.color = "red"
+            }
+
             errorLabel.text = str
             confirm.close()
             availableMetersModel = applicationData.MeterList
-            meterListView.enabled = true;
-            headerID.backBtn.enabled = true;
-            meterAddCommandRect.enabled = true;
-            headerID.isInfoVisible = false;
-            headerID.progressVisible = false;
-            headerID.progressText = "0%";
         }
     }
 }

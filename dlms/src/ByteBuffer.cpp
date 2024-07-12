@@ -682,7 +682,7 @@ void ByteBuffer::AddIntAsString(int value)
 
 void ByteBuffer::AddDoubleAsString(double value)
 {
-    char buff[20];
+    char buff[21] = {0};
     //Show as integer value if there is no fractal part.
     if (value - (long)value == 0)
     {
@@ -690,11 +690,7 @@ void ByteBuffer::AddDoubleAsString(double value)
     }
     else
     {
-#if _MSC_VER > 1000
-        sprintf_s(buff, 20, "%lf", value);
-#else
-        sprintf(buff, "%lf", value);
-#endif
+        snprintf(buff, 20, "%lf", value);
         ByteBuffer::AddString(buff);
     }
 }

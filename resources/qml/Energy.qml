@@ -8,93 +8,64 @@ Page
     id: energyPage
 
     Material.theme: Material.Light
-    Material.accent: "#961C1C"
+    Material.accent: applicationData.Theme.AccentColor
 
     property date currentDate: new Date()
+    property date resetDate: new Date()
+    property string resetDateStr: "2000-01-01 00:00:00"
+    property var applocale: Qt.locale()
 
     property string eyselecteddatefrom: Qt.formatDate(datepick.selectedDate, 'dd MMM yyyy').toString()
     property string eyselecteddateto: Qt.formatDate(datepick.selectedDate, 'dd MMM yyyy').toString()
     property int calendarmode: 0 // 0 is for FROM and 1 is for TO
     property int visualizationmode: 0 // 0 is for ENERGY and 1 is for USD/CURRENCY
 
-    property string ylabel: "kWh"
-    property string xlabel: "Months"
     property string errorstring: ""
 
     Component.onCompleted:
     {
+        currentDate = new Date()
         dateTextFrom.text = Qt.formatDate(currentDate, 'dd MMM yyyy').toString();
         dateTextTo.text = Qt.formatDate(currentDate, 'dd MMM yyyy').toString();
         eyselecteddatefrom = Qt.formatDate(currentDate, 'dd/MM/yyyy').toString();
         eyselecteddateto = Qt.formatDate(currentDate, 'dd/MM/yyyy').toString();
         parameterList.currentIndex = 0
         periodSelector.currentIndex = 0
+        barChart.visible = true
+        lineChart.visible = false
+        graphSelecter.checked = true
+        xAxisLabel.text = "Hours"
+        graphSelecter.visible = false
     }
 
     Rectangle
     {
         id: background
         width: parent.width
-        height: parent.height - headerID.height
-        anchors.top: headerID.bottom
-        color:
-        {
-            if(applicationData.IsDarkTheme === true)
-            {
-                return "black";
-            }
-            else
-            {
-                return "white";
-            }
-        }
+        height: parent.height - headerPanel.height
+        anchors.top: headerPanel.bottom
+        color: applicationData.Theme.BackgroundColor
     }
 
     Header
     {
-        id:headerID
-        backBtn.icon.source :
-        if(applicationData.IsDarkTheme === true)
-        {
-            return "../images/MenuWhite.png";
-        }
-        else
-        {
-            return "../images/MenuBlack.png";
-        }
-        backBtn.action      : openMenuAction
-        headerTitle         : applicationData.CurrentMeter.SerialNo
-        meterName           : "last sync: "+ applicationData.CurrentMeter.LastSyncStr
-        isOptionsBtnVisible: true
-        optionsBtn.icon.source:
-        if(applicationData.IsDarkTheme === true)
-        {
-            return "../images/RefreshWhite.png";
-        }
-        else
-        {
-            return "../images/RefreshBlack.png";
-        }
-        isTitleVisible: true
-
-        onOptionsBtnClicked:
-        {
-            headerID.backBtn.enabled = false;
-            headerID.optionsBtn.enabled = false;
-            console.log(periodSelector.currentIndex,  eyselecteddatefrom, eyselecteddateto);
-            applicationData.invokeFetchEnergyStatistics(visualizationmode, parameterList.currentIndex, periodSelector.currentIndex,  eyselecteddatefrom, eyselecteddateto);
-        }
+        id:headerPanel
+        headerTitle : "Energy"
+        isMenuButtonVisible: true
+        isMeterNameVisible: true
+        isSyncDateVisible: true
+        isConnectionIndicatorVisible: applicationData.IsAppConnected
     }
 
     ComboBox
     {
         id: parameterList
-        height: headerID.height*0.5
+        height: headerPanel.height*0.5
         width: energyPage.width*0.9
-        font.pointSize: headerID.fontSizeSmall
+        font.pointSize: headerPanel.fontSizeSmall
         anchors.horizontalCenter: parent.horizontalCenter
-        anchors.top:headerID.bottom
-        Material.accent: "#961C1C"
+        anchors.top:headerPanel.bottom
+        Material.accent: applicationData.Theme.AccentColor
 
         popup: Popup
         {
@@ -103,6 +74,7 @@ Page
             width: parameterList.width
             height:contentItem.implicitHeight
             padding: 1
+            font.pointSize: headerPanel.fontSizeSmall
 
             contentItem: ListView
             {
@@ -110,7 +82,7 @@ Page
                 implicitHeight: contentHeight
                 model: parameterList.popup.visible ? parameterList.delegateModel : null
                 ScrollIndicator.vertical: ScrollIndicator { }
-                Material.accent: "#961C1C"
+                Material.accent: applicationData.Theme.AccentColor
                 Material.theme:
                 {
                     if(applicationData.IsDarkTheme === true)
@@ -125,26 +97,15 @@ Page
 
                 delegate: Text
                 {
-                    font.pointSize: headerID.fontSizeSmall
+                    font.pointSize: headerPanel.fontSizeSmall
                 }
             }
 
             background: Rectangle
             {
                 border.width: 1
-                border.color:"#961c1c"
-
-                color:
-                {
-                    if(applicationData.IsDarkTheme === true)
-                    {
-                        return "#1C2833";
-                    }
-                    else
-                    {
-                        return "whitesmoke";
-                    }
-                }
+                border.color: applicationData.Theme.AccentColor
+                color: applicationData.Theme.ControlColor
             }
         }
 
@@ -160,64 +121,57 @@ Page
             }
         }
 
-        model: ["Import Energy Tariff 1", "Export Energy Tariff 1", "Import Reactive Energy Tariff 1", "Export Reactive Energy Tariff 1", "Import Energy Tariff 2", "Export Energy Tariff 2", "Import Reactive Energy Tariff 2", "Export Reactive Energy Tariff 2"]
+        onCurrentIndexChanged:
+        {
+            loadEnergyData();
+        }
+
+        model: ["Import Energy 1", "Export Energy 1", "Import Reactive Energy 1", "Export Reactive Energy 1", "Import Energy 2", "Export Energy 2", "Import Reactive Energy 2", "Export Reactive Energy 2"]
     }
 
-    TabBar
+    CustomTab
     {
         id: periodSelector
-        height: headerID.height*0.4
-        width: energyPage.width*0.9
-        font.pointSize: headerID.fontSizeSmall
+        tabHeight: headerPanel.height*0.4
+        tabWidth: energyPage.width*0.9
         anchors.horizontalCenter: parent.horizontalCenter
         anchors.top:parameterList.bottom
-        Material.accent: "#961C1C"
+        anchors.topMargin: 5
+        model: ["Daily", "Weekly", "Monthly", "Annual"]
+        accentColor: applicationData.Theme.AccentColor
+        accentLowColor: applicationData.Theme.AccentColorLow
+        controlLowColor: applicationData.Theme.ControlColor
+        controlColor: applicationData.Theme.ControlColor
+        fontColor: applicationData.Theme.FontColor
 
-        Material.theme:
+        onCurrentIndexChanged:
         {
-            if(applicationData.IsDarkTheme === true)
+            if(currentIndex === 0)
             {
-                return Material.Dark;
+                lineChart.xIntervalDynamic = 12
+                xAxisLabel.text = "Hours"
+                loadEnergyData();
             }
-            else
-            {
-                return Material.Light;
-            }
-        }
 
-        TabButton
-        {
-            text: qsTr("Daily")
-            onClicked:
+            if(currentIndex === 1)
             {
-                splineChart.xIntervalDynamic = 12
+                lineChart.xIntervalDynamic = 7
+                xAxisLabel.text = "Day of Week"
+                loadEnergyData();
             }
-        }
 
-        TabButton
-        {
-            text: qsTr("Weekly")
-            onClicked:
+            if(currentIndex === 2)
             {
-                splineChart.xIntervalDynamic = 7
+                lineChart.xIntervalDynamic = 12
+                xAxisLabel.text = "Day"
+                loadEnergyData();
             }
-        }
 
-        TabButton
-        {
-            text: qsTr("Monthly")
-            onClicked:
+            if(currentIndex === 3)
             {
-                splineChart.xIntervalDynamic = 12
-            }
-        }
-
-        TabButton
-        {
-            text: qsTr("Annual")
-            onClicked:
-            {
-                splineChart.xIntervalDynamic = 12
+                lineChart.xIntervalDynamic = 12
+                 xAxisLabel.text = "Month"
+                loadEnergyData();
             }
         }
     }
@@ -226,21 +180,11 @@ Page
     {
         id: dateSelectRangeHeader
         width: energyPage.width*0.9
-        height: headerID.height*0.3
+        height: headerPanel.height*0.3
         anchors.top:periodSelector.bottom
+        anchors.topMargin: 5
         anchors.horizontalCenter: parent.horizontalCenter
-
-        color:
-        {
-            if(applicationData.IsDarkTheme === true)
-            {
-                return "black";
-            }
-            else
-            {
-                return "white";
-            }
-        }
+        color: applicationData.Theme.BackgroundColor
 
         Rectangle
         {
@@ -249,18 +193,7 @@ Page
             height: dateSelectRangeHeader.height
             anchors.top: dateSelectRangeHeader.top
             anchors.left: dateSelectRangeHeader.left
-
-            color:
-            {
-                if(applicationData.IsDarkTheme === true)
-                {
-                    return "black";
-                }
-                else
-                {
-                    return "white";
-                }
-            }
+            color: applicationData.Theme.BackgroundColor
 
             Label
             {
@@ -278,18 +211,7 @@ Page
             height: dateSelectRangeHeader.height
             anchors.top: dateSelectRangeHeader.top
             anchors.right: dateSelectRangeHeader.right
-
-            color:
-            {
-                if(applicationData.IsDarkTheme === true)
-                {
-                    return "black";
-                }
-                else
-                {
-                    return "white";
-                }
-            }
+            color: applicationData.Theme.BackgroundColor
 
             Label
             {
@@ -305,21 +227,11 @@ Page
     {
         id: dateSelectRangeContent
         width: energyPage.width*0.9
-        height: headerID.height*0.35
+        height: headerPanel.height*0.35
         anchors.top:dateSelectRangeHeader.bottom
         anchors.horizontalCenter: parent.horizontalCenter
+        color: applicationData.Theme.BackgroundColor
 
-        color:
-        {
-            if(applicationData.IsDarkTheme === true)
-            {
-                return "black";
-            }
-            else
-            {
-                return "white";
-            }
-        }
 
         Rectangle
         {
@@ -328,18 +240,8 @@ Page
             height: dateSelectRangeContent.height
             anchors.top: dateSelectRangeContent.top
             anchors.left: dateSelectRangeContent.left
+            color: applicationData.Theme.BackgroundColor
 
-            color:
-            {
-                if(applicationData.IsDarkTheme === true)
-                {
-                    return "black";
-                }
-                else
-                {
-                    return "white";
-                }
-            }
 
             Button
             {
@@ -350,30 +252,12 @@ Page
                 {
                     height: dateSelectRangeContent.height
                     width: dateSelectRangeContent.height
-                    source:
-                    if(applicationData.IsDarkTheme === true)
-                    {
-                        return "../images/CalendarWhite.png";
-                    }
-                    else
-                    {
-                        return "../images/CalendarBlack.png";
-                    }
+                    source: "../images/Calendar.png"
                 }
 
                 background: Rectangle
                 {
-                    color:
-                    {
-                        if(applicationData.IsDarkTheme === true)
-                        {
-                            return "black";
-                        }
-                        else
-                        {
-                            return "white";
-                        }
-                    }
+                    color: applicationData.Theme.BackgroundColor
                 }
 
                 onClicked:
@@ -390,18 +274,7 @@ Page
                 anchors.left: calendarFrom.right
                 anchors.leftMargin: calendarFrom.width*0.5
                 anchors.bottom: calendarFrom.bottom
-                Material.accent: "#961C1C"
-                Material.theme:
-                {
-                    if(applicationData.IsDarkTheme === true)
-                    {
-                        return Material.Dark;
-                    }
-                    else
-                    {
-                        return Material.Light;
-                    }
-                }
+                color: applicationData.Theme.FontColor
             }
         }
 
@@ -412,18 +285,7 @@ Page
             height: dateSelectRangeContent.height
             anchors.top: dateSelectRangeContent.top
             anchors.right: dateSelectRangeContent.right
-
-            color:
-            {
-                if(applicationData.IsDarkTheme === true)
-                {
-                    return "black";
-                }
-                else
-                {
-                    return "white";
-                }
-            }
+            color: applicationData.Theme.BackgroundColor
 
             Button
             {
@@ -434,30 +296,12 @@ Page
                 {
                     height: dateSelectRangeContent.height
                     width: dateSelectRangeContent.height
-                    source:
-                    if(applicationData.IsDarkTheme === true)
-                    {
-                        return "../images/CalendarWhite.png";
-                    }
-                    else
-                    {
-                        return "../images/CalendarBlack.png";
-                    }
+                    source: "../images/Calendar.png"
                 }
 
                 background: Rectangle
                 {
-                    color:
-                    {
-                        if(applicationData.IsDarkTheme === true)
-                        {
-                            return "black";
-                        }
-                        else
-                        {
-                            return "white";
-                        }
-                    }
+                    color: applicationData.Theme.BackgroundColor
                 }
 
                 onClicked:
@@ -474,18 +318,7 @@ Page
                 anchors.left: calendarTo.right
                 anchors.leftMargin: calendarTo.width*0.5
                 anchors.bottom: calendarTo.bottom
-                Material.accent: "#961C1C"
-                Material.theme:
-                {
-                    if(applicationData.IsDarkTheme === true)
-                    {
-                        return Material.Dark;
-                    }
-                    else
-                    {
-                        return Material.Light;
-                    }
-                }
+                color: applicationData.Theme.FontColor
             }
         }
     }
@@ -493,23 +326,12 @@ Page
     Rectangle
     {
         id: graphRect
-        height: energyPage.width*0.9
+        height: energyPage.width*0.8
         width: energyPage.width*0.9
         anchors.top: dateSelectRangeContent.bottom
         anchors.horizontalCenter: parent.horizontalCenter
         anchors.topMargin: 5
-
-        color:
-        {
-            if(applicationData.IsDarkTheme === true)
-            {
-                return "black";
-            }
-            else
-            {
-                return "white";
-            }
-        }
+        color: applicationData.Theme.BackgroundColor
 
         CustomBarChart
         {
@@ -521,15 +343,14 @@ Page
             color1: '#961C1C'
             color2: '#008080'
 
-            title: applicationData.ChartTitleEnergy
-            yLabel: applicationData.YLabelBarEnergy
-            xLabel: applicationData.XLabelBarEnergy
-            points: applicationData.EnergyBarData
+            title: applicationData.ChartTitle
+            yLabel: applicationData.YLabelEnergy
+            xLabel: applicationData.XLabelEnergy
         }
 
         CustomLineChart
         {
-            id: splineChart
+            id: lineChart
             width: parent.width
             height: parent.height
             antialiasing: true
@@ -537,10 +358,21 @@ Page
             color1: '#961C1C'
             color2: '#008080'
 
-            title: applicationData.ChartTitleEnergy
-            yLabel: applicationData.YLabelLineEnergy
-            xLabel: applicationData.XLabelLineEnergy
-            points: applicationData.EnergyLineData
+            title: applicationData.ChartTitle
+            yLabel: applicationData.YLabelEnergy
+            xLabel: applicationData.XLabelEnergy
+        }
+
+        Label
+        {
+            id: errorArea
+            anchors.fill: parent
+            visible: false
+            anchors.horizontalCenter: parent.horizontalCenter
+            anchors.verticalCenter: parent.verticalCenter
+            horizontalAlignment: Text.AlignHCenter
+            verticalAlignment: Text.AlignVCenter
+            color: "red"
         }
     }
 
@@ -549,182 +381,56 @@ Page
         id: xAxisLabel
         anchors.top: graphRect.bottom
         anchors.horizontalCenter: parent.horizontalCenter
-        font.pointSize: headerID.fontSizeSmall
-        text:
-        {
-            if(graphSelecter.checked === true)
-            {
-                return applicationData.XLabelBarEnergy
-            }
-            else
-            {
-                return applicationData.XLabelLineEnergy
-            }
-        }
-
-        color:
-        {
-            if(applicationData.IsDarkTheme === true)
-            {
-                return "white";
-            }
-            else
-            {
-                return "black";
-            }
-        }
+        font.pointSize: headerPanel.fontSizeSmall
+        text:applicationData.XLabelEnergy
+        color: applicationData.Theme.FontColor
     }
 
     Rectangle
     {
         id: modeRect
         width: energyPage.width*0.9
-        height: headerID.height/2.5
+        height: headerPanel.height/2.5
         anchors.top: xAxisLabel.bottom
         anchors.horizontalCenter: parent.horizontalCenter
-        anchors.topMargin: 10
-
-        color:
-        {
-            if(applicationData.IsDarkTheme === true)
-            {
-                return "black";
-            }
-            else
-            {
-                return "white";
-            }
-        }
+        anchors.topMargin: 5
+        color: applicationData.Theme.BackgroundColor
 
         Grid
         {
+            anchors.horizontalCenter: parent.horizontalCenter
             rows: 1
-            columns: 3
+            columns: 1
 
             Rectangle
             {
                 height: modeRect.height
                 width: modeRect.height*3
+                color: applicationData.Theme.BackgroundColor
 
-                color:
-                {
-                    if(applicationData.IsDarkTheme === true)
-                    {
-                        return "black";
-                    }
-                    else
-                    {
-                        return "white";
-                    }
-                }
-
-                Switch
-                {
-                    Material.accent: "#961C1C"
-                    checked: false
-                    text: "kWh"
-
-                    Material.theme:
-                    {
-                        if(applicationData.IsDarkTheme === true)
-                        {
-                            return Material.Dark;
-                        }
-                        else
-                        {
-                            return Material.Light;
-                        }
-                    }
-
-                    onClicked:
-                    {
-                        var infoType = !checked;
-                        console.log(infoType);
-
-                        if(infoType === true)
-                        {
-                            visualizationmode = 0;
-                            text = "kWh"
-                        }
-                        else
-                        {
-                            visualizationmode = 1;
-                            text = "USD"
-                        }
-                    }
-                }
-            }
-
-            Rectangle
-            {
-                color:
-                {
-                    if(applicationData.IsDarkTheme === true)
-                    {
-                        return "black";
-                    }
-                    else
-                    {
-                        return "white";
-                    }
-                }
-
-                height: modeRect.height
-                width: modeRect.width - modeRect.height*3 - modeRect.height*2 - (energyPage.width*0.1)/2
-            }
-
-            Rectangle
-            {
-                height: modeRect.height
-                width: modeRect.height*3
-                anchors.rightMargin: (energyPage.width*0.1)/2
-
-                color:
-                {
-                    if(applicationData.IsDarkTheme === true)
-                    {
-                        return "black";
-                    }
-                    else
-                    {
-                        return "white";
-                    }
-                }
-
-                Switch
+                CustomSelector
                 {
                     id: graphSelecter
-                    Material.accent: "#961C1C"
                     checked: false
+                    selectorSize: 32
+                    accentColor: applicationData.Theme.AccentColor
+                    fontColor: applicationData.Theme.FontColor
+                    backgroundColor: applicationData.Theme.BackgroundColor
                     text: "Bar"
-
-                    Material.theme:
-                    {
-                        if(applicationData.IsDarkTheme === true)
-                        {
-                            return Material.Dark;
-                        }
-                        else
-                        {
-                            return Material.Light;
-                        }
-                    }
 
                     onClicked:
                     {
-                        var infoType = !checked;
-                        console.log(infoType);
-
-                        if(infoType === true)
+                        var fl = graphSelecter.checked
+                        if(fl === true)
                         {
                             barChart.visible = true
-                            splineChart.visible = false
+                            lineChart.visible = false
                             text = "Bar"
                         }
                         else
                         {
                             barChart.visible = false
-                            splineChart.visible = true
+                            lineChart.visible = true
                             text = "Line"
                         }
                     }
@@ -741,122 +447,69 @@ Page
         height: (energyPage.width*0.9)*0.125
         anchors.top: modeRect.bottom
         anchors.topMargin: 5
+        color: applicationData.Theme.BackgroundColor
 
-        color:
+        Label
         {
-            if(applicationData.IsDarkTheme === true)
-            {
-                return "black";
-            }
-            else
-            {
-                return "white";
-            }
-        }
-
-        Column
-        {
-            id: colLeft
+            id: dailyMaxTouTitle
+            text: "Daily Max TOU"
+            font.bold: true
+            font.pointSize: headerPanel.fontSizeSmall
+            color: applicationData.Theme.FontColor
             anchors.left: parent.left
-            height: rectTou.height
-
-            Label
-            {
-                id: dailyMaxTouTitle
-                text: "Daily Max TOU"
-                font.bold: true
-                font.pointSize: headerID.fontSizeSmall
-                Material.accent: "#961C1C"
-                Material.theme:
-                {
-                    if(applicationData.IsDarkTheme === true)
-                    {
-                        return Material.Dark;
-                    }
-                    else
-                    {
-                        return Material.Light;
-                    }
-                }
-            }
-
-            Label
-            {
-                id: dailyMaxTouValue
-                text: applicationData.DailyMaxTou.toFixed(2) + " kWh"
-                color: "darkcyan"
-                font.pointSize: headerID.fontSizeSmall
-            }
+            anchors.top: parent.top
         }
 
-        Column
+        Label
         {
-            id: colMid
+            id: dailyMaxTouValue
+            text: applicationData.DailyMaxTou.toFixed(2) + " kWh"
+            color: "darkcyan"
+            font.pointSize: headerPanel.fontSizeSmall
+            anchors.left: parent.left
+            anchors.bottom: parent.bottom
+        }
+
+        Label
+        {
+            id: totalTouTitle
+            text: "Total TOU"
+            font.bold: true
+            font.pointSize: headerPanel.fontSizeSmall
+            color: applicationData.Theme.FontColor
             anchors.horizontalCenter: parent.horizontalCenter
-            height: rectTou.height
-
-            Label
-            {
-                id: totalTouTitle
-                text: "Total TOU"
-                font.bold: true
-                font.pointSize: headerID.fontSizeSmall
-                Material.accent: "#961C1C"
-                Material.theme:
-                {
-                    if(applicationData.IsDarkTheme === true)
-                    {
-                        return Material.Dark;
-                    }
-                    else
-                    {
-                        return Material.Light;
-                    }
-                }
-            }
-
-            Label
-            {
-                id: totalTouValue
-                text: applicationData.TotalTou.toFixed(2) + " kWh"
-                color: "darkcyan"
-                font.pointSize: headerID.fontSizeSmall
-            }
+            anchors.top: parent.top
         }
 
-        Column
+        Label
         {
-            id: colRight
+            id: totalTouValue
+            text: applicationData.TotalTou.toFixed(2) + " kWh"
+            color: "darkcyan"
+            font.pointSize: headerPanel.fontSizeSmall
+            anchors.horizontalCenter: parent.horizontalCenter
+            anchors.bottom: parent.bottom
+        }
+
+        Label
+        {
+            id: hourlyAveTouTitle
+            text: "Hourly Avg TOU"
+            font.bold: true
+            font.pointSize: headerPanel.fontSizeSmall
+            color: applicationData.Theme.FontColor
             anchors.right: parent.right
-            height: rectTou.height
+            anchors.top: parent.top
+        }
 
-            Label
-            {
-                id: hourlyAveTouTitle
-                text: "Hourly Average TOU"
-                font.bold: true
-                font.pointSize: headerID.fontSizeSmall
-                Material.accent: "#961C1C"
-                Material.theme:
-                {
-                    if(applicationData.IsDarkTheme === true)
-                    {
-                        return Material.Dark;
-                    }
-                    else
-                    {
-                        return Material.Light;
-                    }
-                }
-            }
-
-            Label
-            {
-                id: hourlyAveTouValue
-                text: applicationData.HourlyAverageTou.toFixed(2) + " kWh"
-                color: "darkcyan"
-                font.pointSize: headerID.fontSizeSmall
-            }
+        Label
+        {
+            id: hourlyAveTouValue
+            text: applicationData.HourlyAverageTou.toFixed(2) + " kWh"
+            color: "darkcyan"
+            font.pointSize: headerPanel.fontSizeSmall
+            anchors.right: parent.right
+            anchors.bottom: parent.bottom
         }
     }
 
@@ -867,18 +520,7 @@ Page
         width: energyPage.width*0.9
         height: (energyPage.width*0.9)*0.15
         anchors.top: rectTou.bottom
-
-        color:
-        {
-            if(applicationData.IsDarkTheme === true)
-            {
-                return "black";
-            }
-            else
-            {
-                return "white";
-            }
-        }
+        color: applicationData.Theme.BackgroundColor
 
         Column
         {
@@ -891,18 +533,18 @@ Page
                 id: tsstart
                 text:
                 {
-                    if(periodSelector.currentIndex == 0)
+                    if(periodSelector.currentIndex === 0)
                     {
-                        return applicationData.MinTimestampLP1
+                       return applicationData.MinTimestampLP1
                     }
                     else
                     {
-                        return applicationData.MinTimestampLP2
+                       return applicationData.MinTimestampLP2
                     }
                 }
 
                 font.bold: false
-                font.pointSize: headerID.fontSizeSmall
+                font.pointSize: headerPanel.fontSizeSmall
                 color: "darkgray"
             }
         }
@@ -918,18 +560,18 @@ Page
                 id: tsend
                 text:
                 {
-                    if(periodSelector.currentIndex == 0)
+                    if(periodSelector.currentIndex === 0)
                     {
-                        return applicationData.MaxTimestampLP1
+                       return applicationData.MaxTimestampLP1
                     }
                     else
                     {
-                        return applicationData.MaxTimestampLP2
+                       return applicationData.MaxTimestampLP2
                     }
                 }
 
                 font.bold: false
-                font.pointSize: headerID.fontSizeSmall
+                font.pointSize: headerPanel.fontSizeSmall
                 color: "darkgray"
             }
         }
@@ -940,7 +582,7 @@ Page
         id: datepickerpopup
         visible: false
         width: energyPage.width*0.9
-        height: energyPage.width*0.9
+        height: energyPage.width
         x: (energyPage.width - datepickerpopup.width)/2
         y: parent.height/3
         padding: 0
@@ -951,29 +593,22 @@ Page
         contentItem: Rectangle
         {
             anchors.fill: parent
-            color:
-            {
-                if(applicationData.IsDarkTheme === true)
-                {
-                    return "#1C2833";
-                }
-                else
-                {
-                    return "whitesmoke";
-                }
-            }
+            color: applicationData.Theme.ControlColor
 
-            DatePicker
+            CustomDatePicker
             {
                 id: datepickctl
                 height: datepickerpopup.width*0.8
                 width: datepickerpopup.width
+                fontColor: applicationData.Theme.FontColor
+                controlColor: applicationData.Theme.ControlColor
+                accentColor: applicationData.Theme.AccentColor
                 Component.onCompleted: set(new Date()) // today
                 anchors.top: parent.top
                 anchors.horizontalCenter: parent.horizontalCenter
                 onClicked:
                 {
-                    console.log('onClicked', Qt.formatDate(selectedDate, 'M/d/yyyy'))
+                    currentDate = selectedDate;
                 }
             }
 
@@ -983,61 +618,33 @@ Page
                 rows: 1
                 columns: 2
                 anchors.bottom: parent.bottom
-                anchors.bottomMargin: 10
-                anchors.rightMargin: 10
+                anchors.bottomMargin: 5
+                anchors.rightMargin: 5
                 anchors.right: parent.right
                 spacing: 10
-                Button
+
+                CustomButton
                 {
                     id:btnCancel
                     width: energyPage.width*0.25
                     height: energyPage.width*0.125
                     text: "Cancel"
+                    isDefault: false
+                    accentColor: applicationData.Theme.AccentColor
                     onClicked:
                     {
-                        if(calendarmode === 0)
-                        {
-                            eyselecteddatefrom = Qt.formatDate(currentDate, 'dd/MM/yyyy').toString();
-                            dateTextFrom.text = Qt.formatDate(currentDate, 'dd MMM yyyy').toString();
-                        }
-                        else
-                        {
-                            if(calendarmode === 1)
-                            {
-                                eyselecteddateto = Qt.formatDate(currentDate, 'dd/MM/yyyy').toString();
-                                dateTextTo.text = Qt.formatDate(currentDate, 'dd MMM yyyy').toString();
-                            }
-                        }
-
-                        datepickerpopup.close();
-                    }
-
-                    background: Rectangle
-                    {
-                        color: "white"
-                        border.width: 1
-                        border.color: "#961C1C"
-                        radius: 0.1  * btnCancel.height
-                    }
-
-                    contentItem: Text
-                    {
-                       text: "Cancel"
-                       font: btnCancel.font
-                       opacity: enabled ? 1.0 : 0.3
-                       color: btnCancel.down ? "gray" : "black"
-                       horizontalAlignment: Text.AlignHCenter
-                       verticalAlignment: Text.AlignVCenter
-                       elide: Text.ElideRight
+                         datepickerpopup.close();
                     }
                 }
 
-                Button
+                CustomButton
                 {
                     id:btnSave
                     width: energyPage.width*0.25
                     height: energyPage.width*0.125
                     text: "Save"
+                    isDefault: true
+                    accentColor: applicationData.Theme.AccentColor
                     onClicked:
                     {
                         if(calendarmode === 0)
@@ -1055,30 +662,16 @@ Page
                         }
 
                         datepickerpopup.close()
-                    }
-
-                    background: Rectangle
-                    {
-                        color: "#961C1C"
-                        border.width: 1
-                        border.color: "#961C1C"
-                        radius: 0.2  * btnSave.height
-                    }
-
-
-                    contentItem: Text
-                    {
-                       text: "Save"
-                       font: btnSave.font
-                       opacity: enabled ? 1.0 : 0.3
-                       color: btnSave.down ? "gray" : "white"
-                       horizontalAlignment: Text.AlignHCenter
-                       verticalAlignment: Text.AlignVCenter
-                       elide: Text.ElideRight
+                        loadEnergyData();
                     }
                 }
             }
         }
+    }
+
+    function loadEnergyData()
+    {
+        applicationData.invokeEnergyStatistics(visualizationmode, parameterList.currentIndex, periodSelector.currentIndex,  eyselecteddatefrom, eyselecteddateto);
     }
 
     Connections
@@ -1087,10 +680,35 @@ Page
 
         function onEnergyStatisticsRefreshed()
         {
-            headerID.backBtn.enabled = true;
-            headerID.optionsBtn.enabled = true;
             barChart.points = applicationData.EnergyBarData;
-            splineChart.points = applicationData.EnergyLineData;
+            lineChart.points = applicationData.EnergyLineData;
+            xAxisLabel.visible = true
+            errorArea.visible = false
+            graphSelecter.visible = true
+
+            if(graphSelecter.checked === true)
+            {
+                barChart.visible = true
+                lineChart.visible = false
+            }
+            else
+            {
+                barChart.visible = false
+                lineChart.visible = true
+            }
+        }
+
+        function onEnergyError(str)
+        {
+            console.log(str)
+            errorArea.text = str
+            errorArea.visible = true
+            barChart.visible = false
+            lineChart.visible = false
+            xAxisLabel.visible = false
+            graphSelecter.visible = false
         }
     }
+
+
 }

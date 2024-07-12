@@ -6,7 +6,7 @@ import QtQuick.Controls.Material 2.3
 Page
 {
     Material.theme: Material.Light
-    Material.accent: "#961C1C"
+    Material.accent: applicationData.Theme.AccentColor
 
     id: loginpage
 
@@ -42,37 +42,19 @@ Page
     {
         id: background
         width: parent.width
-        height: parent.height - headerID.height
-        anchors.top: headerID.bottom
-        color:
-        {
-            if(applicationData.IsDarkTheme === true)
-            {
-                return "black";
-            }
-            else
-            {
-                return "white";
-            }
-        }
+        height: parent.height - headerPanel.height
+        anchors.top: headerPanel.bottom
+        color: applicationData.Theme.BackgroundColor
     }
 
-    Rectangle
+    Header
     {
-        id: headerID
-        width: parent.width
-        height: parent.width * 0.2
-        color:
-        {
-            if(applicationData.IsDarkTheme === true)
-            {
-                return "black";
-            }
-            else
-            {
-                return "white";
-            }
-        }
+        id:headerPanel
+        headerTitle: "Login"
+        isMenuButtonVisible: false
+        isMeterNameVisible: false
+        isSyncDateVisible: false
+        isConnectionIndicatorVisible: false
     }
 
     Label
@@ -86,32 +68,20 @@ Page
         id: name
         text: "Welcome " + consumerName
         font.bold: true
-        color: "#961C1C"
+        color: applicationData.Theme.AccentColor
         font.pointSize: fontSizeLarge
         anchors.horizontalCenter: parent.horizontalCenter
         anchors.topMargin: 0
-        anchors.top: headerID.bottom
+        anchors.top: headerPanel.bottom
     }
 
     Text
     {
         id: enterPass1Txt
         text: "Please enter your passcode "
-        color:
-        {
-            if(applicationData.IsDarkTheme === true)
-            {
-                return "white";
-            }
-            else
-            {
-                return "black";
-            }
-        }
-
+        color: applicationData.Theme.FontColor
         font.bold: true
         anchors.top: name.bottom
-        anchors.topMargin: 5
         anchors.horizontalCenter: parent.horizontalCenter
     }
 
@@ -121,23 +91,12 @@ Page
         width: parent.width * 0.6
         height: (parent.width * 0.6)/4
         anchors.top: enterPass1Txt.bottom
-        anchors.topMargin: 5
         anchors.horizontalCenter: parent.horizontalCenter
 
         Rectangle
         {
             anchors.fill: parent
-            color:
-            {
-                if(applicationData.IsDarkTheme === true)
-                {
-                    return "black";
-                }
-                else
-                {
-                    return "white";
-                }
-            }
+            color: applicationData.Theme.BackgroundColor
         }
 
         Grid
@@ -150,18 +109,7 @@ Page
                 height: rectdummy.width/4
                 width:  rectdummy.width/4
                 radius: width*0.5
-
-                color:
-                {
-                    if(applicationData.IsDarkTheme === true)
-                    {
-                        return "black";
-                    }
-                    else
-                    {
-                        return "white";
-                    }
-                }
+                color: applicationData.Theme.BackgroundColor
 
                 Rectangle
                 {
@@ -172,18 +120,7 @@ Page
                     radius: width*0.5
                     anchors.horizontalCenter: parent.horizontalCenter
                     anchors.verticalCenter: parent.verticalCenter
-
-                    color:
-                    {
-                        if(applicationData.IsDarkTheme === true)
-                        {
-                            return "white";
-                        }
-                        else
-                        {
-                            return "black";
-                        }
-                    }
+                    color: applicationData.Theme.FontColor
                 }
             }
 
@@ -192,18 +129,7 @@ Page
                 height: rectdummy.width/4
                 width:  rectdummy.width/4
                 radius: width*0.5
-
-                color:
-                {
-                    if(applicationData.IsDarkTheme === true)
-                    {
-                        return "black";
-                    }
-                    else
-                    {
-                        return "white";
-                    }
-                }
+                color: applicationData.Theme.BackgroundColor
 
                 Rectangle
                 {
@@ -214,18 +140,7 @@ Page
                     radius: width*0.5
                     anchors.horizontalCenter: parent.horizontalCenter
                     anchors.verticalCenter: parent.verticalCenter
-
-                    color:
-                    {
-                        if(applicationData.IsDarkTheme === true)
-                        {
-                            return "white";
-                        }
-                        else
-                        {
-                            return "black";
-                        }
-                    }
+                    color: applicationData.Theme.FontColor
                 }
             }
 
@@ -234,18 +149,7 @@ Page
                 height: rectdummy.width/4
                 width:  rectdummy.width/4
                 radius: width*0.5
-
-                color:
-                {
-                    if(applicationData.IsDarkTheme === true)
-                    {
-                        return "black";
-                    }
-                    else
-                    {
-                        return "white";
-                    }
-                }
+                color: applicationData.Theme.BackgroundColor
 
                 Rectangle
                 {
@@ -256,18 +160,7 @@ Page
                     radius: width*0.5
                     anchors.horizontalCenter: parent.horizontalCenter
                     anchors.verticalCenter: parent.verticalCenter
-
-                    color:
-                    {
-                        if(applicationData.IsDarkTheme === true)
-                        {
-                            return "white";
-                        }
-                        else
-                        {
-                            return "black";
-                        }
-                    }
+                    color: applicationData.Theme.FontColor
                 }
             }
 
@@ -276,18 +169,7 @@ Page
                 height: rectdummy.width/4
                 width:  rectdummy.width/4
                 radius: width*0.5
-
-                color:
-                {
-                    if(applicationData.IsDarkTheme === true)
-                    {
-                        return "black";
-                    }
-                    else
-                    {
-                        return "white";
-                    }
-                }
+                color: applicationData.Theme.BackgroundColor
 
                 Rectangle
                 {
@@ -298,17 +180,7 @@ Page
                     radius: width*0.5
                     anchors.horizontalCenter: parent.horizontalCenter
                     anchors.verticalCenter: parent.verticalCenter
-                    color:
-                    {
-                        if(applicationData.IsDarkTheme === true)
-                        {
-                            return "white";
-                        }
-                        else
-                        {
-                            return "black";
-                        }
-                    }
+                    color: applicationData.Theme.FontColor
                 }
             }
         }
@@ -319,7 +191,7 @@ Page
         id:numberpadId
         visible: true
         anchors.top: rectdummy.bottom
-        anchors.topMargin: 5
+        anchors.topMargin: 0
         anchors.horizontalCenter: parent.horizontalCenter
         onButtonPressed :
         {
@@ -425,6 +297,13 @@ Page
             {
                 errorLabel.text = "Passcode must be 4 digits";
                 errorLabel.visible = true;
+                dot1.visible = false;
+                dot2.visible = false;
+                dot3.visible = false;
+                dot4.visible = false;
+                keycount = 0;
+                passcode = ""
+
                 return;
             }
 
@@ -434,70 +313,60 @@ Page
 
     Label
     {
-        id: txtforget
-        text: "Forgot your passcode ?"
-        font.bold: true
+        id: errorLabel
         anchors.top: numberpadId.bottom
-        anchors.topMargin: 5
         anchors.horizontalCenter: parent.horizontalCenter
-        color:
-        {
-            if(applicationData.IsDarkTheme === true)
-            {
-                return "white";
-            }
-            else
-            {
-                return "black";
-            }
-        }
-    }
-
-    Button
-    {
-        id:btnReset
-        height: loginpage.width*0.15
-        width: (loginpage.width*0.2)*2.5
-        anchors.top: txtforget.bottom
-        anchors.topMargin: 5
-        anchors.horizontalCenter: parent.horizontalCenter
-        text: "Reset Passcode"
-        onClicked:
-        {
-            onClicked: applicationData.pageAction(14)
-        }
-
-        background: Rectangle
-        {
-            color: "#961C1C"
-            border.width: 1
-            border.color: "#961C1C"
-            radius: 0.2  * btnReset.height
-        }
-
-        contentItem: Text
-        {
-           text: "Reset Passcode"
-           font: btnReset.font
-           opacity: enabled ? 1.0 : 0.3
-           color: btnReset.down ? "gray" : "white"
-           horizontalAlignment: Text.AlignHCenter
-           verticalAlignment: Text.AlignVCenter
-           elide: Text.ElideRight
-        }
+        anchors.topMargin: 0
+        font.bold: true
+        text: "Error"
+        color: "red"
     }
 
     Label
     {
-        id: errorLabel
-        width: loginpage.width * 0.9
-        height: loginpage.width * 0.05
-        anchors.top: btnReset.bottom
-        anchors.horizontalCenter: parent.horizontalCenter
-        anchors.topMargin: headerID.height*0.55
+        id: txtforget
+        text: "Forgot your passcode ?"
         font.bold: true
-        text: "Error"
-        color: "red"
+        anchors.bottom: btnReset.top
+        anchors.bottomMargin: 0
+        anchors.horizontalCenter: parent.horizontalCenter
+        color: applicationData.Theme.FontColor
+    }
+
+    CustomButton
+    {
+        id:btnReset
+        height: loginpage.width*0.125
+        width: (loginpage.width*0.2)*2.5
+        anchors.bottom: btnExit.top
+        anchors.bottomMargin: 5
+        anchors.horizontalCenter: parent.horizontalCenter
+        text: "Reset Passcode"
+        isDefault: true
+        accentColor: applicationData.Theme.AccentColor
+        textAlignment: Text.ElideRight
+        onClicked:
+        {
+            onClicked: applicationData.pageAction(14)
+        }
+    }
+
+    CustomButton
+    {
+        id:btnExit
+        height: parent.width*0.125
+        width: (parent.width*0.2)*2.5
+        text: "Exit"
+        anchors.bottom: parent.bottom
+        anchors.bottomMargin: 5
+        anchors.horizontalCenter: parent.horizontalCenter
+        accentColor: applicationData.Theme.AccentColor
+        isDefault: false
+
+        onClicked:
+        {
+            applicationData.invokeExit()
+        }
     }
 
     Connections

@@ -235,12 +235,8 @@ int XmlWriter::WriteElementString(const char* name, int value)
 {
     if (!m_SkipDefaults || value != 0)
     {
-        char buff[20];
-#if _MSC_VER > 1000
-        sprintf_s(buff, 20, "%d", value);
-#else
-        sprintf(buff, "%d", value);
-#endif
+        char buff[21] = {0};
+        snprintf(buff, 20, "%d", value);
         WriteElementString(name, buff);
     }
     return 0;
@@ -251,12 +247,8 @@ int XmlWriter::WriteElementString(const char* name, long value)
 {
     if (!m_SkipDefaults || value != 0)
     {
-        char buff[20];
-#if _MSC_VER > 1000
-        sprintf_s(buff, 20, "%ld", value);
-#else
-        sprintf(buff, "%ld", value);
-#endif
+        char buff[21] = {0};
+        snprintf(buff, 20, "%ld", value);
         WriteElementString(name, buff);
     }
     return 0;
@@ -266,12 +258,8 @@ int XmlWriter::WriteElementString(const char* name, unsigned long value)
 {
     if (!m_SkipDefaults || value != 0)
     {
-        char buff[20];
-#if _MSC_VER > 1000
-        sprintf_s(buff, 20, "%lu", value);
-#else
-        sprintf(buff, "%lu", value);
-#endif
+        char buff[21] = {0};
+        snprintf(buff, 20, "%lu", value);
         WriteElementString(name, buff);
     }
     return 0;
@@ -281,12 +269,8 @@ int XmlWriter::WriteElementString(const char* name, unsigned int value)
 {
     if (!m_SkipDefaults || value != 0)
     {
-        char buff[20];
-#if _MSC_VER > 1000
-        sprintf_s(buff, 20, "%d", value);
-#else
-        sprintf(buff, "%d", value);
-#endif
+        char buff[21] = {0};
+        snprintf(buff, 20, "%d", value);
         WriteElementString(name, buff);
     }
     return 0;
@@ -296,7 +280,7 @@ int XmlWriter::WriteElementString(const char* name, double value, double default
 {
     if (!m_SkipDefaults || value != 0)
     {
-        char buff[30];
+        char buff[31] = {0};
         int ret = snprintf(buff, 30, "%lf", value);
         //Remove trailing zeroes.
         while (ret > 0 && buff[ret - 1] == '0')

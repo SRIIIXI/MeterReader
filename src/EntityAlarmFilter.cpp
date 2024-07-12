@@ -19,54 +19,19 @@ bool EntityAlarmFilter::createTable()
                         is_set Integer NOT NULL, \
                         CONSTRAINT unique_alarm_id UNIQUE ( alarm_id ))";
 
-    QSqlQuery qryresult;
-
-    try
-    {
-        _Database->transaction();
-
-        qryresult = _Database->exec(sqlString);
-
-        _Database->commit();
-    }
-    catch(QException e)
-    {
-       _Database->rollback();
-       QString errString = _Database->lastError().text();
-       return false;
-    }
-
-    return true;
-
+    return executeQuery(sqlString);
 }
 
 bool EntityAlarmFilter::createAlarmFilter(const AlarmFilter &rec)
 {
-    QSqlQuery qryresult;
-    QString err;
+    QString sqlString = "insert into alarm_filter (alarm_id, alarm_name, is_set) values(alarm_id__, 'alarm_name__', is_set__)";
 
-    QString sql = "insert into alarm_filter (alarm_id, alarm_name, is_set) values(alarm_id__, 'alarm_name__', is_set__)";
+    sqlString = sqlString.replace("alarm_id__", QVariant(rec.AlarmId_).toString());
+    sqlString = sqlString.replace("alarm_name__", rec.AlarmName_);
+    sqlString = sqlString.replace("is_set__", QVariant(rec.IsSet_).toString());
 
-    sql = sql.replace("alarm_id__", QVariant(rec.AlarmId_).toString());
-    sql = sql.replace("alarm_name__", rec.AlarmName_);
-    sql = sql.replace("is_set__", QVariant(rec.IsSet_).toString());
-
-    try
-    {
-        _Database->transaction();
-
-        qryresult = _Database->exec(sql);
-
-        _Database->commit();
-    }
-    catch(QException e)
-    {
-       _Database->rollback();
-       err = _Database->lastError().text();
-       return false;
-    }
-
-    return true;}
+    return executeQuery(sqlString);
+}
 
 bool EntityAlarmFilter::allAlarmFilters(QList<AlarmFilter> &list)
 {
