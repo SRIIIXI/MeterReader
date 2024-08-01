@@ -52,7 +52,7 @@ Page
        Text
        {
            id: appName
-           text: "Consumer Smartphone App"
+           text: "Meter Reader"
            anchors.horizontalCenter: parent.horizontalCenter
            anchors.top: animation_splash.bottom
            anchors.topMargin: 40
