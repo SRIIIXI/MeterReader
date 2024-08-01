@@ -1,4 +1,9 @@
 #include <assert.h>
+#include <stdlib.h>
+#include <memory.h>
+#include <string.h>
+#include <malloc.h>
+
 #include "DLMSTranslatorStructure.h"
 #ifndef DLMS_IGNORE_XML_TRANSLATOR
 #include "Helpers.h"
