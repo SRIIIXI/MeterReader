@@ -131,7 +131,7 @@ bool Controller::getIsFirstRun()
     return is_first_run_;
 }
 
-CsaTheme Controller::getTheme()
+ApplicationTheme Controller::getTheme()
 {
     return theme_;
 }

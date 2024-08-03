@@ -244,17 +244,7 @@ Page
                                 return false
                         }
 
-                        visible:
-                        {
-                            if(availableMetersModel[index].SerialNo === "EDM1DEMO" || availableMetersModel[index].SerialNo === "EDM2DEMO")
-                            {
-                                return false
-                            }
-                            else
-                            {
-                                return true
-                            }
-                        }
+                        visible: true
 
                         onClicked:
                         {
@@ -297,17 +287,7 @@ Page
                             }
                         }
 
-                        visible:
-                        {
-                            if(availableMetersModel[index].SerialNo === "EDM1DEMO" || availableMetersModel[index].SerialNo === "EDM2DEMO")
-                            {
-                                return false
-                            }
-                            else
-                            {
-                                return true
-                            }
-                        }
+                        visible: true
 
                         text:
                         {
@@ -363,7 +343,7 @@ Page
         width: availableMetersPage.width
         height: availableMetersPage.width*0.2
         radius: 5
-        color: applicationData.Theme.ControlColor
+        color: applicationData.Theme.NavigationBarColor
         anchors
         {
             bottom: parent.bottom
@@ -383,7 +363,7 @@ Page
 
             background: Rectangle
             {
-                color: applicationData.Theme.ControlColor
+                color: applicationData.Theme.NavigationBarColor
             }
 
             enabled:

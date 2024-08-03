@@ -219,8 +219,8 @@ public:
     Q_PROPERTY (bool ShowIndicator READ getShowIndicator NOTIFY ShowIndicatorChanged)
     bool getShowIndicator();
 
-    Q_PROPERTY (CsaTheme Theme READ getTheme NOTIFY ThemeChanged)
-    CsaTheme getTheme();
+    Q_PROPERTY (ApplicationTheme Theme READ getTheme NOTIFY ThemeChanged)
+    ApplicationTheme getTheme();
 
     Q_PROPERTY (QString TraceString READ getTraceString NOTIFY TraceStringChanged)
     QString getTraceString();
@@ -457,7 +457,7 @@ private:
     bool isDemoMode_;
     bool isTraceEnabled_;
     bool isDumpRxTxEnabled_;
-    CsaTheme theme_;
+    ApplicationTheme theme_;
     QString traceString_;
 
     QString peripheralServiceIdString_;

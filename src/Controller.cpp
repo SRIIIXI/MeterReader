@@ -42,7 +42,7 @@ Controller::Controller(QGuiApplication *appPtr, QObject *parent)
 
     lastPage_ = "";
     isDarkTheme_ = true;
-    isDemoMode_ = false;
+    isDemoMode_ = true;
     isTraceEnabled_ = false;
     isDumpRxTxEnabled_ = false;
     peripheralServiceIdString_ = "ED310001-C889-5D66-AE38-A7A01230635A";

@@ -52,7 +52,7 @@ Page
         anchors.top:headerPanel.bottom
         model: ["New", "Transferred"]
         accentColor: applicationData.Theme.AccentColor
-        accentLowColor: applicationData.Theme.AccentColorLow
+        accentLowColor: applicationData.Theme.AccentColor
         controlLowColor: applicationData.Theme.ControlColor
         controlColor: applicationData.Theme.ControlColor
         fontColor: applicationData.Theme.FontColor
@@ -395,7 +395,7 @@ Page
         width: availableTokensPage.width
         height: availableTokensPage.width*0.2
         radius: 5
-        color: applicationData.Theme.ControlColor
+        color: applicationData.Theme.NavigationBarColor
 
         anchors
         {
@@ -417,7 +417,7 @@ Page
 
             background: Rectangle
             {
-                color: applicationData.Theme.ControlColor
+                color: applicationData.Theme.NavigationBarColor
             }
         }
 

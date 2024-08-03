@@ -64,7 +64,7 @@ Page
             lineWidth: (graphRect.height*0.6)*0.1
             value: applicationData.RemainingCreditPercent.toFixed(2)
             size: graphRect.height*0.7
-            secondaryColor: applicationData.Theme.AccentColorLow
+            secondaryColor: applicationData.Theme.AccentLowColor
             primaryColor: applicationData.Theme.AccentColor
             anchors.horizontalCenter: parent.horizontalCenter
             anchors.verticalCenter: parent.verticalCenter

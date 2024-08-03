@@ -116,7 +116,7 @@ Page
         width: alarmsPage.width
         height: alarmsPage.width*0.2
         radius: 5
-        color: applicationData.Theme.ControlColor
+        color: applicationData.Theme.NavigationBarColor
 
         anchors
         {
@@ -138,7 +138,7 @@ Page
 
             background: Rectangle
             {
-                color: applicationData.Theme.ControlColor
+                color: applicationData.Theme.NavigationBarColor
             }
         }
 

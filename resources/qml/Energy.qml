@@ -139,7 +139,7 @@ Page
         anchors.topMargin: 5
         model: ["Daily", "Weekly", "Monthly", "Annual"]
         accentColor: applicationData.Theme.AccentColor
-        accentLowColor: applicationData.Theme.AccentColorLow
+        accentLowColor: applicationData.Theme.AccentColor
         controlLowColor: applicationData.Theme.ControlColor
         controlColor: applicationData.Theme.ControlColor
         fontColor: applicationData.Theme.FontColor

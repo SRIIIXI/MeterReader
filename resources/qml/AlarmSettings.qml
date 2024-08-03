@@ -114,7 +114,7 @@ Page
         anchors.bottomMargin: 10
         anchors.rightMargin: 0
         anchors.right: parent.right
-        color: applicationData.Theme.ControlColor
+        color: applicationData.Theme.NavigationBarColor
 
         Grid
         {
