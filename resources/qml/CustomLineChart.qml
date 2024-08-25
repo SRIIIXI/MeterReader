@@ -4,20 +4,18 @@ Item
 {
     id: root
 
- // public
     property string title:  'title'
     property string yLabel: 'yLabel'
     property string xLabel: 'xLabel'
 
-    property variant points: []//{x: 0, y: 0}, {x: 1, y: 2}]
+    property variant points: []
     property string  color1: '#961C1C'
     property string  color2: '#008080'
 
- // private
     property double factor: Math.min(width, height)
 
-    property double yInterval:  1 // set by onPointsChanged
-    property double xIntervalDynamic:  1 // set by onPointsChanged
+    property double yInterval:  1
+    property double xIntervalDynamic:  1
     property double yMaximum:  10
     property double yMinimum:   0
     function toYPixels(y)
@@ -25,7 +23,7 @@ Item
         return -plot.height / (yMaximum - yMinimum) * (y - yMinimum) + plot.height
     }
 
-    property double xInterval:  1 // set by onPointsChanged
+    property double xInterval:  1
     property double xMaximum:  10
     property double xMinimum:   0
     function toXPixels(x)
@@ -53,12 +51,12 @@ Item
             if(points[j].x2 < xMinimum)  xMinimum = points[j].x2
         }
 
-        var yLog10     = Math.log(yMaximum - yMinimum) / Math.LN10 //  take log, convert to integer, and then raise 10 to this power
-        root.yInterval = Math.pow(10, Math.floor(yLog10)) / 2 // distance between ticks
+        var yLog10     = Math.log(yMaximum - yMinimum) / Math.LN10
+        root.yInterval = Math.pow(10, Math.floor(yLog10)) / 2
         root.yMaximum  = Math.ceil( yMaximum / yInterval) * yInterval
         root.yMinimum  = Math.floor(yMinimum / yInterval) * yInterval
 
-        var xLog10     = Math.log(xMaximum - xMinimum) / Math.LN10 //  take log, convert to integer, and then raise 10 to this power
+        var xLog10     = Math.log(xMaximum - xMinimum) / Math.LN10
         root.xInterval =  Math.round(xMaximum / points.length);
         root.xMaximum  = Math.ceil( xMaximum / xInterval) * xInterval
         root.xMinimum  = Math.floor(xMinimum / xInterval) * xInterval
@@ -66,31 +64,26 @@ Item
         canvas.requestPaint()
     }
 
-    width: 500;
-    height: 500 // default size
+    width: 500
+    height: 500
 
-    Text
-    { // title
-        text: title
-        anchors.horizontalCenter: parent.horizontalCenter
-        font.pixelSize: 0.03 * factor
-        color:
-        {
-            if(applicationData.IsDarkTheme === true)
-            {
-                return "white";
-            }
-            else
-            {
-                return "black";
-            }
-        }
+    FontSizer
+    {
+        id: fontsizer
     }
 
     Text
-    { // y label
+    {
+        text: title
+        anchors.horizontalCenter: parent.horizontalCenter
+        color: applicationData.Theme.FontColor
+        anchors.bottom: parent.bottom
+    }
+
+    Text
+    {
         text: yLabel
-        font.pixelSize: 0.03 * factor
+        font.pixelSize: fontsizer.fontSizeSmall
         y: 0.5 * (2 * plot.y + plot.height + width)
         rotation: -90
         transformOrigin: Item.TopLeft
@@ -133,28 +126,65 @@ Item
     */
 
     Item
-    { // plot
+    {
         id: plot
-        anchors
+        width: parent.width - 35
+        height: parent.height - 40
+        anchors.top: parent.top
+        anchors.right: parent.right
+
+        Rectangle
         {
-            fill: parent;
-            topMargin: 0.05 * factor;
-            bottomMargin: 0.1 * factor;
-            leftMargin: 0.15 * factor;
-            rightMargin: 0.05 * factor
+            anchors.fill: parent
+            color: "transparent"
+
+            Rectangle
+            {
+                width: parent.width
+                height: 1
+                border.color:
+                {
+                    if(applicationData.IsDarkTheme === true)
+                    {
+                        return "white";
+                    }
+                    else
+                    {
+                        return "black";
+                    }
+                }
+                anchors.bottom: parent.bottom
+            }
+
+            Rectangle
+            {
+                width: 1
+                height: parent.height
+                border.color:
+                {
+                    if(applicationData.IsDarkTheme === true)
+                    {
+                        return "white";
+                    }
+                    else
+                    {
+                        return "black";
+                    }
+                }
+                anchors.left: parent.left
+            }
         }
 
         Repeater
         {
-            // y axis tick marks and labels
-            model: Math.floor((yMaximum - yMinimum) / yInterval) + 1 // number of tick marks
+            model: Math.floor((yMaximum - yMinimum) / yInterval) + 1
 
             delegate: Rectangle
             {
                 property double value: index * yInterval + yMinimum
                 y: toYPixels(value)
                 width: plot.width;
-                height: 1
+                height: 0
                 color:
                 {
                     if(applicationData.IsDarkTheme === true)
@@ -176,7 +206,7 @@ Item
                         verticalCenter: parent.verticalCenter;
                         margins: 0.01 * factor
                     }
-                    font.pixelSize: 0.03 * factor
+                    font.pixelSize: fontsizer.fontSizeSmall
                     color:
                     {
                         if(applicationData.IsDarkTheme === true)
@@ -194,14 +224,13 @@ Item
 
         Repeater
         {
-            // x axis tick marks and labels
-            model: Math.floor((xMaximum - xMinimum) / xInterval) + 1 // number of tick marks
+            model: Math.floor((xMaximum - xMinimum) / xInterval) + 1
 
             delegate: Rectangle
             {
                 property double value: index * xInterval + xMinimum
                 x: toXPixels(value)
-                width: 1;
+                width: 0
                 height: plot.height;
                 color:
                 {
@@ -224,7 +253,7 @@ Item
                         horizontalCenter: parent.horizontalCenter;
                         margins: 0.01 * factor
                     }
-                    font.pixelSize: 0.03 * factor
+                    font.pixelSize: fontsizer.fontSizeSmall
                     color:
                     {
                         if(applicationData.IsDarkTheme === true)
@@ -241,14 +270,14 @@ Item
         }
 
         Canvas
-        { // points
+        {
             id: canvas
             anchors.fill: parent
 
             onPaint:
             {
                 var context = getContext("2d")
-                context.clearRect(0, 0, width, height) // new points data (animation)
+                context.clearRect(0, 0, width, height)
 
                 context.strokeStyle = color1
                 context.lineWidth   = 0.005 * factor

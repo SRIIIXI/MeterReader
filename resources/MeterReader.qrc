@@ -22,6 +22,8 @@
         <file>qml/CustomDatePicker.qml</file>
         <file>qml/CustomSelector.qml</file>
         <file>qml/CustomTab.qml</file>
+        <file>qml/CustomTrendCard.qml</file>
+        <file>qml/FontSizer.qml</file>
         <file>qml/CreateUserStage1.qml</file>
         <file>qml/CreateUserStage2.qml</file>
         <file>qml/CreateUserStage3.qml</file>

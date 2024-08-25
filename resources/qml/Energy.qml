@@ -198,7 +198,7 @@ Page
             Label
             {
                 text: "Select Date"
-                color: "darkcyan"
+                color: '#1e90ff'
                 anchors.left: parent.left
                 anchors.verticalCenter: parent.verticalCenter
             }
@@ -216,7 +216,7 @@ Page
             Label
             {
                 text: "Compare With"
-                color: "darkred"
+                color: '#ff8c00'
                 anchors.left: parent.left
                 anchors.verticalCenter: parent.verticalCenter
             }
@@ -340,8 +340,8 @@ Page
             height: parent.height
             antialiasing: true
             visible: true
-            color1: '#961C1C'
-            color2: '#008080'
+            color1: '#1e90ff'
+            color2: '#ff8c00'
 
             title: applicationData.ChartTitle
             yLabel: applicationData.YLabelEnergy
@@ -355,8 +355,8 @@ Page
             height: parent.height
             antialiasing: true
             visible: false
-            color1: '#961C1C'
-            color2: '#008080'
+            color1: '#1e90ff'
+            color2: '#ff8c00'
 
             title: applicationData.ChartTitle
             yLabel: applicationData.YLabelEnergy
@@ -464,7 +464,7 @@ Page
         {
             id: dailyMaxTouValue
             text: applicationData.DailyMaxTou.toFixed(2) + " kWh"
-            color: "darkcyan"
+            color: '#1e90ff'
             font.pointSize: headerPanel.fontSizeSmall
             anchors.left: parent.left
             anchors.bottom: parent.bottom
@@ -485,7 +485,7 @@ Page
         {
             id: totalTouValue
             text: applicationData.TotalTou.toFixed(2) + " kWh"
-            color: "darkcyan"
+            color: '#1e90ff'
             font.pointSize: headerPanel.fontSizeSmall
             anchors.horizontalCenter: parent.horizontalCenter
             anchors.bottom: parent.bottom
@@ -506,7 +506,7 @@ Page
         {
             id: hourlyAveTouValue
             text: applicationData.HourlyAverageTou.toFixed(2) + " kWh"
-            color: "darkcyan"
+            color: '#1e90ff'
             font.pointSize: headerPanel.fontSizeSmall
             anchors.right: parent.right
             anchors.bottom: parent.bottom
